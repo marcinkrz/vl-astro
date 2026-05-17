@@ -1,0 +1,18 @@
+---
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { getT } from '@/i18n/messages';
+
+const locale = Astro.currentLocale === 'pl' ? 'pl' : 'en';
+const t = getT(locale);
+const year = new Date().getFullYear();
+---
+
+<footer class="container mx-auto py-4 text-[var(--muted)]">
+  <div class="flex justify-between items-center">
+    <span class="inline-flex text-xs">
+      &copy; {t('footer.copy', { year })}
+    </span>
+
+    <LanguageSwitcher />
+  </div>
+</footer>

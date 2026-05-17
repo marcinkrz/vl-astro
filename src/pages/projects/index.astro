@@ -1,0 +1,31 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const projects = await getCollection(
+  'projects',
+  ({ data }) => data.locale === 'en'
+);
+
+// opcjonalnie sortowanie
+projects.sort((a, b) =>
+  a.data.title.localeCompare(b.data.title)
+);
+---
+<BaseLayout>
+  <main transition:animate="slide" class="container">
+    <h1 class="h1 mb-4">Projects</h1>
+    <ul>
+      {projects.map((project) => (
+        <li>
+          <a href={`/projects/${project.id}`}>
+            <article>
+              <h2 class="h2">{project.data.title}</h2>
+              <p>{project.data.description}</p>
+            </article>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </main>
+</BaseLayout>

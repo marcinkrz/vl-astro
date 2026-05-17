@@ -1,0 +1,93 @@
+---
+import { getT, type Locale } from '@/i18n/messages';
+import { getProjectSlugMap } from '@/lib/projectSlugMap';
+import Button from '@/components/_ui/Button.astro';
+
+const locale = (Astro.currentLocale === 'pl' ? 'pl' : 'en') as Locale;
+const t = getT(locale);
+const pathname = Astro.url.pathname;
+const projectSlugMap = await getProjectSlugMap();
+const hideOnPolish = locale === 'pl';
+---
+{ !hideOnPolish ? (
+  <div
+    id="lang-banner"
+    class="w-full flex justify-center border-b border-[var(--border)]"
+    hidden
+  >
+    <div class="w-fit sm:max-w-max p-2 md:py-1 flex items-center md:justify-center">
+      <button
+        data-banner-close
+        class="cursor-pointer mr-4 text-[var(--muted)] hover:text-[var(--foreground)] transition-colors"
+        aria-label={t('banner.close')}
+        type="button"
+      >
+        <svg class="w-5.5 h-5.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strok-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+      </button>
+      <p class="pr-4 text-sm text-[var(--muted)] leading-tight">
+        {t('banner.text')}
+      </p>
+      <Button
+        data-banner-continue
+        variant="primary"
+        size="sm"
+      >
+        {t('banner.continue')}
+      </Button>
+    </div>
+  </div>
+) : null}
+
+<script is:inline define:vars={{ pathname, projectSlugMap }}>
+  function getPolishPath(currentPath) {
+    const routeMap = {
+      '/': '/pl',
+      '/projects': '/pl/projekty',
+      '/studio': '/pl/studio',
+      '/contact': '/pl/kontakt',
+    };
+
+    if (routeMap[currentPath]) {
+      return routeMap[currentPath];
+    }
+
+    if (currentPath.startsWith('/projects/')) {
+      const slug = currentPath.replace('/projects/', '');
+      const translatedSlug = projectSlugMap[slug];
+
+      if (translatedSlug) {
+        return `/pl/projekty/${translatedSlug}`;
+      }
+
+      return '/pl/projekty';
+    }
+
+    return '/pl';
+  }
+
+  function initBanner() {
+    const banner = document.getElementById('lang-banner');
+    if (!banner) return;
+
+    const stored = localStorage.getItem('preferredLanguage');
+    const browserLang = navigator.language?.toLowerCase() ?? '';
+
+    const shouldShow = !stored && browserLang.startsWith('pl');
+    banner.hidden = !shouldShow;
+
+    const closeBtn = banner.querySelector('[data-banner-close]');
+    const continueBtn = banner.querySelector('[data-banner-continue]');
+
+    closeBtn?.addEventListener('click', () => {
+      localStorage.setItem('preferredLanguage', 'en');
+      banner.hidden = true;
+    });
+
+    continueBtn?.addEventListener('click', () => {
+      localStorage.setItem('preferredLanguage', 'pl');
+      window.location.href = getPolishPath(pathname);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initBanner);
+</script>

@@ -1,0 +1,45 @@
+---
+import { cn } from '@/utils/styles-merge';
+
+const {
+  variant = "primary",
+  size = "default",
+  href,
+  class: className = "",
+  ...props
+} = Astro.props;
+
+const base =
+  "cursor-pointer inline-flex justify-center items-center tracking-wide leading-none whitespace-nowrap border border-transparent rounded-full transition-colors";
+
+const sizes = {
+  default: "text-base px-7 py-2.5",
+  sm: "text-sm !leading-none px-4 py-2",
+  icon: "min-w-[2rem] p-1.5",
+};
+
+const variants = {
+  primary: `bg-[var(--foreground)] text-[var(--background)] hover:bg-[var(--foreground-1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--foreground-1)]`,
+  secondary: `text-[var(--foreground)] border-[var(--foreground)] hover:bg-[var(--foreground-1)] hover:text-[var(--background)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground-1)] active:bg-[var(--foreground-1)] active:text-[var(--background)]`,
+  outline: `bg-transparent border-[var(--border)] text-[var(--foreground-1)] hover:border-[var(--foreground)] hover:text-[var(--foreground)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] focus-visible:border-transparent active:border-[var(--foreground)] active:text-[var(--foreground)]`,
+  ghost: `bg-transparent text-[var(--foreground)] hover:bg-[var(--background-3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--background-3)] active:bg-[var(--background-3)]`,
+};
+
+const classes = cn(
+  base,
+  sizes[size],
+  variants[variant],
+  className
+);
+---
+{
+  href ? (
+    <a class={classes} href={href} {...props}>
+      <slot />
+    </a>
+  ) : (
+    <button class={classes} {...props}>
+      <slot />
+    </button>
+  )
+}

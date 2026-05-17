@@ -1,0 +1,72 @@
+---
+import Button from '@/components/_ui/Button.astro';
+import { getCollection } from 'astro:content';
+import type { Locale } from '@/i18n/messages';
+import { getOtherLocale, getRoute } from '@/i18n/routes';
+
+const currentLocale = (Astro.currentLocale === 'pl' ? 'pl' : 'en') as Locale;
+const targetLocale = getOtherLocale(currentLocale);
+const currentPath = Astro.url.pathname;
+
+const routeCandidates = ['home', 'projects', 'studio', 'contact'] as const;
+
+let href = getRoute(targetLocale, 'home');
+
+for (const key of routeCandidates) {
+  if (currentPath === getRoute(currentLocale, key)) {
+    href = getRoute(targetLocale, key);
+    break;
+  }
+}
+
+const currentProjectsBase = getRoute(currentLocale, 'projects');
+const targetProjectsBase = getRoute(targetLocale, 'projects');
+
+if (currentPath.startsWith(`${currentProjectsBase}/`)) {
+  const currentSlug = currentPath.replace(`${currentProjectsBase}/`, '');
+  const projects = await getCollection('projects');
+
+  const currentProject = projects.find(
+    (entry) =>
+      entry.data.locale === currentLocale &&
+      entry.id === currentSlug
+  );
+
+  if (currentProject) {
+    const translatedProject = projects.find(
+      (entry) =>
+        entry.data.projectId === currentProject.data.projectId &&
+        entry.data.locale === targetLocale
+    );
+
+    href = translatedProject
+      ? `${targetProjectsBase}/${translatedProject.id}`
+      : targetProjectsBase;
+  }
+}
+---
+<Button
+  href={href}
+  data-language-switcher
+  data-target-locale={targetLocale}
+  aria-label={`Switch to ${targetLocale.toUpperCase()}`}
+  variant="outline"
+  size="icon"
+  class="text-inherit text-xs"
+>
+  <span>{targetLocale.toUpperCase()}</span>
+</Button>
+<script is:inline>
+  document.addEventListener('astro:page-load', () => {
+    const links = document.querySelectorAll('[data-language-switcher]');
+
+    links.forEach((link) => {
+      link.addEventListener('click', () => {
+        const targetLocale = link.getAttribute('data-target-locale');
+        if (targetLocale) {
+          localStorage.setItem('preferredLanguage', targetLocale);
+        }
+      });
+    });
+  });
+</script>
