@@ -1,11 +1,11 @@
 ---
 locale: en
 projectId: portfolio-website
-title: Portfolio Website
 metaTitle: Portfolio Website | Visual Label
 metaDescription: A fast portfolio website built with Astro.
-client: Test client 1
-lead: Project with red background. Mauris quis erat varius ex sodales accumsan id ut nisl.
+title: Portfolio Website
+description: A fast portfolio website built with Astro.
+client: Nike
 cover: /images/projects/portfolio-en.jpg
 slug: project-name
 tags:

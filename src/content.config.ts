@@ -10,11 +10,11 @@ const projects = defineCollection({
   schema: z.object({
     locale: z.enum(['en', 'pl']),
     projectId: z.string(),
-    title: z.string(),
     metaTitle: z.string(),
     metaDescription: z.string(),
+    title: z.string(),
+    description: z.string(),
     client: z.string(),
-    lead: z.string(),
     cover: z.string().optional(),
     tags: z.array(z.string()).default([]),
   }),

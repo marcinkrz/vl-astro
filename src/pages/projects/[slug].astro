@@ -16,11 +16,11 @@ const { Content } = await render(project);
 ---
 
 <ProjectLayout
-  title={project.data.title}
   metaTitle={project.data.metaTitle}
   metaDescription={project.data.metaDescription}
+  title={project.data.title}
+  description={project.data.description}
   client={project.data.client}
-  lead={project.data.lead}
   cover={project.data.cover}
   tags={project.data.tags}
 >

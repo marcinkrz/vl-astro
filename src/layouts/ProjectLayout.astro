@@ -1,55 +1,63 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import { getT } from '@/i18n/messages';
+
+const locale = Astro.currentLocale === 'pl' ? 'pl' : 'en';
+const t = getT(locale);
 
 interface Props {
-  title: string;
   metaTitle: string;
   metaDescription: string;
+  title: string;
+  description: string;
   client: string;
-  lead: string;
   cover?: string;
   tags?: string[];
 }
 
 const {
-  title,
   metaTitle,
   metaDescription,
+  title,
+  description,
   client,
-  lead,
   cover,
   tags = [],
 } = Astro.props as Props;
 ---
-
 <BaseLayout title={metaTitle} description={metaDescription}>
-  <article class="container mx-auto py-12">
-    {cover && (
-      <img
-        src={cover}
-        alt={title}
-        class="mb-8 w-full rounded-2xl object-cover"
-      />
-    )}
-
-    <header class="max-w-3xl">
-      <p class="mb-3 text-sm text-[var(--muted)]">Client: {client}</p>
-      <h1 class="text-4xl font-semibold">{title}</h1>
-      <p class="mt-4 text-lg text-[var(--muted)]">{lead}</p>
-    </header>
-
-    <div class="prose mt-10 max-w-3xl">
+  <article>
+    <section class="relative w-full max-md:h-[calc(100svh-4rem)] overflow-hidden">
+      <div class="max-md:absolute inset-0 max-md:flex flex-col justify-end md:mt-32">
+        <header class="container mx-auto">
+          <h1 class="h1 mb-6">{title}</h1>
+          <p class="mb-6 text-[var(--muted)]">{description}</p>
+          <ul class="mt-6 mb-12 text-[var(--muted)]">
+            <li>{t('project.clientTitle')}: {client}</li>
+            {tags.length > 0 && (
+              <li>{t('project.clientTitle')}:
+                {tags.map((tag) => (
+                  <span class="text-[var(--foreground)]">
+                    {tag}
+                  </span>
+                ))}
+              </li>
+            )}
+          </ul>
+        </header>
+        <!-- {cover && (
+          <img
+            src={cover}
+            alt={title}
+            class="mb-8 w-full rounded-2xl object-cover"
+          />
+        )}-->
+        <div class="will-change-transform w-full pb-[75%] md:pb-[56.50%] lg:pb-[42.85%] flex bg-[var(--background-1)]"></div>
+      </div>
+    </section>
+    
+    <section class="container mx-auto my-12">
       <slot />
-    </div>
-
-    {tags.length > 0 && (
-      <footer class="mt-10 flex flex-wrap gap-2">
-        {tags.map((tag) => (
-          <span class="rounded-full border px-3 py-1 text-sm">
-            {tag}
-          </span>
-        ))}
-      </footer>
-    )}
+    </section>
   </article>
 </BaseLayout>
