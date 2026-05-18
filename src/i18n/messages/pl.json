@@ -6,5 +6,8 @@
   "nav.projects": "Projekty",
   "nav.studio": "Studio",
   "nav.contact": "Kontakt",
-  "switcher.label": "Zmień język"
+  "switcher.label": "Zmień język",
+  "footer.srDark": "Przełącz na ciemny motyw",
+  "footer.srLight": "Przełącz na jasny motyw",
+  "footer.srLocale": "Zmień język na angielski",
 }

@@ -3,10 +3,13 @@ import Button from '@/components/_ui/Button.astro';
 import { getCollection } from 'astro:content';
 import type { Locale } from '@/i18n/messages';
 import { getOtherLocale, getRoute } from '@/i18n/routes';
+import { getT } from '@/i18n/messages';
 
 const currentLocale = (Astro.currentLocale === 'pl' ? 'pl' : 'en') as Locale;
 const targetLocale = getOtherLocale(currentLocale);
 const currentPath = Astro.url.pathname;
+
+const t = getT(currentLocale);
 
 const routeCandidates = ['home', 'projects', 'studio', 'contact'] as const;
 
@@ -49,7 +52,8 @@ if (currentPath.startsWith(`${currentProjectsBase}/`)) {
   href={href}
   data-language-switcher
   data-target-locale={targetLocale}
-  aria-label={`Switch to ${targetLocale.toUpperCase()}`}
+  aria-label={t('footer.srLocale')}
+  title={t('footer.srLocale')}
   variant="outline"
   size="icon"
   class="text-inherit text-xs"
@@ -61,6 +65,9 @@ if (currentPath.startsWith(`${currentProjectsBase}/`)) {
     const links = document.querySelectorAll('[data-language-switcher]');
 
     links.forEach((link) => {
+      if (link.dataset.langSwitcherBound === '1') return;
+      link.dataset.langSwitcherBound = '1';
+
       link.addEventListener('click', () => {
         const targetLocale = link.getAttribute('data-target-locale');
         if (targetLocale) {

@@ -6,5 +6,8 @@
   "nav.projects": "Projects",
   "nav.studio": "Studio",
   "nav.contact": "Contact",
-  "switcher.label": "Switch language"
+  "switcher.label": "Switch language",
+  "footer.srDark": "Switch to dark theme",
+  "footer.srLight": "Switch to light theme",
+  "footer.srLocale": "Change language to Polish",
 }
