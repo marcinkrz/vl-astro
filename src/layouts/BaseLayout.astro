@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import { getT, type Locale } from '@/i18n/messages';
-import LanguageDetector from '@/components/LanguageDetector.astro';
+import LangDetect from '@/components/LangDetect.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
@@ -55,7 +55,7 @@ const pageDescription = description ?? defaultDescription;
     <ClientRouter />
 	</head>
   <body>
-    <LanguageDetector />
+    <LangDetect />
     <Header />
     <main>
       <slot />
