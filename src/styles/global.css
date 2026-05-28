@@ -35,6 +35,8 @@
   --muted: hsl(0, 0%, 48%);
   --muted-1: hsl(0, 0%, 44%);
   --border: hsl(0, 0%, 76%);
+
+  --focus: hsl(204, 90%, 45%);
 }
 
 [data-theme="dark"] {
@@ -68,6 +70,8 @@
   --muted: hsl(0, 0%, 64%);
   --muted-1: hsl(0, 0%, 68%);
   --border: hsl(0, 0%, 24%);
+
+  --info-border: hsl(204, 90%, 45%);
 }
 
 body {
@@ -75,8 +79,8 @@ body {
 }
 
 input:not([type="checkbox"]),
-textarea {
-  min-height: 2.5rem;
+select {
+  @apply h-10;
 }
 
 .container {

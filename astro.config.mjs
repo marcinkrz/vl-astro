@@ -2,7 +2,10 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  output: 'static',
+  output: 'server',
+  security: {
+    checkOrigin: true
+  },
   i18n: {
     locales: ['en', 'pl'],
     defaultLocale: 'en',

@@ -1,0 +1,51 @@
+---
+import '../styles/global.css';
+import Footer from '../components/Footer.astro';
+import Button from '../components/_ui/Button.astro';
+import { getT, type Locale } from '../i18n/messages';
+
+const locale = (Astro.currentLocale === 'pl' ? 'pl' : 'en') as Locale;
+const t = getT(locale);
+const pageTitle = 'Login';
+
+export const prerender =  false;
+
+if (Astro.request.method === "POST") {
+  const data = await Astro.request.formData();
+  const password = data.get("password");
+
+  if (password === import.meta.env.SITE_PASSWORD) {
+    Astro.cookies.set("site_auth", "true", {
+      path: "/",
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax"
+    });
+    return Astro.redirect("/");
+  }
+  
+}
+---
+        
+<!doctype html>
+<html lang={locale}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <link rel="canonical" href={Astro.url.href} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+	</head>
+  <body>
+    <main class="container">
+      <div class="h-[calc(100svh-66px)] flex items-center justify-center">
+        <form method="POST" class="space-y-2">
+          <input type="password" name="password" required class="flex w-full outline-0 ring-0 ring-[var(--focus)] border border-[var(--border)] focus-visible:border-[var(--focus)] focus-visible:ring-1 active:border-[var(--focus)] active:ring-1 px-4 placeholder:text-[var(--muted)]" />
+          <Button type="submit" variant="primary" class="w-full">Log in</Button>
+        </form>
+      </div>
+    </main>
+    <Footer />
+	</body>
+</html>

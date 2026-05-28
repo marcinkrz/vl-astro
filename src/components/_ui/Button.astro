@@ -10,12 +10,12 @@ const {
 } = Astro.props;
 
 const base =
-  "cursor-pointer inline-flex justify-center items-center tracking-wide leading-none whitespace-nowrap border border-transparent rounded-full transition-colors";
+  "cursor-pointer inline-flex justify-center items-center tracking-wide leading-none whitespace-nowrap border border-transparent transition-colors";
 
 const sizes = {
-  default: "text-base px-7 py-2.5",
-  sm: "text-sm !leading-none px-4 py-2",
-  icon: "min-w-[2rem] p-1.5",
+  default: "min-h-10 text-base px-7",
+  small: "min-h-8 text-sm !leading-none px-4",
+  icon: "min-w-[2rem] p-1.5 rounded-full",
 };
 
 const variants = {
