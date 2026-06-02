@@ -9,7 +9,8 @@ const projects = defineCollection({
   }),
   schema: z.object({
     locale: z.enum(['en', 'pl']),
-    projectId: z.string(),
+    projectKey: z.string(),
+    slug: z.string(),
     metaTitle: z.string(),
     metaDescription: z.string(),
     title: z.string(),

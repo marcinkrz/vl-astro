@@ -11,7 +11,7 @@ export async function getProjectSlugMap() {
     const translated = projects.find(
       (p) =>
         p.data.locale === 'pl' &&
-        p.data.projectId === project.data.projectId
+        p.data.slug === project.data.slug
     );
 
     if (translated) {

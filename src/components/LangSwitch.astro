@@ -37,9 +37,9 @@ if (currentPath.startsWith(`${currentProjectsBase}/`)) {
 
   if (currentProject) {
     const translatedProject = projects.find(
-      (entry) =>
-        entry.data.projectId === currentProject.data.projectId &&
-        entry.data.locale === targetLocale
+    (entry) =>
+      entry.data.projectKey === currentProject.data.projectKey &&
+      entry.data.locale === targetLocale
     );
 
     href = translatedProject

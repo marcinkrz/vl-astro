@@ -1,14 +1,10 @@
 import { defineConfig } from 'astro/config';
+import mdx from '@astrojs/mdx';
 import tailwindcss from '@tailwindcss/vite';
 import netlify from '@astrojs/netlify';
 
 export default defineConfig({
-  output: 'server',
-
-  security: {
-    checkOrigin: true
-  },
-
+  output: 'static',
   i18n: {
     locales: ['en', 'pl'],
     defaultLocale: 'en',
@@ -16,14 +12,12 @@ export default defineConfig({
       prefixDefaultLocale: false
     }
   },
-
+  integrations: [mdx()],
   vite: {
     plugins: [tailwindcss()]
   },
-
   devToolbar: {
     enabled: false
   },
-
   adapter: netlify()
 });
