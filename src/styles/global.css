@@ -5,12 +5,12 @@
   /* --primary: #e34f33; /* Red 17-1463TPG */
   --primary: #f4c522; /* Yellow P7-8C */
 
-  --background: hsl(0, 0%, 100%);
-  --background-t: hsla(0, 0%, 100%, 0.4);
-  --background-1: hsl(0, 0%, 96%);
-  --background-2: hsl(0, 0%, 92%);
-  --background-3: hsl(0, 0%, 88%);
-  --background-t-3: hsla(0, 0%, 88%, 0.8);
+  --background: hsl(0, 0%, 96%);
+  --background-t: hsla(0, 0%, 96%, 0.4);
+  --background-1: hsl(0, 0%, 92%);
+  --background-2: hsl(0, 0%, 88%);
+  --background-3: hsl(0, 0%, 84%);
+  --background-t-3: hsla(0, 0%, 84%, 0.8);
 
   --foreground: hsl(0, 0%, 10%);
   --foreground-1: hsl(0, 0%, 20%);
@@ -40,12 +40,12 @@
 }
 
 [data-theme="dark"] {
-  --background: hsl(0, 0%, 0%);
-  --background-t: hsla(0, 0%, 0%, 0.4);
-  --background-1: hsl(0, 0%, 12%);
-  --background-2: hsl(0, 0%, 16%);
-  --background-3: hsl(0, 0%, 20%);
-  --background-t-3: hsla(0, 0%, 20%, 0.8);
+  --background: hsl(0, 0%, 4%);
+  --background-t: hsla(0, 0%, 4%, 0.4);
+  --background-1: hsl(0, 0%, 16%);
+  --background-2: hsl(0, 0%, 20%);
+  --background-3: hsl(0, 0%, 24%);
+  --background-t-3: hsla(0, 0%, 24%, 0.8);
 
   --foreground: hsl(0, 0%, 95%);
   --foreground-1: hsl(0, 0%, 80%);
