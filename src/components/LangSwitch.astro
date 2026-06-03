@@ -26,20 +26,11 @@ const currentProjectsBase = getRoute(currentLocale, 'projects');
 const targetProjectsBase = getRoute(targetLocale, 'projects');
 
 if (currentPath.startsWith(`${currentProjectsBase}/`)) {
-  const currentSlug = currentPath.replace(`${currentProjectsBase}/`, '');
-  
-  console.log('PATH:', currentPath);
-  console.log('SLUG:', currentSlug);
+  const currentSlug = currentPath
+    .replace(`${currentProjectsBase}/`, '')
+    .replace(/\/$/, '');
 
   const projects = await getCollection('projects');
-  
-  console.log(
-    projects.map((p) => ({
-      id: p.id,
-      locale: p.data.locale,
-      projectKey: p.data.projectKey,
-    }))
-  );
 
   const currentProject = projects.find(
     (entry) =>

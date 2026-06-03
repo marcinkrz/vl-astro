@@ -1,7 +1,6 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import tailwindcss from '@tailwindcss/vite';
-import netlify from '@astrojs/netlify';
 
 export default defineConfig({
   output: 'static',
@@ -18,6 +17,5 @@ export default defineConfig({
   },
   devToolbar: {
     enabled: false
-  },
-  adapter: netlify()
+  }
 });
