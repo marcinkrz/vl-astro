@@ -7,7 +7,7 @@ import { getT } from '@/i18n/messages';
 
 const currentLocale = (Astro.currentLocale === 'pl' ? 'pl' : 'en') as Locale;
 const targetLocale = getOtherLocale(currentLocale);
-const currentPath = Astro.url.pathname;
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
 
 const t = getT(currentLocale);
 
