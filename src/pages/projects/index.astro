@@ -20,9 +20,9 @@ projects.sort((a, b) =>
         <li>
           <a href={`/projects/${project.id}`}>
             <article>
-              <h2 class="h2 mb-2">{project.data.title}</h2>
-              <p>{project.data.description}</p>
-              <img src={project.data.cover} alt={project.data.title} />
+              <h2 transition:name={`project-title-${project.data.slug}`} class="h2 mb-2">{project.data.title}</h2>
+              <p transition:name={`project-desc-${project.data.slug}`}>{project.data.description}</p>
+              <img transition:name={`project-cover-${project.data.slug}`} src={project.data.cover} alt={project.data.title} />
             </article>
           </a>
         </li>

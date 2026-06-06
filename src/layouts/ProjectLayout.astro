@@ -13,6 +13,7 @@ interface Props {
   client: string;
   cover?: string;
   tags?: string[];
+  slug?: string;
 }
 
 const {
@@ -23,15 +24,19 @@ const {
   client,
   cover,
   tags = [],
+  slug,
 } = Astro.props as Props;
 ---
 <BaseLayout title={metaTitle} description={metaDescription}>
-  <article>
-    <section class="relative w-full max-md:h-[calc(100svh-3rem)] overflow-hidden">
-      <div class="max-md:absolute inset-0 max-md:flex flex-col justify-end md:mt-32">
-        <header class="container mx-auto">
-          <h1 class="display mb-1">{title}</h1>
-          <p class="mb-6 text-[var(--muted)]">{description}</p>
+  <main class="container">
+    <article>
+      <section class="relative w-full max-md:h-[calc(100svh-3rem)] overflow-hidden">
+        <div class="max-md:absolute inset-0 max-md:flex flex-col justify-end md:mt-32">
+          <h1 transition:name={`project-title-${slug}`} class="display mb-1">{title}</h1>
+          <p transition:name={`project-desc-${slug}`} class="mb-6 text-[var(--muted)]">{description}</p>
+          {cover && (
+            <img transition:name={`project-cover-${slug}`} src={cover} alt={title} class="mb-2 w-full object-cover" />
+          )}
           <ul class="mt-6 mb-12 text-[var(--muted)]">
             <li>{t('project.clientTitle')}: {client}</li>
             {tags.length > 0 && (
@@ -44,14 +49,11 @@ const {
               </li>
             )}
           </ul>
-          {cover && (
-            <img src={cover} alt={title} class="mb-2 w-full object-cover" />
-          )}
-        </header>
-      </div>
-    </section>
-    <section class="container mx-auto my-12">
-      <slot />
-    </section>
-  </article>
+        </div>
+      </section>
+      <section class="my-12">
+        <slot />
+      </section>
+    </article>
+  </main>
 </BaseLayout>
