@@ -8,6 +8,8 @@ const projects = defineCollection({
     pattern: '**/*.{md,mdx}',
   }),
   schema: z.object({
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
     locale: z.enum(['en', 'pl']),
     projectKey: z.string(),
     slug: z.string(),

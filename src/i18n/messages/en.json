@@ -10,6 +10,8 @@
   "footer.srDark": "Switch to dark theme",
   "footer.srLight": "Switch to light theme",
   "footer.srLocale": "Change language to Polish",
+  "projects.title": "Projects",
+  "projects.description": "A selection of projects I've worked on, showcasing my skills.",
   "project.clientTitle": "Client",
   "project.tagsTitle": "Tags"
 }

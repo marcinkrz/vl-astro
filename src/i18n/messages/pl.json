@@ -10,6 +10,8 @@
   "footer.srDark": "Przełącz na ciemny motyw",
   "footer.srLight": "Przełącz na jasny motyw",
   "footer.srLocale": "Zmień język na angielski",
+  "projects.title": "Projekty",
+  "projects.description": "Wybór projektów, nad którymi pracowałem, prezentujące moje umiejętności.",
   "project.clientTitle": "Klient",
   "project.tagsTitle": "Tagi"
 }

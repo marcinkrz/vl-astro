@@ -14,6 +14,7 @@ interface Props {
   cover?: string;
   tags?: string[];
   slug?: string;
+  pubDate?: Date;
 }
 
 const {
@@ -25,33 +26,41 @@ const {
   cover,
   tags = [],
   slug,
+  pubDate,
 } = Astro.props as Props;
 ---
 <BaseLayout title={metaTitle} description={metaDescription}>
-  <main class="container">
+  <main class="container my-24">
     <article>
-      <section class="relative w-full max-md:h-[calc(100svh-3rem)] overflow-hidden">
-        <div class="max-md:absolute inset-0 max-md:flex flex-col justify-end md:mt-32">
-          <h1 transition:name={`project-title-${slug}`} class="display mb-1">{title}</h1>
-          <p transition:name={`project-desc-${slug}`} class="mb-6 text-[var(--muted)]">{description}</p>
-          {cover && (
-            <img transition:name={`project-cover-${slug}`} src={cover} alt={title} class="mb-2 w-full object-cover" />
-          )}
-          <ul class="mt-6 mb-12 text-[var(--muted)]">
-            <li>{t('project.clientTitle')}: {client}</li>
-            {tags.length > 0 && (
-              <li>{t('project.clientTitle')}:
-                {tags.map((tag) => (
-                  <span class="text-[var(--foreground)]">
-                    {tag}
-                  </span>
-                ))}
-              </li>
-            )}
-          </ul>
+      <header>
+        {cover && (
+          <img transition:name={`project-cover-${slug}`} src={cover} alt={title} class="w-full object-cover" />
+        )}
+        <div class="my-3 flex justify-between items-start">
+          <h1 transition:name={`project-title-${slug}`} class="h3">{title}</h1>
+          <p class="text-[var(--muted)]">
+            {pubDate ? pubDate.toLocaleDateString(locale, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              }) : null}
+          </p>
         </div>
-      </section>
-      <section class="my-12">
+        <p transition:name={`project-desc-${slug}`} class="mb-6 text-[var(--muted)]">{description}</p>
+        <ul class="text-[var(--muted)]">
+          <li>{t('project.clientTitle')}: {client}</li>
+          {tags.length > 0 && (
+            <li>{t('project.tagsTitle')}:
+              {tags.map((tag, index) => (
+                <span>
+                  <span class="text-[var(--foreground)]">{tag}</span>{index < tags.length - 1 ? ', ' : ''}
+                </span>
+              ))}
+            </li>
+          )}
+        </ul>
+      </header>
+      <section class="my-24">
         <slot />
       </section>
     </article>

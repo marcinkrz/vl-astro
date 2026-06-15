@@ -1,32 +1,56 @@
 ---
+import { getT } from '@/i18n/messages';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+
+const locale = Astro.currentLocale === 'pl' ? 'pl' : 'en';
+const t = getT(locale);
 
 const projects = await getCollection(
   'projects',
   ({ data }) => data.locale === 'pl'
 );
 
-// opcjonalnie sortowanie
 projects.sort((a, b) =>
-  a.data.title.localeCompare(b.data.title, 'pl')
+  b.data.pubDate.getTime() - a.data.pubDate.getTime()
 );
 ---
 <BaseLayout>
-  <main class="container">
-    <h1 class="h1 mb-4">Projekty</h1>
-    <ul>
-      {projects.map((project) => (
-        <li>
-          <a href={`/pl/projekty/${project.id}`}>
-            <article>
-              <h2 transition:name={`project-title-${project.data.slug}`} class="h2 mb-2">{project.data.title}</h2>
-              <p transition:name={`project-desc-${project.data.slug}`}>{project.data.description}</p>
-              <img transition:name={`project-cover-${project.data.slug}`} src={project.data.cover} alt={project.data.title} />
-            </article>
-          </a>
-        </li>
-      ))}
+  <main class="container my-24">
+    <h1 class="display mb-3">
+      {t("projects.title")}
+    </h1>
+    <p class="text-lg text-[var(--muted)] mb-24">
+      {t("projects.description")}
+    </p>
+    <ul class="space-y-8 mb-24">
+      {
+        projects.map((project) => (
+          <li>
+            <a href={`/pl/projekty/${project.id}`}>
+              <article>
+                <img
+                  transition:name={`project-cover-${project.data.slug}`}
+                  src={project.data.cover}
+                  alt={project.data.title}
+                />
+                <div class="grid grid-cols-4 gap-2">
+                  <h2
+                    class="h4"
+                    transition:name={`project-title-${project.data.slug}`}
+                  >{project.data.title}</h2>
+                  <p
+                    class="col-span-3 text-[var(--muted)]"
+                    transition:name={`project-desc-${project.data.slug}`}
+                  >
+                    {project.data.description}
+                  </p>
+                </div>
+              </article>
+            </a>
+          </li>
+        ))
+      }
     </ul>
   </main>
 </BaseLayout>
