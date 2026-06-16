@@ -8,14 +8,17 @@ import Logo from './_ui/Logo.astro';
 const locale = (Astro.currentLocale === 'pl' ? 'pl' : 'en') as Locale;
 const t = getT(locale);
 ---
-
-<header class="relative z-[100] container h-12 mx-auto pt-2 grid grid-cols-[1fr_auto_auto] items-start gap-x-2 leading-none">
-  <Logo />
-  <LangSwitch />
-  <Button
-    href={getRoute(locale, 'contact')}
-    variant="primary"
-    size="small"
-    class=""
-  >{t('nav.contact')}</Button>
+<header class="container">
+  <div class="fixed z-[101] top-2 mix-blend-difference">
+    <Logo />
+  </div>
+  <div class="fixed z-[100] top-2 right-2 md:right-4 lg:right-6 w-full flex justify-end gap-x-1">
+    <LangSwitch />
+    <Button
+      href={getRoute(locale, 'contact')}
+      variant="primary"
+      size="small"
+      class=""
+    >{t('nav.contact')}</Button>
+  </div>
 </header>
