@@ -12,6 +12,7 @@
   "footer.srLocale": "Change language to Polish",
   "projects.title": "Projects",
   "projects.description": "A selection of projects I've worked on, showcasing my skills.",
+  "projects.btnTitle": "All projects",
   "project.clientTitle": "Client",
   "project.tagsTitle": "Tags"
 }

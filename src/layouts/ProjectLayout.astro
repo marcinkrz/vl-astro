@@ -38,7 +38,7 @@ const {
         )}
         <div class="my-3 flex justify-between items-start">
           <h1 transition:name={`project-title-${slug}`} class="h3">{title}</h1>
-          <p class="text-[var(--muted)]">
+          <p>
             {pubDate ? pubDate.toLocaleDateString(locale, {
                 year: 'numeric',
                 month: 'short',
@@ -46,8 +46,11 @@ const {
               }) : null}
           </p>
         </div>
-        <p transition:name={`project-desc-${slug}`} class="mb-6 text-[var(--muted)]">{description}</p>
-        <ul class="text-[var(--muted)]">
+        <p
+          transition:name={`project-desc-${slug}`}
+          class="mb-6"
+        >{description}</p>
+        <ul>
           <li>{t('project.clientTitle')}: {client}</li>
           {tags.length > 0 && (
             <li>{t('project.tagsTitle')}:

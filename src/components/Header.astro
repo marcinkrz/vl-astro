@@ -1,40 +1,21 @@
 ---
 import { getT, type Locale } from '@/i18n/messages';
 import { getRoute } from '@/i18n/routes';
+import LangSwitch from './LangSwitch.astro';
+import Button from './_ui/Button.astro';
+import Logo from './_ui/Logo.astro';
 
 const locale = (Astro.currentLocale === 'pl' ? 'pl' : 'en') as Locale;
 const t = getT(locale);
-
-const pathname = Astro.url.pathname;
-
-const items = [
-  { key: 'projects', href: getRoute(locale, 'projects'), label: t('nav.projects') },
-  { key: 'studio', href: getRoute(locale, 'studio'), label: t('nav.studio') },
-  { key: 'contact', href: getRoute(locale, 'contact'), label: t('nav.contact') },
-] as const;
-
-const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 ---
 
-<header class="relative z-[100] container mx-auto">
-  <div class="h-12 pt-2 flex justify-between leading-none">
-    <a href={getRoute(locale, 'home')}>Visual Label</a>
-    <nav>
-      <ul class="flex gap-4">
-        {items.map((item) => (
-          <li>
-            <a
-              href={item.href}
-              aria-current={isActive(item.href) ? 'page' : undefined}
-              class:list={{
-                'text-[var(--foreground)]': isActive(item.href),
-                'text-[var(--muted)]': !isActive(item.href),
-              }}
-            >
-              {item.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-  </div>
+<header class="relative z-[100] container h-12 mx-auto pt-2 grid grid-cols-[1fr_auto_auto] items-start gap-x-2 leading-none">
+  <Logo />
+  <LangSwitch />
+  <Button
+    href={getRoute(locale, 'contact')}
+    variant="primary"
+    size="small"
+    class=""
+  >{t('nav.contact')}</Button>
 </header>

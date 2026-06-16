@@ -1,0 +1,162 @@
+---
+import { type Locale } from '@/i18n/messages';
+const locale = (Astro.currentLocale === 'pl' ? 'pl' : 'en') as Locale;
+import { getRoute } from '@/i18n/routes';
+---
+<a
+  href={getRoute(locale, 'home')}
+  class="logo-container"
+  aria-label="Visual Label"
+>
+  <svg
+    class="logo-loader absolute w-auto h-8 fill-[var(--foreground)]"
+    xmlns="http://www.w3.org/2000/svg"
+    fill-rule="evenodd"
+    stroke-linejoin="round"
+    stroke-miterlimit="2"
+    clip-rule="evenodd"
+    viewBox="0 0 23 30"
+  >
+    <path
+      class="origin-[6.1px_7px]"
+      fill-rule="nonzero"
+      d="M3.235 11.193V0H0v14h5.115l6.992-14H8.554L3.235 11.193z"
+    />
+    <path
+      class="origin-[18px_7px] animate-rotateTR"
+      fill-rule="nonzero"
+      d="M19.61 2.832v11.162H23V-.008H12.924v2.84h6.685z"
+    />
+    <path
+      class="origin-[5px_23px] animate-rotateTL"
+      fill-rule="nonzero"
+      d="M3.385 27.169V16.006H-.007V30.01h10.098v-2.84H3.385z"
+    />
+    <path
+      class="origin-[17.9px_23px] animate-rotateBR"
+      fill-rule="nonzero"
+      d="M19.61 27.169V16.006H23V30.01H12.924v-2.84h6.685z"
+    />
+  </svg>
+
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill-rule="evenodd"
+    stroke-linejoin="round"
+    stroke-miterlimit="2"
+    clip-rule="evenodd"
+    viewBox="0 0 68 30"
+    class="logo-full logomark hidden w-auto h-8 fill-[var(--foreground)]"
+  >
+    <path
+      class="logomark__t1 origin-[6px_7px]"
+      fill-rule="nonzero"
+      d="M3.235 11.193V0H0v14h5.115l6.992-14H8.554L3.235 11.193z"
+    />
+    <path
+      class="logomark__t2 origin-[14.6px_7px]"
+      style="transform: translateX(-10px)"
+      fill-rule="nonzero"
+      d="M12.997.007h3.237v13.996h-3.237z"
+    />
+    <path
+      class="logomark__t3 origin-[23.8px_7px]"
+      style="transform: translateX(-20px)"
+      fill-rule="nonzero"
+      d="M25.538 5.6l-2.208-.335c-1.144-.138-1.913-.493-1.913-1.243 0-.67.512-1.36 2.307-1.38 1.499 0 2.524.65 2.524 1.755h3.274c0-2.702-1.932-4.398-5.877-4.398-3.905 0-5.62 1.854-5.62 4.141 0 2.091 1.36 3.748 4.575 4.182l2.189.295c.828.099 1.696.257 1.696 1.302 0 .77-.789 1.4-2.722 1.42-1.735.04-2.74-.73-2.74-1.814h-3.354c0 2.78 1.992 4.476 6.233 4.476 4.141 0 5.995-1.814 5.995-4.338 0-2.781-1.795-3.708-4.359-4.063z"
+    />
+    <path
+      class="logomark__t4 origin-[37.1px_7px]"
+      style="transform: translateX(-33px)"
+      fill-rule="nonzero"
+      d="M43.216 7.737V.007h-3.274V7.52c0 2.604-1.341 3.491-2.82 3.491-1.48 0-2.82-.907-2.82-3.53V.006h-3.294v7.81c0 4.26 2.78 5.996 6.074 5.996 3.254 0 6.134-1.913 6.134-6.075z"
+    />
+    <path
+      class="logomark__t5 origin-[50.8px_7px]"
+      style="transform: translateX(-46px)"
+      fill-rule="nonzero"
+      d="M54.627 13.995H58.3L52.963-.008h-4.302l-5.418 14.003h3.55l1.117-3.146h5.621l1.096 3.146zm-5.844-5.662L50.08 4.66c.224-.67.447-1.461.65-2.172.223.71.446 1.502.65 2.172l1.278 3.673h-3.876z"
+    />
+    <path
+      class="logomark__t6 origin-[63.1px_7px]"
+      style="transform: translateX(-44px)"
+      fill-rule="nonzero"
+      d="M64.614 2.832v11.162h3.393V-.008H57.909v2.84h6.705z"
+    />
+    <path
+      class="logomark__b1 origin-[5.1px_23px]"
+      fill-rule="nonzero"
+      d="M3.385 27.169V16.006H-.007V30.01h10.098v-2.84H3.385z"
+    />
+    <path
+      class="logomark__b2 origin-[18.5px_23px]"
+      style="transform: translateX(-12px)"
+      fill-rule="nonzero"
+      d="M22.3 30.007h3.673l-5.338-14.003h-4.302l-5.418 14.003h3.551l1.116-3.146h5.622l1.096 3.146zm-5.845-5.662l1.299-3.673c.223-.67.446-1.462.65-2.172.222.71.446 1.502.649 2.172l1.278 3.673h-3.876z"
+    />
+    <path
+      class="logomark__b3 origin-[33.5px_23px]"
+      style="transform: translateX(-25px)"
+      fill-rule="nonzero"
+      d="M37.079 22.397c1.177-.589 1.786-1.624 1.786-2.963 0-2.172-1.624-3.43-5.013-3.43H27.46v14.003h7.001c3.247 0 5.134-1.563 5.134-4.059 0-1.867-.77-3.044-2.516-3.551zm-3.734-3.694c1.278 0 2.03.305 2.03 1.32 0 1.014-.468 1.542-2.07 1.542h-2.456v-2.862h2.496zm.852 8.605H30.85V24.06h3.145c1.441 0 2.05.507 2.05 1.522 0 1.116-.67 1.725-1.847 1.725z"
+    />
+    <path
+      class="logomark__b4 origin-[46.1px_23px]"
+      style="transform: translateX(-38px)"
+      fill-rule="nonzero"
+      d="M44.384 27.206v-2.942h6.19v-2.74h-6.19v-2.72h6.779v-2.8H40.995v14.003h10.31v-2.8h-6.92z"
+    />
+    <path
+      class="logomark__b5 origin-[63px_23px]"
+      style="transform: translateX(-44px)"
+      fill-rule="nonzero"
+      d="M64.614 27.169V16.006h3.393V30.01H57.909v-2.84h6.705z"
+    />
+  </svg>
+</a>
+
+<style is:global>
+  .logomark {
+    background: none;
+    transition: fill 0.3s;
+  }
+  .logomark path {
+    transition: transform 0.3s ease, opacity 0.2s ease 0.1s;
+    opacity: 1;
+  }
+  .logomark path:not(.logomark__t1, .logomark__t6, .logomark__b1, .logomark__b5) {
+    opacity: 0;
+  }
+  .logomark.anim-in > path {
+    transform: translateX(0px) !important;
+  }
+  .logomark.anim-in > path:not(.logomark__t1, .logomark__t6, .logomark__b1, .logomark__b5) {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const containers = document.querySelectorAll('.logo-container');
+
+    containers.forEach((container) => {
+      const loader = container.querySelector('.logo-loader');
+      const full = container.querySelector('.logo-full');
+
+      if (!loader || !full) return;
+
+      loader.classList.remove('hidden');
+      full.classList.add('hidden');
+      full.classList.remove('anim-in');
+
+      setTimeout(() => {
+        full.classList.remove('hidden');
+      }, 360);
+
+      setTimeout(() => {
+        loader.classList.add('hidden');
+        full.classList.add('anim-in');
+      }, 400);
+    });
+  });
+</script>
