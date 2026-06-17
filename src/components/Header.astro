@@ -23,28 +23,43 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
     <Logo />
     <Button
       id="menu-toggle"
-      variant="primary"
-      size="small"
-      class="md:hidden font-semibold bg-white text-black hover:bg-black hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:bg-black active:text-white"
-    >Menu</Button>
+      variant="ghost"
+      size="icon"
+      aria-label="Menu"
+      class={`md:hidden relative p-0 w-8 h-8 hover:bg-transparent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:bg-transparent`}
+    >
+      <span class={
+        `before:block before:absolute before:w-8 before:h-[3px] before:bg-white
+        before:top-[0%] before:left-[50%] before:-translate-x-1/2
+        data-active:before:top-[50%] data-active:before:rotate-[-45deg] data-active:before:translate-y-[-50%]
+        data-active:before:translate-[-50%]
+        before:transition-all before:duration-200 before:ease-in-out
+
+        after:block after:absolute after:w-8 after:h-[3px] after:bg-white
+        after:top-[30%] after:left-[50%] after:-translate-x-1/2
+        data-active:after:top-[50%] data-active:after:rotate-45 data-active:after:translate-y-[-50%]
+        data-active:after:translate-[-50%]
+        after:transition-all after:duration-200 after:ease-in-out
+        `}></span>
+    </Button>
   </div>
   <nav id="menu-items" class="hidden fixed top-0 inset-x-0 h-[100svh] bg-[var(--foreground)] text-[var(--background)] z-[100]">
     <ul class="mt-[30vh] flex flex-col gap-4 text-center">
       {items.map((item) => (
         <li>
-          <a href={item.href} class="display">
+          <a href={item.href} class="text-[4rem] font-semibold">
             {item.label}
           </a>
         </li>
       ))}
-      <li class="mt-12">
+      <li class="mt-12 mix-blend-difference">
         <LangSwitch />
       </li>
     </ul>
   </nav>
   <div class="hidden md:flex gap-x-4 fixed z-[100] top-2 right-2 md:right-4 lg:right-6 w-full justify-end">
     <nav>
-      <ul class="flex h-full items-center gap-4">
+      <ul class="flex h-full items-center gap-4 font-semibold">
         {items.map((item) => (
           <li>
             <a
@@ -70,6 +85,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
     const menuItems = document.getElementById('menu-items');
 
     toggleButton?.addEventListener('click', () => {
+      document.querySelector('#menu-toggle > span').toggleAttribute('data-active');
       menuItems?.classList.toggle('hidden');
     });
   });

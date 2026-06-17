@@ -30,8 +30,8 @@ const {
 } = Astro.props as Props;
 ---
 <BaseLayout title={metaTitle} description={metaDescription}>
-  <main class="container mt-12 mb-24">
-    <article>
+  <main class="container mt-16">
+    <article class="space-y-24">
       <header>
         <div class="pb-[75%] relative overflow-hidden"> 
           {cover && (
@@ -49,11 +49,18 @@ const {
         <p class="my-6 h2">{description}</p>
 
         <ul class="text-sm">
-          <li class="grid grid-cols-[4rem_auto]">
-            <span>{t('project.clientTitle')}:</span> {client}
+          <li class="grid grid-cols-[3rem_auto]">
+            <span>{t('project.clientTitle')}:</span>
+            {client}
+          </li>
+          <li class="grid grid-cols-[3rem_auto]">
+            <span>{t('project.yearTitle')}:</span>
+            {pubDate ? pubDate.toLocaleDateString(locale, {
+              year: 'numeric'
+            }) : null}
           </li>
           {tags.length > 0 && (
-            <li class="grid grid-cols-[4rem_auto]">
+            <li class="grid grid-cols-[3rem_auto]">
               {t('project.tagsTitle')}:
               <span>
                 {tags.map((tag, index) => (
@@ -64,33 +71,9 @@ const {
               </span>
             </li>
           )}
-          <li class="grid grid-cols-[4rem_auto]">
-            <span>{t('project.yearTitle')}:</span>
-            {pubDate ? pubDate.toLocaleDateString(locale, {
-              year: 'numeric'
-            }) : null}
-          </li>
         </ul>
       </header>
-
-      <section class="relative z-1 py-6 bg-[var(--background)]">
-        <slot />
-      </section>
-
-      <footer class="relative z-1 pt-6 pb-24 bg-[var(--background)] text-sm">
-        <ul>
-          <li>{t('project.clientTitle')}: {client}</li>
-          {tags.length > 0 && (
-            <li>{t('project.tagsTitle')}:
-              {tags.map((tag, index) => (
-                <span>
-                  <span class="text-[var(--foreground)]">{tag}</span>{index < tags.length - 1 ? ', ' : ''}
-                </span>
-              ))}
-            </li>
-          )}
-        </ul>
-      </footer>
+      <slot />
     </article>
   </main>
 </BaseLayout>
