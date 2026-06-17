@@ -7,18 +7,70 @@ import Logo from './_ui/Logo.astro';
 
 const locale = (Astro.currentLocale === 'pl' ? 'pl' : 'en') as Locale;
 const t = getT(locale);
+
+const pathname = Astro.url.pathname;
+
+const items = [
+  { key: 'projects', href: getRoute(locale, 'projects'), label: t('nav.projects') },
+  { key: 'studio', href: getRoute(locale, 'studio'), label: t('nav.studio') },
+  { key: 'contact', href: getRoute(locale, 'contact'), label: t('nav.contact') },
+] as const;
+
+const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 ---
 <header class="container">
-  <div class="fixed z-[101] top-2 mix-blend-difference">
+  <div class="fixed z-[101] top-2 max-md:inset-x-2 flex justify-between mix-blend-difference contrast-[2]">
     <Logo />
-  </div>
-  <div class="fixed z-[100] top-2 right-2 md:right-4 lg:right-6 w-full flex justify-end gap-x-1">
-    <LangSwitch />
     <Button
-      href={getRoute(locale, 'contact')}
+      id="menu-toggle"
       variant="primary"
       size="small"
-      class=""
-    >{t('nav.contact')}</Button>
+      class="md:hidden font-semibold bg-white text-black hover:bg-black hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:bg-black active:text-white"
+    >Menu</Button>
+  </div>
+  <nav id="menu-items" class="hidden fixed top-0 inset-x-0 h-[100svh] bg-[var(--foreground)] text-[var(--background)] z-[100]">
+    <ul class="mt-[30vh] flex flex-col gap-4 text-center">
+      {items.map((item) => (
+        <li>
+          <a href={item.href} class="display">
+            {item.label}
+          </a>
+        </li>
+      ))}
+      <li class="mt-12">
+        <LangSwitch />
+      </li>
+    </ul>
+  </nav>
+  <div class="hidden md:flex gap-x-4 fixed z-[100] top-2 right-2 md:right-4 lg:right-6 w-full justify-end">
+    <nav>
+      <ul class="flex h-full items-center gap-4">
+        {items.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+              class:list={{
+                'text-[var(--foreground)]': isActive(item.href),
+                'text-[var(--muted)]': !isActive(item.href),
+              }}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <LangSwitch />
   </div>
 </header>
+<script is:inline>
+  document.addEventListener('astro:page-load', () => {
+    const toggleButton = document.getElementById('menu-toggle');
+    const menuItems = document.getElementById('menu-items');
+
+    toggleButton?.addEventListener('click', () => {
+      menuItems?.classList.toggle('hidden');
+    });
+  });
+</script>

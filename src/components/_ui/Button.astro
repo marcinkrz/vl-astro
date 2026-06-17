@@ -14,7 +14,7 @@ const base =
 
 const sizes = {
   default: "min-h-10 px-6 text-base",
-  small: "min-h-6 px-3 text-sm !leading-none",
+  small: "h-6 px-3 text-sm !leading-none",
   icon: "min-h-8 min-w-[2rem] px-1 text-sm",
 } as const;
 
@@ -23,7 +23,7 @@ const variants = {
   secondary: `text-[var(--foreground)] border-[var(--foreground)] hover:bg-[var(--foreground-1)] hover:text-[var(--background)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground-1)] active:bg-[var(--foreground-1)] active:text-[var(--background)]`,
   outline: `bg-transparent border-[var(--border)] text-[var(--foreground-1)] hover:border-[var(--foreground)] hover:text-[var(--foreground)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] focus-visible:border-transparent active:border-[var(--foreground)] active:text-[var(--foreground)]`,
   ghost: `bg-transparent text-[var(--foreground)] hover:bg-[var(--background-3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--background-3)] active:bg-[var(--background-3)]`,
-  link: `min-h-auto p-0 bg-transparent text-[var(--foreground)] hover:text-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--background-3)] active:text-underline`,
+  link: `text-inherit font-semibold min-h-auto p-0 bg-transparent text-[var(--foreground)] decoration-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--background-3)] active:underline`,
 } as const;
 
 const classes = cn(

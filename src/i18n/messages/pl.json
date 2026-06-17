@@ -14,5 +14,6 @@
   "projects.description": "Wybór projektów, nad którymi pracowałem, prezentujące moje umiejętności.",
   "projects.btnTitle": "Wszystkie projekty",
   "project.clientTitle": "Klient",
-  "project.tagsTitle": "Tagi"
+  "project.tagsTitle": "Tagi",
+  "project.yearTitle": "Rok"
 }
