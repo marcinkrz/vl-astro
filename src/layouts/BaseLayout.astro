@@ -5,6 +5,7 @@ import { getT, type Locale } from '@/i18n/messages';
 import LangDetect from '@/components/LangDetect.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { fade } from "astro:transitions";
 
 interface Props {
   title?: string;
@@ -35,7 +36,7 @@ const pageTitle = title ? `${title} | ${siteName}` : defaultTitle;
 const pageDescription = description ?? defaultDescription;
 ---
 <!doctype html>
-<html lang={locale}>
+<html lang={locale} transition:name="root" transition:animate="none">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -57,7 +58,9 @@ const pageDescription = description ?? defaultDescription;
   <body>
     <LangDetect />
     <Header />
-    <slot />
+    <main transition:animate={fade({ duration: "0.3s" })}>
+      <slot />
+    </main>
     <Footer />
 	</body>
 </html>

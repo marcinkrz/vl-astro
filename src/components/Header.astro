@@ -26,25 +26,61 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
       variant="ghost"
       size="icon"
       aria-label="Menu"
-      class={`md:hidden relative p-0 w-8 h-8 hover:bg-transparent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:bg-transparent`}
+      class={`md:hidden relative p-0 w-12 h-12 -mt-2 hover:bg-transparent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:bg-transparent
+      group
+      `}
     >
       <span class={
-        `before:block before:absolute before:w-8 before:h-[3px] before:bg-white
-        before:top-[0%] before:left-[50%] before:-translate-x-1/2
-        data-active:before:top-[50%] data-active:before:rotate-[-45deg] data-active:before:translate-y-[-50%]
-        data-active:before:translate-[-50%]
-        before:transition-all before:duration-200 before:ease-in-out
+        `before:block before:absolute before:w-3/4 before:h-1 before:bg-white
+        before:top-2 before:right-0
+        group-[.is-active]:before:w-3/4
+        group-[.is-active]:before:top-[50%]
+        group-[.is-active]:before:-right-5
+        group-[.is-active]:before:rotate-[135deg]
+        group-[.is-active]:before:translate-[-50%]
+        before:transition-all before:duration-400 before:ease-in-out
 
-        after:block after:absolute after:w-8 after:h-[3px] after:bg-white
-        after:top-[30%] after:left-[50%] after:-translate-x-1/2
-        data-active:after:top-[50%] data-active:after:rotate-45 data-active:after:translate-y-[-50%]
-        data-active:after:translate-[-50%]
-        after:transition-all after:duration-200 after:ease-in-out
-        `}></span>
+        after:block after:absolute after:w-3/4 after:h-1 after:bg-white
+        after:top-9 after:right-0
+        group-[.is-active]:after:w-3/4
+        group-[.is-active]:after:top-[50%]
+        group-[.is-active]:after:-right-5
+        group-[.is-active]:after:rotate-[225deg]
+        group-[.is-active]:after:translate-[-50%]
+        after:transition-all after:duration-400 after:ease-in-out
+        `}>
+          <span class={`
+          block absolute w-3/4 h-1 bg-white
+          top-4 right-0
+          group-[.is-active]:w-1
+          group-[.is-active]:top-[50%]
+          group-[.is-active]:right-3
+          group-[.is-active]:rotate-[360deg]
+          group-[.is-active]:-translate-y-1/2
+          transition-all duration-400 ease-in-out
+          `}></span>
+        </span>
     </Button>
   </div>
-  <nav id="menu-items" class="hidden fixed top-0 inset-x-0 h-[100svh] bg-[var(--foreground)] text-[var(--background)] z-[100]">
-    <ul class="mt-[30vh] flex flex-col gap-4 text-center">
+
+  <nav
+    id="menu-items"
+    class={`
+      fixed z-[100] top-0 inset-x-0 h-[100svh] text-white
+      invisible
+      [.is-active]:visible
+      transition-visible duration-300
+      group
+    `}>
+    <ul class={`
+      relative z-1 mt-[30vh] flex flex-col gap-4 text-center
+      opacity-0
+      translate-y-4
+      group-[.is-active]:opacity-100
+      group-[.is-active]:translate-y-0
+      transition-all duration-300
+      mix-blend-difference
+    `}>
       {items.map((item) => (
         <li>
           <a href={item.href} class="text-[4rem] font-semibold">
@@ -52,11 +88,18 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
           </a>
         </li>
       ))}
-      <li class="mt-12 mix-blend-difference">
+      <li class="mt-12">
         <LangSwitch />
       </li>
     </ul>
+    <div class={`
+      absolute inset-0 bg-[var(--background)]
+      opacity-0
+      group-[.is-active]:opacity-100
+      transition-opacity duration-300
+    `}></div>
   </nav>
+
   <div class="hidden md:flex gap-x-4 fixed z-[100] top-2 right-2 md:right-4 lg:right-6 w-full justify-end">
     <nav>
       <ul class="flex h-full items-center gap-4 font-semibold">
@@ -85,8 +128,8 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
     const menuItems = document.getElementById('menu-items');
 
     toggleButton?.addEventListener('click', () => {
-      document.querySelector('#menu-toggle > span').toggleAttribute('data-active');
-      menuItems?.classList.toggle('hidden');
+      toggleButton?.classList.toggle('is-active');
+      menuItems?.classList.toggle('is-active');
     });
   });
 </script>
