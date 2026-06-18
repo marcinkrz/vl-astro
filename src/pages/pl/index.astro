@@ -23,7 +23,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
     <section class="-mt-12 pb-12 h-[75vh] flex items-end border-b border-[var(--border)]">
       <h1 class="h1 text-pretty md:max-w-[75%] lg:max-w-[66%]">Budowanie pożądanego wizerunku marki, w sieci i poza nią.</h1>
     </section>
-    <section class="border-t border-[var(--border)]">
+    <section class="mb-24 border-t border-[var(--border)]">
       <Button
         href={getRoute(locale, 'projects')}
         variant="link"
@@ -31,18 +31,20 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
       >
         {t("projects.btnTitle")}
       </Button>
-      <ul class="space-y-8 mb-24">
-      {
-        projects.map((project) => (
-          <li>
-            <a href={`/pl/projekty/${project.id}`}>
-              <article>
-                <img
-                  transition:name={`project-cover-${project.data.slug}`}
-                  src={project.data.cover}
-                  alt={project.data.title}
-                />
-                <div class="grid grid-cols-4 gap-2">
+      <div class="relative w-full overflow-x-auto">
+        <ul class="flex gap-x-4">
+          { projects.map((project) => (
+            <li class="w-max">
+              <a href={`/pl/projekty/${project.id}`}>
+                <div class="relative w-[66vw] pb-[75%] overflow-hidden">
+                  <img
+                    transition:name={`project-cover-${project.data.slug}`}
+                    src={project.data.cover}
+                    alt={project.data.title}
+                    class="absolute w-full h-full object-cover"
+                  />
+                </div>
+                <div>
                   <h2
                     class="h4"
                     transition:name={`project-title-${project.data.slug}`}
@@ -54,12 +56,11 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
                     {project.data.description}
                   </p>
                 </div>
-              </article>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
   </main>
 </BaseLayout>
