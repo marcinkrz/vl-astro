@@ -12,25 +12,30 @@ const hideOnPolish = locale === 'pl';
 { !hideOnPolish ? (
   <div
     id="lang-banner"
-    class="w-full flex justify-center border-b border-[var(--border)]"
-    hidden
-  >
-    <div class="w-fit sm:max-w-max p-2 md:py-1 flex items-center md:justify-center">
+    class={`fixed max-md:inset-x-1 md:left-2 bottom-1 z-[102] flex justify-center border border-[var(--border-light)] rounded-xl
+    after:absolute after:-z-1 after:inset-0 after:rounded-xl after:bg-[var(--background)] after:opacity-[.66]`}>
+    <div class={`
+      w-fit p-2 flex max-md:flex-col items-center md:justify-center
+      after:absolute after:-z-1 after:inset-0 after:rounded-xl
+      after:backdrop-filter-[blur(.8rem)_contrast(150%)_saturate(120%)]
+      after:shadow-[inset_0_-1rem_1rem_0.5rem_var(--background)]
+    `}>
       <button
         data-banner-close
-        class="cursor-pointer mr-4 text-[var(--muted)] hover:text-[var(--foreground)] transition-colors"
+        class="max-md:absolute max-md:right-1 cursor-pointer md:mr-2 text-[var(--muted)] hover:text-[var(--foreground)] transition-colors"
         aria-label={t('banner.close')}
         type="button"
       >
         <svg class="w-5.5 h-5.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strok-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
       </button>
-      <p class="pr-4 text-sm text-[var(--muted)] leading-tight">
+      <p class="max-md:mb-2 max-md:pr-6 pl-1 pr-2 text-[var(--foreground-2)] text-sm leading-tight text-shadow-xs">
         {t('banner.text')}
       </p>
       <Button
         data-banner-continue
         variant="primary"
         size="small"
+        class="max-md:w-full"
       >
         {t('banner.continue')}
       </Button>
@@ -74,6 +79,9 @@ const hideOnPolish = locale === 'pl';
 
     const shouldShow = !stored && browserLang.startsWith('pl');
     banner.hidden = !shouldShow;
+
+    console.log('shouldShow: ', shouldShow)
+    console.log('banner.hidden: ', banner.hidden)
 
     const closeBtn = banner.querySelector('[data-banner-close]');
     const continueBtn = banner.querySelector('[data-banner-continue]');
