@@ -5,7 +5,7 @@
   --primary: #e34f33; /* Red 17-1463TPG */
   /* --primary: #f4c522; /* Yellow P7-8C */
 
-  --background: hsl(0, 0%, 96%);
+  --background: hsl(0, 0%, 100%);
   --background-t: hsla(0, 0%, 96%, 0.4);
   --background-1: hsl(0, 0%, 92%);
   --background-2: hsl(0, 0%, 88%);
@@ -41,7 +41,7 @@
 }
 
 [data-theme="dark"] {
-  --background: hsl(0, 0%, 4%);
+  --background: hsl(0, 0%, 0%);
   --background-t: hsla(0, 0%, 4%, 0.4);
   --background-1: hsl(0, 0%, 16%);
   --background-2: hsl(0, 0%, 20%);
