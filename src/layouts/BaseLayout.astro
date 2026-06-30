@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import { getT, type Locale } from '@/i18n/messages';
 import LangDetect from '@/components/LangDetect.astro';
+import CookieManager from '@/components/CookieManager/CookieManager.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { fade } from "astro:transitions";
@@ -56,36 +57,42 @@ const pageDescription = description ?? defaultDescription;
     <ClientRouter />
 	</head>
   <body>
-    <LangDetect />
     <Header />
     <main transition:animate={fade({ duration: "0.6s" })}>
       <slot />
     </main>
     <Footer />
-    <figure
-  class="fixed inset-0 z-10 pointer-events-none opacity-15 mix-blend-difference"
-  aria-hidden="true"
->
-  <svg
-    class="w-full h-full"
-    xmlns="http://www.w3.org/2000/svg"
-    preserveAspectRatio="none"
-  >
-    <filter id="noise">
-      <feTurbulence
-        type="fractalNoise"
-        baseFrequency="0.8"
-        numOctaves="4"
-        stitchTiles="stitch"
-      />
-    </filter>
 
-    <rect
-      width="100%"
-      height="100%"
-      filter="url(#noise)"
-    />
-  </svg>
-</figure>
+    <figure class="fixed inset-0 z-10 pointer-events-none opacity-30 mix-blend-difference" aria-hidden="true">
+      <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <defs>
+          <filter id="noise">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.8"
+              numOctaves="4"
+              stitchTiles="stitch"
+            />
+          </filter>
+          <mask id="gradient-mask">
+            <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="white" stop-opacity="0" />
+              <stop offset="100%" stop-color="white" stop-opacity="1" />
+            </linearGradient>
+            <rect width="100%" height="100%" fill="url(#grad)" />
+          </mask>
+        </defs>
+
+        <rect
+          width="100%"
+          height="100%"
+          filter="url(#noise)"
+          mask="url(#gradient-mask)"
+        />
+      </svg>
+    </figure>
+
+    <LangDetect />
+    <CookieManager />
 	</body>
 </html>

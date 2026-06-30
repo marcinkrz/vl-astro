@@ -1,19 +1,48 @@
 {
-  "banner.text": "Strona jest dostępna w języku polskim. Kontynuuj po polsku lub zmień ustawienia w stopce.",
-  "banner.continue": "Kontynuuj",
-  "banner.close": "Zamknij baner",
-  "footer.copy": "{year} Visual Label. All rights reserved.",
-  "nav.projects": "Projects",
-  "nav.studio": "Studio",
-  "nav.contact": "Contact",
-  "switcher.label": "Switch language",
-  "footer.srDark": "Switch to dark theme",
-  "footer.srLight": "Switch to light theme",
-  "footer.srLocale": "Change language to Polish",
-  "projects.title": "Projects",
-  "projects.description": "A selection of projects I've worked on, showcasing my skills.",
-  "projects.btnTitle": "All projects",
-  "project.clientTitle": "Client",
-  "project.tagsTitle": "Tags",
-  "project.yearTitle": "Year"
+  "banner": {
+    "text": "Strona jest dostępna w języku polskim. Kontynuuj po polsku lub zmień ustawienia w stopce.",
+    "continue": "Kontynuuj",
+    "close": "Zamknij baner"
+  },
+  "nav": {
+    "projects": "Projects",
+    "studio": "Studio",
+    "contact": "Contact"
+  },
+  "switcher": {
+    "label": "Switch language"
+  },
+  "footer": {
+    "copy": "{year} Visual Label. All rights reserved.",
+    "srDark": "Switch to dark theme",
+    "srLight": "Switch to light theme",
+    "srLocale": "Change language to Polish"
+  },
+  "projects": {
+    "title": "Projects",
+    "description": "A selection of projects I've worked on, showcasing my skills.",
+    "btnTitle": "All projects",
+    "clientTitle": "Client",
+    "tagsTitle": "Tags",
+    "yearTitle": "Year"
+  },
+  "cookie": {
+    "bannerMsg": "We use cookies on our website to provide you with the best experience. You can learn more about cookies from which we use in our <a href='/privacy-policy' class='hover:underline'>privacy policy.</a>",
+    "accept": "It's fine",
+    "settings": "Settings",
+    "modalTitle": "Cookie settings",
+    "modalBody": "We use cookies to make our website more user-friendly and to work without you. Below you can check what data we collect from cookies and how we collect it. You can always change your choice in the steps you find on the footer of each page.",
+    "cookieTypes": {
+      "necessary": {
+        "title": "Necessary cookies",
+        "description": "Are necessary for the proper functioning of the website. We save, for example, the state of the agreement to the various cookies."
+      },
+      "analytics": {
+        "title": "Analytics cookies",
+        "description": "Anonymized data analytics that we can use to know your behavior and needs. We save, for example, how often you visit our website and how long you spend on it."
+      }
+    },
+    "acceptAll": "Accept all",
+    "save": "Save"
+  }
 }

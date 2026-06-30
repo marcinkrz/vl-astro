@@ -1,0 +1,282 @@
+---
+import { getCookieTypes } from "./cookie-types";
+import { getT } from "@/i18n/messages";
+import Button from "../_ui/Button.astro";
+
+const locale = Astro.currentLocale === "pl" ? "pl" : "en";
+const t = getT(locale) as (key: string, vars?: Record<string, string | number>) => string;
+
+const cookieTypes = getCookieTypes(t);
+---
+<div
+  id="cookie-banner"
+  class="fixed z-40 bottom-2 inset-x-2 sm:w-[600px] md:right-auto md:left-4 lg:left-6 hidden"
+>
+  <div class="p-px bg-gradient-to-b from-[var(--background-t)] from-50% to-[var(--background-t-3)] rounded-2xl">
+    <div class="glass p-4 flex max-sm:flex-col sm:items-center justify-between text-sm leading-snug rounded-2xl">
+      <div class="content">
+        <p set:html={t("cookie.bannerMsg")} class="sm:mr-2 mb-2 text-[var(--foreground)]" />
+        <div class="max-sm:w-full flex max-sm:justify-end gap-2">
+          <Button
+            id="cookie-settings-button"
+            variant="ghost"
+            size="small"
+          >
+            {t("cookie.settings")}
+          </Button>
+          <Button
+            id="cookie-accept-all"
+            variant="primary"
+            size="small"
+          >
+            {t("cookie.accept")}
+          </Button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  id="cookie-modal"
+  class="fixed inset-0 z-[999] modal-hidden items-end md:items-center justify-center opacity-0 transition-all duration-300"
+>
+  <div
+    class="relative top-1/2 left-1/2 z-20 w-[calc(100%-1rem)] sm:max-w-lg xl:max-w-xl p-px bg-gradient-to-b from-[var(--background-t)] to-75% to-[var(--background-t-3)] rounded-2xl z-20 transform transition-transform duration-300 -translate-1/2"
+    id="cookie-modal-content"
+  >
+    <div class="glass rounded-2xl">
+      <div class="content">
+        <div class="relative h-16 px-4 flex items-center justify-between">
+          <h2 class="font-semibold text-lg">
+            {t("cookie.modalTitle")}
+          </h2>
+          <button
+            id="cookie-close"
+            type="button"
+            class="absolute right-2 p-2 text-[var(--muted)] hover:text-[var(--foreground)] transition-colors cursor-pointer"
+          >
+            <svg
+              class="w-5.5 h-5.5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="max-h-[calc(100svh-5rem)] overflow-y-auto pb-16">
+          <p class="mb-4 px-4 text-sm text-[var(--foreground)]">
+            {t("cookie.modalBody")}
+          </p>
+          <div class="px-2 lg:px-3 space-y-2">
+            {cookieTypes.map((type) => (
+              <div class="py-2 border border-[var(--border)] rounded-lg">
+                <div class="mb-2 px-3 flex items-center justify-between">
+                  <h3 class="font-semibold text-base">
+                    {type.name}
+                  </h3>
+
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input
+                      class="cookie-toggle sr-only peer"
+                      type="checkbox"
+                      data-cookie={type.id}
+                      checked={type.required}
+                      disabled={type.required}
+                    />
+
+                    <div
+                      class:list={[
+                        "w-11 h-6 rounded-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--background)] after:rounded-full after:h-5 after:w-5 after:transition-all",
+                        type.required
+                          ? "bg-[var(--border)]"
+                          : "bg-[var(--danger-border)] peer-checked:bg-[var(--success-border)]",
+                      ]}
+                    />
+                  </label>
+                </div>
+
+                <div class="py-2 mx-3 flex items-center justify-between border-t border-[var(--border)] text-sm">
+                  <p>{type.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="absolute bottom-0 left-0 w-full h-16 flex justify-end items-center gap-2 px-4 bg-linear-to-b from-transparent to-[var(--background)]">
+          <button
+            id="cookie-save"
+            class="px-3 py-2 rounded-lg hover:bg-[var(--muted)] transition-colors cursor-pointer"
+            type="button"
+          >
+            {t("cookie.save")}
+          </button>
+
+          <button
+            id="cookie-accept-all-modal"
+            class="px-3 py-2 rounded-lg bg-[var(--foreground)] text-[var(--background)] hover:opacity-90 transition-opacity cursor-pointer"
+            type="button"
+          >
+            {t("cookie.acceptAll")}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="cookie-backdrop" class="absolute inset-0 z-10 bg-black/20 backdrop-blur-xs"></div>
+</div>
+<style>
+  .modal-hidden {
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .glass {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0.25rem 0.5rem hsla(0, 0%, 0%, 0.1);
+    background: linear-gradient(to bottom, transparent, var(--background-t));
+  }
+  .glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    box-shadow: inset 0 0 1.5rem 1rem var(--background-t);
+  }
+  .glass::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    box-shadow: inset 0 -1rem 2rem 1rem var(--background);
+    backdrop-filter: blur(0.5rem) contrast(150%) saturate(120%);
+  }
+  .glass > .content {
+    position: relative;
+    z-index: 1;
+  }
+  .cookie-toggle:checked + div::after {
+    transform: translateX(100%);
+  }
+  #cookie-banner {
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+<script>
+  import {
+    setCookieConsent,
+    checkCookieConsent,
+    setAnalyticsCookie,
+  } from "./cookie-actions";
+
+  document.addEventListener("astro:page-load", () => {
+    const banner = document.getElementById("cookie-banner");
+    const modal = document.getElementById("cookie-modal");
+    const modalContent = document.getElementById("cookie-modal-content");
+
+    const btnSettings = document.getElementById("cookie-settings-button");
+    const btnAcceptAll = document.getElementById("cookie-accept-all");
+    const btnAcceptAllModal = document.getElementById("cookie-accept-all-modal");
+    const btnSave = document.getElementById("cookie-save");
+    const btnClose = document.getElementById("cookie-close");
+    const backdrop = document.getElementById("cookie-backdrop");
+
+    const toggles = document.querySelectorAll<HTMLInputElement>(".cookie-toggle");
+
+    if (!banner || !modal) return;
+
+    try {
+      const storedConsent = checkCookieConsent();
+      
+      if (!storedConsent) {
+        banner.classList.remove("hidden");
+      } else {
+        toggles.forEach((toggle) => {
+          const cookieId = toggle.dataset.cookie;
+          if (cookieId && !toggle.disabled) {
+            toggle.checked = !!storedConsent[cookieId as keyof typeof storedConsent];
+          }
+        });
+      }
+    } catch (error) {
+      console.error("Error loading cookie preferences:", error);
+    }
+
+    const openModal = () => {
+      modal.classList.remove("modal-hidden");
+      requestAnimationFrame(() => {
+        modal.classList.remove("opacity-0");
+        modalContent?.classList.remove("translate-y-4");
+      });
+    };
+
+    const closeModal = () => {
+      modal.classList.add("opacity-0");
+      modalContent?.classList.add("translate-y-4");
+      setTimeout(() => modal.classList.add("modal-hidden"), 300);
+    };
+
+    const applyAndReload = (preferences: Record<string, boolean>) => {
+      setCookieConsent(preferences as any);
+      setAnalyticsCookie(preferences.analytics || false);
+      banner.classList.add("hidden");
+      closeModal();
+      window.location.reload();
+    };
+
+    const handleAcceptAll = () => {
+      const preferences: Record<string, boolean> = {};
+      toggles.forEach((toggle) => {
+        const cookieId = toggle.dataset.cookie;
+        if (cookieId) {
+          preferences[cookieId] = true;
+          toggle.checked = true;
+        }
+      });
+      applyAndReload(preferences);
+    };
+
+    const handleSave = () => {
+      const preferences: Record<string, boolean> = {};
+      toggles.forEach((toggle) => {
+        const cookieId = toggle.dataset.cookie;
+        if (cookieId) {
+          preferences[cookieId] = toggle.checked;
+        }
+      });
+      applyAndReload(preferences);
+    };
+
+    btnSettings?.addEventListener("click", openModal);
+    btnClose?.addEventListener("click", closeModal);
+    backdrop?.addEventListener("click", closeModal);
+    
+    btnAcceptAll?.addEventListener("click", handleAcceptAll);
+    btnAcceptAllModal?.addEventListener("click", handleAcceptAll);
+    btnSave?.addEventListener("click", handleSave);
+
+    const handleOpenEvent = () => openModal();
+    document.removeEventListener("open-cookie-settings", handleOpenEvent); // Usuwamy stare, by uniknąć duplikacji
+    document.addEventListener("open-cookie-settings", handleOpenEvent);
+  });
+</script>

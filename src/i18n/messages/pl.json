@@ -1,19 +1,48 @@
 {
-  "banner.text": "Strona jest dostępna w języku polskim. Kontynuuj po polsku lub zmień ustawienia w stopce.",
-  "banner.continue": "Kontynuuj",
-  "banner.close": "Zamknij baner",
-  "footer.copy": "{year} Visual Label. Wszelkie prawa zastrzeżone.",
-  "nav.projects": "Projekty",
-  "nav.studio": "Studio",
-  "nav.contact": "Kontakt",
-  "switcher.label": "Zmień język",
-  "footer.srDark": "Przełącz na ciemny motyw",
-  "footer.srLight": "Przełącz na jasny motyw",
-  "footer.srLocale": "Zmień język na angielski",
-  "projects.title": "Projekty",
-  "projects.description": "Wybór projektów, nad którymi pracowałem, prezentujące moje umiejętności.",
-  "projects.btnTitle": "Wszystkie projekty",
-  "project.clientTitle": "Klient",
-  "project.tagsTitle": "Tagi",
-  "project.yearTitle": "Rok"
+  "banner": {
+    "text": "Strona jest dostępna w języku polskim. Kontynuuj po polsku lub zmień ustawienia w stopce.",
+    "continue": "Kontynuuj",
+    "close": "Zamknij baner"
+  },
+  "nav": {
+    "projects": "Projekty",
+    "studio": "Studio",
+    "contact": "Kontakt"
+  },
+  "switcher": {
+    "label": "Zmień język"
+  },
+  "footer": {
+    "copy": "{year} Visual Label. Wszelkie prawa zastrzeżone.",
+    "srDark": "Przełącz na ciemny motyw",
+    "srLight": "Przełącz na jasny motyw",
+    "srLocale": "Zmień język na angielski"
+  },
+  "projects": {
+    "title": "Projekty",
+    "description": "Wybór projektów, nad którymi pracowałem, prezentujące moje umiejętności.",
+    "btnTitle": "Wszystkie projekty",
+    "clientTitle": "Klient",
+    "tagsTitle": "Tagi",
+    "yearTitle": "Rok"
+  },
+  "cookie": {
+    "bannerMsg": "Używamy plików cookies na naszej stronie internetowej, aby zapewnić najlepsze wrażenia. Możesz dowiedzieć się więcej o plikach cookie z których korzystamy w <a href='/privacy-policy' class='hover:underline'>polityce prywatności.</a>",
+    "accept": "W porządku",
+    "settings": "Ustawienia",
+    "modalTitle": "Ustawienia plików cookie",
+    "modalBody": "Używamy ciasteczek, dzięki którym nasza strona jest dla Ciebie bardziej przyjazna i działa niezawodnie. Poniżej możesz sprawdzić, jakie dane zbieramy w ciasteczkach i po co je zbieramy. Zawsze możesz zmienić swój wybór w ustwieniach które znajdziesz w stopce każdej strony.",
+    "cookieTypes": {
+      "necessary": {
+        "title": "Niezbędne ciasteczka",
+        "description": "Są niezbędne do właściwego działania strony. Zapisujemy np. stan wyrażenia zgody na poszczególne ciasteczka."
+      },
+      "analytics": {
+        "title": "Analityczne ciasteczka",
+        "description": "Anonimizowane dane analityczne dzieki którym możemy poznać Twoje zachowanie i potrzeby. Zapisujemy np. jak często odwiedzasz naszą stronę i jak długo ją przeglądasz."
+      }
+    },
+    "acceptAll": "Zaakceptuj wszystkie",
+    "save": "Zapisz"
+  }
 }
