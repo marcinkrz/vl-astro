@@ -25,7 +25,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
         Creating the desired brand image, online and beyond.
       </h1>
     </section>
-    <section class="mb-24 border-t border-[var(--border)]">
+    <section class="mb-24 -mx-2 md:-mx-4 lg:mx-auto border-t border-[var(--border)]">
       <Button
         href={getRoute(locale, 'projects')}
         variant="link"
@@ -33,12 +33,12 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
       >
         {t("projects.btnTitle")}
       </Button>
-      <div class="relative w-full overflow-x-auto">
-        <ul class="flex gap-x-4">
+      <div class="relative w-full max-md:overflow-x-auto">
+        <ul class="flex md:grid grid-cols-3 gap-x-4">
           { projects.map((project) => (
-            <li class="w-max">
+            <li class="max-md:w-max">
               <a href={`/projects/${project.id}`}>
-                <div class="relative w-[66vw] pb-[75%] overflow-hidden">
+                <div class="relative max-md:w-[66vw] pb-[75%] overflow-hidden">
                   <img
                     transition:name={`project-cover-${project.data.slug}`}
                     src={project.data.cover}
