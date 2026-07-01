@@ -20,23 +20,25 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
   description="Studio projektowe tworzące nowoczesne strony internetowe."
 >
   <main class="container">
-    <section class="-mt-12 pb-12 h-[75vh] flex items-end border-b border-[var(--border)]">
+    <section class="-mt-12 pb-12 h-[65vh] flex items-end border-b border-[var(--border)]">
       <h1 class="h1 text-pretty md:max-w-[75%] lg:max-w-[66%]">Budowanie pożądanego wizerunku marki, w sieci i poza nią.</h1>
     </section>
     <section class="mb-24 -mx-2 md:-mx-4 lg:mx-auto border-t border-[var(--border)]">
-      <Button
-        href={getRoute(locale, 'projects')}
-        variant="link"
-        class="mt-2 mb-12"
-      >
-        {t("projects.btnTitle")}
-      </Button>
-      <div class="relative w-full max-md:overflow-x-auto">
-        <ul class="flex md:grid grid-cols-3 gap-x-4">
+      <header class="mt-2 mb-8 px-2 md:px-4 lg:px-6 flex justify-between">
+        <h2 class="h4 text-[var(--muted)]">Projekty</h2>
+        <Button
+          href={getRoute(locale, 'projects')}
+          variant="link"
+        >
+          {t("projects.btnTitle")}
+        </Button>
+      </header>
+      <div class="relative w-full max-md:overflow-x-auto px-2 md:px-4 lg:px-6">
+        <ul class="inline-flex md:grid grid-cols-3 gap-x-4">
           { projects.map((project) => (
-            <li class="max-md:w-max">
+            <li class="max-md:w-[66vw]">
               <a href={`/pl/projekty/${project.id}`}>
-                <div class="relative max-md:w-[66vw] pb-[75%] overflow-hidden">
+                <div class="relative pb-[75%] overflow-hidden">
                   <img
                     transition:name={`project-cover-${project.data.slug}`}
                     src={project.data.cover}
