@@ -1,0 +1,43 @@
+---
+const pathname = Astro.url.pathname;
+const projectSlugMap = await import('@/lib/projectSlugMap').then(m => m.getProjectSlugMap());
+const isAlreadyPolish = Astro.currentLocale === 'pl';
+---
+{ !isAlreadyPolish && (
+  <script is:inline define:vars={{ pathname, projectSlugMap }}>
+    function getPolishPath(currentPath) {
+      const routeMap = {
+        '/': '/pl',
+        '/projects': '/pl/projekty',
+        '/studio': '/pl/studio',
+        '/contact': '/pl/kontakt',
+      };
+
+      if (routeMap[currentPath]) return routeMap[currentPath];
+
+      if (currentPath.startsWith('/projects/')) {
+        const slug = currentPath.replace('/projects/', '');
+        const translatedSlug = projectSlugMap[slug];
+        return translatedSlug ? `/pl/projekty/${translatedSlug}` : '/pl/projekty';
+      }
+
+      return '/pl';
+    }
+
+    function handleRedirect() {
+      const storedPreference = localStorage.getItem('preferredLanguage');
+      if (storedPreference === 'en') return;
+
+      const browserLang = navigator.language?.toLowerCase() ?? '';
+      
+      if (browserLang.startsWith('pl')) {
+        localStorage.setItem('preferredLanguage', 'pl');
+        window.location.replace(getPolishPath(pathname));
+      }
+    }
+
+    handleRedirect();
+    
+    document.addEventListener('astro:page-load', handleRedirect);
+  </script>
+)}
