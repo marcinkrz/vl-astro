@@ -39,29 +39,29 @@ const {
           )}
         </div>
 
-        <!-- <h1
+        <h1
           transition:name={`project-title-${slug}`}
           class="display mt-6 mb-3"
         >
           {title}
-        </h1> -->
+        </h1>
         
         <p class="my-6 h2">{description}</p>
 
         <ul class="text-sm">
           <li class="grid grid-cols-[3rem_auto]">
-            <span>{t('project.clientTitle')}:</span>
+            <span>{t('projects.clientTitle')}:</span>
             {client}
           </li>
           <li class="grid grid-cols-[3rem_auto]">
-            <span>{t('project.yearTitle')}:</span>
+            <span>{t('projects.yearTitle')}:</span>
             {pubDate ? pubDate.toLocaleDateString(locale, {
               year: 'numeric'
             }) : null}
           </li>
           {tags.length > 0 && (
             <li class="grid grid-cols-[3rem_auto]">
-              {t('project.tagsTitle')}:
+              {t('projects.tagsTitle')}:
               <span>
                 {tags.map((tag, index) => (
                   <span class="">

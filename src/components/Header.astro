@@ -66,7 +66,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
   <nav
     id="menu-items"
     class={`
-      fixed z-[100] top-0 inset-x-0 h-[100svh] text-white
+      fixed z-[100] top-0 inset-x-0 h-[100svh]
       invisible
       [.is-active]:visible
       transition-visible duration-300
@@ -80,7 +80,6 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
       group-[.is-active]:opacity-100
       group-[.is-active]:translate-y-[-50%]
       transition-all duration-300
-      mix-blend-difference
     `}>
       {items.map((item) => (
         <li>
