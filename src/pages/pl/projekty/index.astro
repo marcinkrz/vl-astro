@@ -30,19 +30,12 @@ projects.sort((a, b) =>
             <a href={`/pl/projekty/${project.id}`}>
               <article>
                 <img
-                  transition:name={`project-cover-${project.data.slug}`}
                   src={project.data.cover}
                   alt={project.data.title}
                 />
                 <div class="grid grid-cols-4 gap-2">
-                  <h2
-                    class="h4"
-                    transition:name={`project-title-${project.data.slug}`}
-                  >{project.data.title}</h2>
-                  <p
-                    class="col-span-3 text-[var(--muted)]"
-                    transition:name={`project-desc-${project.data.slug}`}
-                  >
+                  <h2 class="h4">{project.data.title}</h2>
+                  <p class="col-span-3 text-[var(--muted)]">
                     {project.data.description}
                   </p>
                 </div>

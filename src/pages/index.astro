@@ -42,21 +42,14 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
               <a href={`/projects/${project.id}`}>
                 <div class="relative pb-[75%] overflow-hidden">
                   <img
-                    transition:name={`project-cover-${project.data.slug}`}
                     src={project.data.cover}
                     alt={project.data.title}
                     class="absolute w-full h-full object-cover"
                   />
                 </div>
                 <div>
-                  <h2
-                    class="h4"
-                    transition:name={`project-title-${project.data.slug}`}
-                  >{project.data.title}</h2>
-                  <p
-                    class="col-span-3 text-[var(--muted)]"
-                    transition:name={`project-desc-${project.data.slug}`}
-                  >
+                  <h2>{project.data.title}</h2>
+                  <p class="col-span-3 text-[var(--muted)]">
                     {project.data.description}
                   </p>
                 </div>
