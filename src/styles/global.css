@@ -33,7 +33,7 @@
 
   --muted: hsl(0, 0%, 48%);
   --muted-1: hsl(0, 0%, 44%);
-  --border: hsl(0, 0%, 76%);
+  --border: var(--background-2);
   --border-light: var(--foreground);
 
   --focus: hsl(204, 90%, 45%);
@@ -67,7 +67,7 @@
 
   --muted: hsl(0, 0%, 64%);
   --muted-1: hsl(0, 0%, 68%);
-  --border: hsl(0, 0%, 24%);
+  --border: var(--background-2);
   --border-light: var(--foreground);
 
   --info-border: hsl(204, 90%, 45%);
@@ -103,7 +103,7 @@ select {
 }
 
 .display {
-  @apply text-[2.5rem] sm:text-6xl xl:text-7xl text-balance leading-[1.1]!;
+  @apply text-[2.5rem] sm:text-6xl xl:text-8xl text-balance leading-[1.1]!;
 }
 
 .h1 {

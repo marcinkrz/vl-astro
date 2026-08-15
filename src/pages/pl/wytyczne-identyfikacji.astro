@@ -4,8 +4,8 @@ import Button from "@/components/_ui/Button.astro";
 ---
 
 <BaseLayout>
-  <div class="mt-14 md:mt-16 md:grid grid-cols-6">
-    <header class="border-t border-(--border)">
+  <div class="mt-14 md:mt-16 md:grid md:grid-cols-5 lg:grid-cols-6">
+    <header class="max-md:mb-24 border-t border-(--border)">
       <div class="p-2 md:p-4 lg:p-6">
         <h1 class="text-xs font-mono font-bold uppercase">
           Wytyczne identyfikacji wizualnej
@@ -14,7 +14,7 @@ import Button from "@/components/_ui/Button.astro";
           Aktualizacja: 15-08-2026 r.
         </p>
       </div>
-      <nav class="md:sticky top-16 font-semibold border-t border-(--border)">
+      <nav class="md:sticky top-16 font-semibold border-t border-(--border) divide-y divide-(--border)">
         <div>
           <button
             type="button"
@@ -31,7 +31,7 @@ import Button from "@/components/_ui/Button.astro";
               +
             </span>
           </button>
-          <ul data-menu="logo" hidden class="group">
+          <ul data-menu="logo" class="group" hidden>
             <li>
               <a
                 href="#logo"
@@ -82,7 +82,7 @@ import Button from "@/components/_ui/Button.astro";
               +
             </span>
           </button>
-          <ul data-menu="typography" hidden class="group">
+          <ul data-menu="typography" class="group" hidden>
             <li>
               <a
                 href="#typography"
@@ -112,11 +112,11 @@ import Button from "@/components/_ui/Button.astro";
       </nav>
     </header>
     <article
-      class="md:col-span-5 space-y-8 md:space-y-16 lg:space-y-32 md:border-l border-(--border)"
+      class="md:col-span-4 lg:col-span-5 md:border-l border-(--border)"
     >
-      <section id="logo" class="scroll-mt-14 md:scroll-mt-16 space-y-8 md:space-y-16 lg:space-y-32">
-        <header>
-          <div class="relative pt-[33%] md:pt-[25%] px-2 md:px-4 lg:px-6 bg-(--foreground) text-(--background)">
+      <section id="logo" class="scroll-mt-12 md:scroll-mt-16 space-y-24 md:space-y-32">
+        <header class="md:border-t border-(--border)">
+          <div class="relative pt-[50%] md:pt-[25%] px-2 md:px-4 lg:px-6 bg-(--background-1) text-(--foreground)">
             <div class="max-w-340 mx-auto">
               <h2
                 class="display pb-2 md:pb-4 lg:pb-6 grid grid-cols-2"
@@ -140,7 +140,7 @@ import Button from "@/components/_ui/Button.astro";
         </header>
         <section
           id="logo-wordmark"
-          class="scroll-mt-14 md:scroll-mt-16 p-2 md:p-4 lg:p-6 border-t border-(--border)"
+          class="scroll-mt-12 md:scroll-mt-16 p-2 md:p-4 lg:p-6 border-t border-(--border)"
         >
           <header class="max-w-340 mx-auto mb-8 md:grid grid-cols-2 gap-2 md:gap-4 lg:gap-6">
             <h3 class="h3 mb-4">Logotyp</h3>
@@ -166,7 +166,7 @@ import Button from "@/components/_ui/Button.astro";
         </section>
         <section
           id="logo-mark"
-          class="scroll-mt-14 md:scroll-mt-16 p-2 md:p-4 lg:p-6 border-t border-(--border)"
+          class="scroll-mt-12 md:scroll-mt-16 p-2 md:p-4 lg:p-6 border-t border-(--border)"
         >
           <header class="max-w-340 mx-auto mb-8 md:grid grid-cols-2 gap-2 md:gap-4 lg:gap-6">
             <h3 class="h3 mb-4">Sygnet</h3>
@@ -178,7 +178,7 @@ import Button from "@/components/_ui/Button.astro";
             <div class="relative w-full pb-[100%] flex bg-(--background-1)">
               <div class="absolute w-[50%] top-1/2 left-1/2 -translate-1/2 pb-[50%] bg-[#11110e]">
                 <svg
-                  class="w-auto h-1/2 fill-[#f6f6f4] absolute z-1 top-1/2 left-1/2 -translate-1/2"
+                  class="w-auto h-[55%] fill-[#f6f6f4] absolute z-1 top-1/2 left-1/2 -translate-1/2"
                   xmlns="http://www.w3.org/2000/svg"
                   fill-rule="evenodd"
                   stroke-linejoin="round"
@@ -212,7 +212,7 @@ import Button from "@/components/_ui/Button.astro";
             <div class="relative w-full pb-[100%] flex bg-(--background-1)">
               <div class="absolute w-[50%] top-1/2 left-1/2 -translate-1/2 pb-[50%] bg-[#11110e] rounded-[25%]">
                 <svg
-                  class="w-auto h-1/2 fill-[#f6f6f4] absolute z-1 top-1/2 left-1/2 -translate-1/2"
+                  class="w-auto h-[55%] fill-[#f6f6f4] absolute z-1 top-1/2 left-1/2 -translate-1/2"
                   xmlns="http://www.w3.org/2000/svg"
                   fill-rule="evenodd"
                   stroke-linejoin="round"
@@ -246,7 +246,7 @@ import Button from "@/components/_ui/Button.astro";
             <div class="relative w-full pb-[100%] flex bg-(--background-1)">
               <div class="absolute w-[50%] top-1/2 left-1/2 -translate-1/2 pb-[50%] bg-[#11110e] rounded-full">
                 <svg
-                  class="w-auto h-1/2 fill-[#f6f6f4] absolute z-1 top-1/2 left-1/2 -translate-1/2"
+                  class="w-auto h-[55%] fill-[#f6f6f4] absolute z-1 top-1/2 left-1/2 -translate-1/2"
                   xmlns="http://www.w3.org/2000/svg"
                   fill-rule="evenodd"
                   stroke-linejoin="round"
@@ -281,7 +281,7 @@ import Button from "@/components/_ui/Button.astro";
         </section>
         <section
           id="logo-color"
-          class="scroll-mt-14 md:scroll-mt-16 p-2 md:p-4 lg:p-6 border-t border-(--border)"
+          class="scroll-mt-12 md:scroll-mt-16 p-2 md:p-4 lg:p-6 border-t border-(--border)"
         >
           <header class="max-w-340 mx-auto mb-8 pt-2 md:grid grid-cols-2 gap-2 md:gap-4 lg:gap-6">
             <h3 class="h3 mb-4">Kolor</h3>
