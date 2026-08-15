@@ -71,7 +71,7 @@
 }
 
 body {
-  @apply bg-[var(--background)] text-[var(--foreground)] antialiased;
+  @apply bg-(--background) text-(--foreground) antialiased;
 }
 
 input:not([type="checkbox"]),
@@ -100,19 +100,19 @@ select {
 }
 
 .display {
-  @apply text-[2.5rem] sm:text-6xl xl:text-7xl text-balance !leading-[1.1];
+  @apply text-[2.5rem] sm:text-6xl xl:text-7xl text-balance leading-[1.1]!;
 }
 
 .h1 {
-  @apply text-3xl sm:text-4xl xl:text-5xl text-balance !leading-[1.1];
+  @apply text-3xl sm:text-4xl xl:text-5xl text-balance leading-[1.1]!;
 }
 
 .h2 {
-  @apply text-2xl xl:text-3xl !leading-[1.1];
+  @apply text-2xl xl:text-3xl leading-[1.1]!;
 }
 
 .h3 {
-  @apply text-xl xl:text-2xl !leading-tight;
+  @apply text-xl xl:text-2xl leading-tight!;
 }
 
 .link {

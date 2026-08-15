@@ -11,7 +11,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '');
 
 const t = getT(currentLocale);
 
-const routeCandidates = ['home', 'projects', 'studio', 'contact'] as const;
+const routeCandidates = ['home', 'projects', 'studio', 'contact', 'styleguide'] as const;
 
 let href = getRoute(targetLocale, 'home');
 

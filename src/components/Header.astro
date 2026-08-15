@@ -18,8 +18,8 @@ const items = [
 
 const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 ---
-<header class="fixed z-[101] top-0 inset-x-0">
-  <div class="relative z-2 container py-2 flex justify-between items-start">
+<header class="fixed z-101 top-0 inset-x-0">
+  <div class="relative z-2 container-full py-2 md:py-4 flex justify-between items-start">
     <div class="w-full flex justify-between">
       <Logo />
       <Button
@@ -32,31 +32,31 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
         `}
       >
         <span class={
-          `before:block before:absolute before:w-3/4 before:h-[3px] before:bg-[var(--foreground)]
+          `before:block before:absolute before:w-3/4 before:h-0.75 before:bg-(--foreground)
           before:top-2 before:right-0
           group-[.is-active]:before:w-3/4
           group-[.is-active]:before:top-[50%]
           group-[.is-active]:before:-right-5
-          group-[.is-active]:before:rotate-[135deg]
+          group-[.is-active]:before:rotate-135deg
           group-[.is-active]:before:translate-[-50%]
           before:transition-all before:duration-400 before:ease-in-out
 
-          after:block after:absolute after:w-3/4 after:h-[3px] after:bg-[var(--foreground)]
+          after:block after:absolute after:w-3/4 after:h-0.75 after:bg-(--foreground)
           after:top-7 after:right-0
           group-[.is-active]:after:w-3/4
           group-[.is-active]:after:top-[50%]
           group-[.is-active]:after:-right-5
-          group-[.is-active]:after:rotate-[225deg]
+          group-[.is-active]:after:rotate-225deg
           group-[.is-active]:after:translate-[-50%]
           after:transition-all after:duration-400 after:ease-in-out
           `}>
             <span class={`
-            block absolute w-3/4 h-[3px] bg-[var(--foreground)]
+            block absolute w-3/4 h-0.75 bg-(--foreground)
             top-4 right-0
             group-[.is-active]:w-1
             group-[.is-active]:top-[50%]
             group-[.is-active]:right-3
-            group-[.is-active]:rotate-[360deg]
+            group-[.is-active]:rotate-360deg
             group-[.is-active]:-translate-y-1/2
             transition-all duration-400 ease-in-out
             `}></span>
@@ -72,8 +72,8 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
                 href={item.href}
                 aria-current={isActive(item.href) ? 'page' : undefined}
                 class:list={{
-                  'text-[var(--foreground)]': isActive(item.href),
-                  'text-[var(--muted)]': !isActive(item.href),
+                  'text-(--foreground)': isActive(item.href),
+                  'text-(--muted)': !isActive(item.href),
                 }}
               >
                 {item.label}
@@ -88,7 +88,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
   <nav
     id="mobile-nav"
     class={`
-      fixed z-1 top-0 inset-x-0 h-[100svh]
+      fixed z-1 top-0 inset-x-0 h-svh
       invisible
       [.is-active]:visible
       transition-visible duration-300
@@ -115,7 +115,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
       </li>
     </ul>
     <div class={`
-      absolute inset-0 bg-[var(--background)]
+      absolute inset-0 bg-(--background)
       opacity-0
       group-[.is-active]:opacity-100
       transition-opacity duration-300

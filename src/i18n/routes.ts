@@ -1,6 +1,6 @@
 import type { Locale } from './messages';
 
-type RouteKey = 'home' | 'projects' | 'studio' | 'contact';
+type RouteKey = 'home' | 'projects' | 'studio' | 'contact' | 'styleguide';
 
 const routes: Record<RouteKey, Record<Locale, string>> = {
   home: {
@@ -18,6 +18,10 @@ const routes: Record<RouteKey, Record<Locale, string>> = {
   contact: {
     en: '/contact',
     pl: '/pl/kontakt',
+  },
+  styleguide: {
+    en: '/style-guide',
+    pl: '/pl/wytyczne-identyfikacji',
   },
 };
 
