@@ -1,12 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --primary: hsl(5, 80%, 50%);
+  --brand-red: hsl(5, 75%, 50%);
+  --brand-green: hsl(155, 70%, 25%);
+  --brand-brown: hsl(30, 50%, 30%);
+  --brand-yellow: hsl(40, 80%, 50%);
 
   --background: hsl(60, 10%, 96%);
-  --background-1: hsl(60, 8%, 90%);
-  --background-2: hsl(60, 6%, 86%);
-  --background-3: hsl(60, 4%, 82%);
+  --background-1: hsl(60, 8%, 92%);
+  --background-2: hsl(60, 6%, 88%);
+  --background-3: hsl(60, 4%, 84%);
 
   --foreground: hsl(60, 10%, 6%);
   --foreground-1: hsl(0, 0%, 20%);
@@ -38,9 +41,9 @@
 
 [data-theme="dark"] {
   --background: hsl(60, 10%, 6%);
-  --background-1: hsl(60, 8%, 14%);
-  --background-2: hsl(60, 6%, 18%);
-  --background-3: hsl(60, 4%, 22%);
+  --background-1: hsl(60, 8%, 12%);
+  --background-2: hsl(60, 6%, 16%);
+  --background-3: hsl(60, 4%, 20%);
 
   --foreground: hsl(60, 10%, 96%);
   --foreground-1: hsl(0, 0%, 80%);
