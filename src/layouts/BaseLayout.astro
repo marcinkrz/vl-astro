@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { Font } from "astro:assets";
 import { ClientRouter } from 'astro:transitions';
 import { getT, type Locale } from '@/i18n/messages';
 import LangRedirect from '@/components/LangRedirect.astro';
@@ -55,6 +56,8 @@ const pageDescription = description ?? defaultDescription;
 		<link rel="icon" href="/favicon.ico" />
     <LangRedirect />
     <ClientRouter />
+    <Font cssVariable="--font-display" />
+    <Font cssVariable="--font-copy" />
 	</head>
   <body>
     <Header />

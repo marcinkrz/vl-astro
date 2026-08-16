@@ -1,4 +1,4 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig, fontProviders } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import tailwindcss from '@tailwindcss/vite';
 
@@ -17,5 +17,21 @@ export default defineConfig({
   },
   devToolbar: {
     enabled: false
-  }
+  },
+  fonts: [
+    {
+      provider: fontProviders.google(),
+      name: 'Sora',
+      weights: [600],
+      subsets: ['latin', 'latin-ext'],
+      cssVariable: '--font-display',
+    },
+    {
+      provider: fontProviders.google(),
+      name: 'Inter',
+      weights: [400, 600],
+      subsets: ['latin', 'latin-ext'],
+      cssVariable: '--font-copy',
+    }
+  ]
 });
