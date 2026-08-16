@@ -103,15 +103,15 @@ select {
 }
 
 .display {
-  @apply font-(family-name:--font-display) text-4xl sm:text-6xl xl:text-8xl text-balance leading-[1.1]! tracking-[-0.07em] font-features-['liga'];
+  @apply text-4xl sm:text-6xl xl:text-7xl leading-none! tracking-tighter font-features-['liga'] text-balance;
 }
 
 .h1 {
-  @apply text-3xl sm:text-4xl xl:text-5xl text-balance leading-[1.1]! tracking-tighter;
+  @apply text-3xl sm:text-4xl xl:text-5xl leading-[1.1]! tracking-tight text-balance;
 }
 
 .h2 {
-  @apply text-2xl xl:text-3xl leading-[1.1]! tracking-tight;
+  @apply text-2xl xl:text-3xl leading-[1.1]! tracking-tight text-balance;
 }
 
 .h3 {

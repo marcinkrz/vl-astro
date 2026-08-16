@@ -41,14 +41,14 @@ import Typography from "@/layouts/styleguide/Typography.astro";
             ),
             items: [
               { id: "typography", label: "Introduction" },
-              { id: "typeface", label: "Typeface" },
-              { id: "sizes", label: "Sizes" },
+              { id: "typography-typeface", label: "Typeface" },
+              { id: "typography-sizes", label: "Sizes" },
             ],
           },
         ]}
       />
     </header>
-    <article class="md:col-span-3 lg:col-span-4 xl:col-span-5 md:border-l border-(--border)">
+    <article class="md:col-span-3 lg:col-span-4 xl:col-span-5 md:border-l border-(--border) space-y-24 md:space-y-32">
       <Logo
         logo_title={(
           <>
@@ -74,6 +74,16 @@ import Typography from "@/layouts/styleguide/Typography.astro";
         )}
         typography_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
         btn_text="Get font"
+
+        typeface_title="Typeface"
+        typeface_lead="The Inter font family, designed by Rasmus Andersson, is our primary typeface."
+        typeface_heading={<>Good design<br/>is innovative</>}
+        typeface_subheading="Dieter Rams"
+        typeface_copy="The possibilities for innovation are not, by any means, exhausted. Technological development is always offering new opportunities for innovative design. But innovative design always develops in tandem with innovative technology, and can never be an end in itself."
+
+        sizes_title="Sizes"
+        sizes_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc aliquet est ac eros scelerisque scelerisque. Aliquam erat volutpat. Phasellus quis fringilla dui."
+        sizes_pangram="The quick brown fox jumps over the lazy dog."
       />
     </article>
   </div>

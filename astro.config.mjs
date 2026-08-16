@@ -21,13 +21,6 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.google(),
-      name: 'Sora',
-      weights: [600],
-      subsets: ['latin', 'latin-ext'],
-      cssVariable: '--font-display',
-    },
-    {
-      provider: fontProviders.google(),
       name: 'Inter',
       weights: [400, 600],
       subsets: ['latin', 'latin-ext'],
