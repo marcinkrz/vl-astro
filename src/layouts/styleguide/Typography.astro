@@ -1,0 +1,43 @@
+---
+import Button from "@/components/_ui/Button.astro";
+import Section from "@/layouts/styleguide/Section.astro";
+
+const {
+  typography_title,
+  typography_lead,
+  btn_text,
+  typeface_title,
+  typeface_lead,
+  sizes_title,
+  sizes_lead,
+} = Astro.props;
+---
+
+<section
+  id="typography"
+  class="scroll-mt-12 md:scroll-mt-16 space-y-24 md:space-y-32"
+>
+  <header class="md:border-t border-(--border)">
+    <div
+      class="relative pt-[50%] md:pt-[25%] px-2 md:px-4 lg:px-6 bg-(--background-1) text-(--foreground)"
+    >
+      <div class="max-w-340 mx-auto">
+        <h2 class="display pb-2 md:pb-4 lg:pb-6 md:grid grid-cols-2">
+          {typography_title}
+        </h2>
+      </div>
+    </div>
+    <div class="px-2 md:px-4 lg:px-6">
+      <div class="max-w-340 mx-auto">
+        <p class="h3 mt-4 mb-8">{typography_lead}</p>
+        <Button variant="primary" size="large">{btn_text}</Button>
+      </div>
+    </div>
+  </header>
+  <Section
+    id="typography-typeface"
+    title={typeface_title}
+    lead={typeface_lead}
+  />
+  <Section id="typography-sizes" title={sizes_title} lead={sizes_lead} />
+</section>

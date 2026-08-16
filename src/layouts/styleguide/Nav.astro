@@ -1,0 +1,104 @@
+---
+interface NavItem {
+  id: string;
+  label: string;
+}
+
+interface NavSection {
+  id: string;
+  title: string;
+  items: NavItem[];
+}
+
+const { sections } = Astro.props as {
+  sections: NavSection[];
+};
+---
+
+<nav
+  class="md:sticky top-16 font-semibold border-t border-(--border) divide-y divide-(--border)"
+>
+  {sections.map((section) => (
+    <div>
+      <button
+        type="button"
+        data-toggle={section.id}
+        aria-expanded="false"
+        class="w-full flex items-center justify-between py-1 px-2 md:px-4 lg:px-6 hover:bg-(--background-1) cursor-pointer"
+      >
+        {section.title}
+
+        <span
+          aria-hidden="true"
+          data-icon
+          class="font-normal text-(--muted) text-lg leading-none"
+        >
+          +
+        </span>
+      </button>
+
+      <ul data-menu={section.id} class="group" hidden>
+        {section.items.map((item) => (
+          <li>
+            <a
+              href={`#${item.id}`}
+              class="block pl-8 md:pl-10 lg:pl-12 py-1 text-(--muted) hover:bg-(--background-1) hover:text-(--foreground)"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</nav>
+
+<script>
+  function initNavigation() {
+    const toggles =
+      document.querySelectorAll<HTMLButtonElement>("[data-toggle]");
+
+    toggles.forEach((toggle) => {
+      toggle.addEventListener("click", () => {
+        const id = toggle.dataset.toggle;
+
+        if (!id) return;
+
+        const menu = document.querySelector<HTMLElement>(
+          `[data-menu="${id}"]`,
+        );
+        const icon = toggle.querySelector<HTMLElement>("[data-icon]");
+
+        if (!menu || !icon) return;
+
+        const isOpen = toggle.getAttribute("aria-expanded") === "true";
+
+        toggles.forEach((otherToggle) => {
+          if (otherToggle === toggle) return;
+
+          const otherId = otherToggle.dataset.toggle;
+
+          if (!otherId) return;
+
+          const otherMenu = document.querySelector<HTMLElement>(
+            `[data-menu="${otherId}"]`,
+          );
+          const otherIcon =
+            otherToggle.querySelector<HTMLElement>("[data-icon]");
+
+          if (!otherMenu || !otherIcon) return;
+
+          otherToggle.setAttribute("aria-expanded", "false");
+          otherMenu.hidden = true;
+          otherIcon.textContent = "+";
+        });
+
+        toggle.setAttribute("aria-expanded", String(!isOpen));
+        menu.hidden = isOpen;
+        icon.textContent = isOpen ? "+" : "−";
+      });
+    });
+  }
+
+  document.addEventListener("astro:page-load", initNavigation);
+</script>

@@ -1,0 +1,18 @@
+---
+const { id, title, lead } = Astro.props;
+---
+
+<section
+  id={id}
+  class="scroll-mt-12 md:scroll-mt-16 p-2 md:p-4 lg:p-6 border-t border-(--border)"
+>
+  <header
+    class="max-w-340 mx-auto mb-8 md:grid grid-cols-2 gap-2 md:gap-4 lg:gap-6"
+  >
+    <h3 class="h3 mb-4">{title}</h3>
+    <p class="mt-2 font-semibold">{lead}</p>
+  </header>
+  <div class="max-w-340 mx-auto">
+    <slot />
+  </div>
+</section>
