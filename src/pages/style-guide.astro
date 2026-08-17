@@ -3,6 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import Nav from "@/layouts/styleguide/Nav.astro";
 import Logo from "@/layouts/styleguide/Logo.astro";
 import Typography from "@/layouts/styleguide/Typography.astro";
+import Color from "@/layouts/styleguide/Color.astro";
 ---
 
 <BaseLayout>
@@ -42,20 +43,42 @@ import Typography from "@/layouts/styleguide/Typography.astro";
             items: [
               { id: "typography", label: "Introduction" },
               { id: "typography-typeface", label: "Typeface" },
-              { id: "typography-sizes", label: "Sizes" },
+              { id: "typography-sizes", label: "Sizes & styles" },
+            ],
+          },
+          {
+            id: "color",
+            title: (
+              <span>
+                <span class="inline-flex w-6">03 </span>Color
+              </span>
+            ),
+            items: [
+              { id: "color", label: "Introduction" },
+              { id: "color-brand", label: "Brand colors" },
+              { id: "color-gradients", label: "Gradients" },
+              { id: "color-patterns", label: "Patterns" },
+            ],
+          },
+          {
+            id: "components",
+            title: (
+              <span>
+                <span class="inline-flex w-6">04 </span>Components
+              </span>
+            ),
+            items: [
+              { id: "components", label: "Introduction" },
+              { id: "components-buttons", label: "Buttons" },
+              { id: "components-cards", label: "Cards" },
+              { id: "components-covers", label: "Covers" },
             ],
           },
         ]}
       />
     </header>
-    <article class="md:col-span-3 lg:col-span-4 xl:col-span-5 md:border-l border-(--border) space-y-24 md:space-y-32">
-      <Logo
-        logo_title={(
-          <>
-            <span>01 </span>
-            <span>Logo</span>
-          </>
-        )}
+    <article class="md:col-span-3 lg:col-span-4 xl:col-span-5 pb-24 md:pb-32 space-y-24 md:space-y-32 md:border-l border-(--border)">
+      <Logo logo_title={(<><span>01 </span><span>Logo</span></>)}
         logo_lead="The Visual Label logo is the foundation of our identity and a key element of brand recognition for our customers. To accurately reproduce our logo on various media, please follow a few simple guidelines that will ensure its clarity and consistency in every situation."
         btn_text="Download logo"
         logo_wordmark_title="Logotype"
@@ -65,13 +88,7 @@ import Typography from "@/layouts/styleguide/Typography.astro";
         logo_color_title="Color"
         logo_color_lead="Although the Visual Label logo and its graphic variations can be used in any of our brand colors, we strongly recommend using the monochrome version."
       />
-      <Typography
-        typography_title={(
-          <>
-            <span>02 </span>
-            <span>Typography</span>
-          </>
-        )}
+      <Typography typography_title={(<><span>02 </span><span>Typography</span></>)}
         typography_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
         btn_text="Get font"
 
@@ -81,9 +98,15 @@ import Typography from "@/layouts/styleguide/Typography.astro";
         typeface_subheading="Dieter Rams"
         typeface_copy="The possibilities for innovation are not, by any means, exhausted. Technological development is always offering new opportunities for innovative design. But innovative design always develops in tandem with innovative technology, and can never be an end in itself."
 
-        sizes_title="Sizes"
+        sizes_title="Sizes & styles"
         sizes_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc aliquet est ac eros scelerisque scelerisque. Aliquam erat volutpat. Phasellus quis fringilla dui."
         sizes_pangram="The quick brown fox jumps over the lazy dog."
+      />
+      <Color
+        color_title={(<><span>03 </span><span>Color</span></>)}
+        color_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
+        color_brand_title="Brand colors"
+        color_brand_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
       />
     </article>
   </div>

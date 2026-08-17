@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  /* red */
-  --brand-primary: hsl(5, 75%, 50%);
-  /* green */
-  --brand-secondary: hsl(155, 70%, 25%);
+  --vl-black: oklch(0.17 0.01 107);
+  --vl-white: oklch(0.98 0.01 107); /* red */
+  --vl-accent-1: oklch(0.59 0.21 30);
+  --vl-accent-2: oklch(0.47 0.1 160); /* green */
 
-  --background: hsl(60, 10%, 96%);
-  --background-1: hsl(60, 8%, 92%);
-  --background-2: hsl(60, 6%, 88%);
-  --background-3: hsl(60, 4%, 84%);
+  --background: var(--vl-white);
+  --background-1: hsl(60, 16%, 92%);
+  --background-2: hsl(60, 12%, 88%);
+  --background-3: hsl(60, 8%, 84%);
 
-  --foreground: hsl(60, 10%, 6%);
+  --foreground: var(--black);
   --foreground-1: hsl(0, 0%, 20%);
   --foreground-2: hsl(0, 0%, 25%);
 
@@ -40,12 +40,12 @@
 }
 
 [data-theme="dark"] {
-  --background: hsl(60, 10%, 6%);
-  --background-1: hsl(60, 8%, 12%);
-  --background-2: hsl(60, 6%, 16%);
-  --background-3: hsl(60, 4%, 20%);
+  --background:   var(--black);
+  --background-1: oklch(0.27 0.01 107); 
+  --background-2: oklch(0.37 0.01 107);
+  --background-3: oklch(0.47 0.01 107);
 
-  --foreground: hsl(60, 10%, 96%);
+  --foreground: var(--vl-white);
   --foreground-1: hsl(0, 0%, 80%);
   --foreground-2: hsl(0, 0%, 75%);
 

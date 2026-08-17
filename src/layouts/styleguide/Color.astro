@@ -1,0 +1,64 @@
+---
+import Section from "@/layouts/styleguide/Section.astro";
+
+const {
+  color_title,
+  color_lead,
+  color_brand_title,
+  color_brand_lead,
+} = Astro.props;
+---
+
+<section
+  id="color"
+  class="scroll-mt-12 md:scroll-mt-16 space-y-24 md:space-y-32"
+>
+  <header class="md:border-t border-(--border)">
+    <div
+      class="relative pt-[50%] md:pt-[25%] px-2 md:px-4 lg:px-6 bg-(--background-1) text-(--foreground)"
+    >
+      <div class="max-w-340 mx-auto">
+        <h2 class="display pb-2 md:pb-4 lg:pb-6 md:grid grid-cols-2">
+          {color_title}
+        </h2>
+      </div>
+    </div>
+    <div class="px-2 md:px-4 lg:px-6">
+      <div class="max-w-340 mx-auto">
+        <p class="h3 mt-4 mb-8">{color_lead}</p>
+      </div>
+    </div>
+  </header>
+  <Section id="color-brand" title={color_brand_title} lead={color_brand_lead}>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
+      <div class="relative pb-[100%] bg-(--vl-black) border border-(--border)">
+        <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+          <p class="text-xs md:text-sm text-(--vl-white)">
+            --vl-black<br/>cmyk(0% 0% 31% 94%)<br/>oklch(0.17 0.01 107)<br/>#10100b
+          </p>
+        </div>
+      </div>
+      <div class="relative pb-[100%] bg-(--vl-white) border border-(--border)">
+        <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+          <p class="text-xs md:text-sm text-(--vl-black)">
+            --vl-white<br/>cmyk(0% 0% 3% 2%)<br/>oklch(0.98 0.01 107)<br/>#f9f9f1
+          </p>
+        </div>
+      </div>
+      <div class="relative pb-[100%] bg-(--vl-accent-1)">
+        <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+          <p class="text-xs md:text-sm text-(--vl-white)">
+            --vl-accent-1<br/>cmyk(0% 77% 85% 13%)<br/>oklch(0.59 0.21 30)<br/>#df3322
+          </p>
+        </div>
+      </div>
+      <div class="relative pb-[100%] bg-(--vl-accent-2)">
+        <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+          <p class="text-xs md:text-sm text-(--vl-white)">
+            --vl-accent-2<br/>cmyk(83% 0% 34% 58%)<br/>oklch(0.47 0.1 160)<br/>#126b47
+          </p>
+        </div>
+      </div>
+    </div>
+  </Section>
+</section>
