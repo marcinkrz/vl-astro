@@ -6,6 +6,8 @@ const {
   color_lead,
   color_brand_title,
   color_brand_lead,
+  color_palette_title,
+  color_palette_lead,
 } = Astro.props;
 ---
 
@@ -57,6 +59,201 @@ const {
           <p class="text-xs md:text-sm text-(--vl-white)">
             --vl-accent-2<br/>cmyk(83% 0% 34% 58%)<br/>oklch(0.47 0.1 160)<br/>#126b47
           </p>
+        </div>
+      </div>
+    </div>
+  </Section>
+  <Section id="color-palette" title={color_palette_title} lead={color_palette_lead}>
+    <div class="mb-2 md:mb-4 lg:mb-6 pt-1 border-t border-(--border)">
+      <p class="text-sm font-semibold">HSL</p>
+    </div>
+    <div class="space-y-2 md:space-y-4 lg:space-y-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
+        <div class="relative pb-[50%] bg-(--primary)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --primary
+            </p>
+          </div>
+        </div>
+        <div class="relative pb-[50%] bg-(--complementary)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --complementary
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
+        <div class="hidden md:block relative pb-[50%]"></div>
+        <div class="relative pb-[50%] bg-(--analogous-1)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --analogous-1
+            </p>
+          </div>
+        </div>
+        <div class="relative pb-[50%] bg-(--analogous-2)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --analogous-2
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
+        <div class="hidden md:block relative pb-[50%]"></div>
+        <div class="relative pb-[50%] bg-(--split-complementary-1)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --split-complementary-1
+            </p>
+          </div>
+        </div>
+        <div class="relative pb-[50%] bg-(--split-complementary-2)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --split-complementary-2
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
+        <div class="hidden md:block relative pb-[50%]"></div>
+        <div class="relative pb-[50%] bg-(--triadic-1)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --triadic-1
+            </p>
+          </div>
+        </div>
+        <div class="relative pb-[50%] bg-(--triadic-2)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --triadic-2
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
+        <div class="hidden md:block relative pb-[50%]"></div>
+        <div class="relative pb-[50%] bg-(--tetradic-1)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --tetradic-1
+            </p>
+          </div>
+        </div>
+        <div class="relative pb-[50%] bg-(--tetradic-2)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --tetradic-2
+            </p>
+          </div>
+        </div>
+        <div class="relative pb-[50%] bg-(--tetradic-3)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --tetradic-3
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 md:mt-16 mb-2 md:mb-4 lg:mb-6 pt-1 border-t border-(--border)">
+      <p class="text-sm font-semibold">OKLCH</p>
+    </div>
+    <div class="space-y-2 md:space-y-4 lg:space-y-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
+        <div class="relative pb-[50%] bg-(--oklch-primary)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --oklch-primary
+            </p>
+          </div>
+        </div>
+        <div class="relative pb-[50%] bg-(--oklch-complementary)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --oklch-complementary
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
+        <div class="hidden md:block relative pb-[50%]"></div>
+        <div class="relative pb-[50%] bg-(--oklch-analogous-1)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --oklch-analogous-1
+            </p>
+          </div>
+        </div>
+        <div class="relative pb-[50%] bg-(--oklch-analogous-2)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --oklch-analogous-2
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
+        <div class="hidden md:block relative pb-[50%]"></div>
+        <div class="relative pb-[50%] bg-(--oklch-split-complementary-1)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --oklch-split-complementary-1
+            </p>
+          </div>
+        </div>
+        <div class="relative pb-[50%] bg-(--oklch-split-complementary-2)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --oklch-split-complementary-2
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
+        <div class="hidden md:block relative pb-[50%]"></div>
+        <div class="relative pb-[50%] bg-(--oklch-triadic-1)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --oklch-triadic-1
+            </p>
+          </div>
+        </div>
+        <div class="relative pb-[50%] bg-(--oklch-triadic-2)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --oklch-triadic-2
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 lg:gap-6">
+        <div class="hidden md:block relative pb-[50%]"></div>
+        <div class="relative pb-[50%] bg-(--oklch-tetradic-1)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --oklch-tetradic-1
+            </p>
+          </div>
+        </div>
+        <div class="relative pb-[50%] bg-(--oklch-tetradic-2)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --oklch-tetradic-2
+            </p>
+          </div>
+        </div>
+        <div class="relative pb-[50%] bg-(--oklch-tetradic-3)">
+          <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
+            <p class="text-xs md:text-sm text-(--vl-white)">
+              --oklch-tetradic-3
+            </p>
+          </div>
         </div>
       </div>
     </div>

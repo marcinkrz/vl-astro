@@ -6,6 +6,32 @@
   --vl-accent-1: oklch(0.59 0.21 30);
   --vl-accent-2: oklch(0.47 0.1 160); /* green */
 
+  /* Palette HSL */
+  --primary: hsl(5 74% 50%);
+  --complementary: hsl(from var(--primary) calc(h + 180) s l);
+  --analogous-1: hsl(from var(--primary) calc(h + 30) s l);
+  --analogous-2: hsl(from var(--primary) calc(h - 30) s l);
+  --split-complementary-1: hsl(from var(--primary) calc(h + 150) s l);
+  --split-complementary-2: hsl(from var(--primary) calc(h - 150) s l);
+  --triadic-1: hsl(from var(--primary) calc(h + 120) s l);
+  --triadic-2: hsl(from var(--primary) calc(h - 120) s l);
+  --tetradic-1: hsl(from var(--primary) calc(h + 90) s l);
+  --tetradic-2: hsl(from var(--primary) calc(h + 180) s l);
+  --tetradic-3: hsl(from var(--primary) calc(h + 270) s l);
+
+  /* Palette OKLCH */
+  --oklch-primary: oklch(0.59 0.21 30);
+  --oklch-complementary: oklch(from var(--primary) l c calc(h + 180));
+  --oklch-analogous-1: oklch(from var(--primary) l c calc(h - 30));
+  --oklch-analogous-2: oklch(from var(--primary) l c calc(h + 40));
+  --oklch-split-complementary-1: oklch(from var(--primary) l c calc(h + 150));
+  --oklch-split-complementary-2: oklch(from var(--primary) l c calc(h - 150));
+  --oklch-triadic-1: oklch(from var(--primary) l c calc(h + 120));
+  --oklch-triadic-2: oklch(from var(--primary) l c calc(h - 120));
+  --oklch-tetradic-1: oklch(from var(--primary) l c calc(h + 90));
+  --oklch-tetradic-2: oklch(from var(--primary) l c calc(h + 180));
+  --oklch-tetradic-3: oklch(from var(--primary) l c calc(h + 270));
+
   --background: var(--vl-white);
   --background-1: hsl(60, 16%, 92%);
   --background-2: hsl(60, 12%, 88%);
