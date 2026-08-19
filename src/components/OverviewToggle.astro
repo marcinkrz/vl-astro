@@ -12,14 +12,19 @@
 
 <style is:global>
   html.overview {
-    font-size: var(--overview-scale, 60%);
-
-    @media (width >= 40rem) {
-      font-size: var(--overview-scale, 50%);
-    }
+    font-size: 50%;
     
     @media (width >= 48rem) {
-      font-size: var(--overview-scale, 40%);
+      font-size: 45%;
+    }
+    @media (width >= 64rem) {
+      font-size: 40%;
+    }
+    @media (width >= 80rem) {
+      font-size: 35%;
+    }
+    @media (width >= 96rem) {
+      font-size: 30%;
     }
 
     body > header .logo-full,
@@ -30,6 +35,10 @@
     body > header button {
       width: 48px;
       height: 48px;
+    }
+
+    body > header nav {
+      font-size: 16px;
     }
   }
 
@@ -49,28 +58,52 @@
     column-gap: 1px;
     column-rule: 1px solid var(--border);
     margin-top: 48px;
-    padding-bottom: 3rem;
+    padding-bottom: 0;
     border-left: 0;
 
     @media (width >= 48rem) {
       columns: 3;
       margin-top: 64px;
     }
-    @media (width >= 64rem) {
+    @media (width >= 80rem) {
       columns: 4;
     }
-    @media (width >= 110rem) {
+    @media (width >= 96rem) {
       columns: 5;
+    }
+
+    > section > header,
+    > section > section > header,
+    .overview-group,
+    p,
+    img,
+    svg {
+      break-inside: avoid;
     }
   }
 
   /* 4. Sekcje nie rozcinają się między kolumnami; czysty rytm poziomy */
   html.overview #styleguide > article > * {
-    margin-bottom: 2.5rem;
+    margin: 0;
   }
   html.overview #styleguide > article > section > * {
-    margin-bottom: 2.5rem;
+    margin-bottom: 0;
+    padding-bottom: 3rem;
+
+    @media (width >= 48rem) {
+      padding-bottom: 4rem;
+    }
+    @media (width >= 80rem) {
+      padding-bottom: 5rem;
+    }
   }
+  html.overview #styleguide > article > section > section > div {
+    margin-top: 0;
+  }
+  /* html.overview .overview-group {
+    margin-bottom: 0;
+    padding-bottom: 3rem;
+  } */
 
   /* 5. Aktywny stan przycisku */
   #overview-btn[aria-pressed="true"] {
