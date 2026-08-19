@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 :root {
+  /* green */
+  /* --vl-accent-2: oklch(0.47 0.1 160); */
+
   /* Palette OKLCH */
   --primary: oklch(0.59 0.21 30);
   --analogous-1: oklch(from var(--primary) l c calc(h + 30));
@@ -17,9 +20,8 @@
   --vl-black: oklch(0.17 0.01 107);
   --vl-white: oklch(0.98 0.01 107);
   --vl-accent-1: var(--primary);
-  /* --vl-accent-2: oklch(0.47 0.1 160); green */
-  --vl-accent-2: var(--tetradic-2);
-  --vl-accent-3: var(--tetradic-1);
+  --vl-accent-2: var(--split-complementary-2);
+  --vl-accent-3: var(--triadic-1);
 
   --background: var(--vl-white);
   --background-1: hsl(60, 16%, 92%);
