@@ -3,6 +3,7 @@ const pathname = Astro.url.pathname;
 const projectSlugMap = await import('@/lib/projectSlugMap').then(m => m.getProjectSlugMap());
 const isAlreadyPolish = Astro.currentLocale === 'pl';
 ---
+
 { !isAlreadyPolish && (
   <script is:inline define:vars={{ pathname, projectSlugMap }}>
     function getPolishPath(currentPath) {

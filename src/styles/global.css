@@ -1,36 +1,44 @@
 @import "tailwindcss";
+@import "./color-palette";
 
 :root {
-  /* green */
-  /* --vl-accent-2: oklch(0.47 0.1 160); */
+  --black: oklch(0.17 0.01 107);
+  --white: oklch(0.98 0.01 107);
+  --primary: var(--pallette-primary);
+  --accent-1: var(--complementary);
+  --accent-2: var(--tetradic-1);
 
-  /* Palette OKLCH */
-  --primary: oklch(0.59 0.21 30);
-  --analogous-1: oklch(from var(--primary) l c calc(h + 30));
-  --analogous-2: oklch(from var(--primary) l c calc(h - 30));
-  --complementary: oklch(from var(--primary) l c calc(h + 180));
-  --split-complementary-1: oklch(from var(--primary) l c calc(h - 150));
-  --split-complementary-2: oklch(from var(--primary) l c calc(h + 150));
-  --triadic-1: oklch(from var(--primary) l c calc(h - 120));
-  --triadic-2: oklch(from var(--primary) l c calc(h + 120));
-  --tetradic-1: oklch(from var(--primary) l c calc(h + 270));
-  --tetradic-2: oklch(from var(--primary) l c calc(h + 180));
-  --tetradic-3: oklch(from var(--primary) l c calc(h + 90));
+  --primary-lightest: oklch(from var(--primary) calc(l + 0.30) calc(c - 0.15) h);
+  --primary-lighter:  oklch(from var(--primary) calc(l + 0.20) calc(c - 0.10) h);
+  --primary-light:    oklch(from var(--primary) calc(l + 0.10) calc(c - 0.05) h);
+  --primary-dark:     oklch(from var(--primary) calc(l - 0.10) calc(c - 0.05) h);
+  --primary-darker:   oklch(from var(--primary) calc(l - 0.20) calc(c - 0.10) h);
+  --primary-darkest:  oklch(from var(--primary) calc(l - 0.30) calc(c - 0.15) h);
+  
+  --accent-1-lightest: oklch(from var(--accent-1) calc(l + 0.30) calc(c - 0.15) h);
+  --accent-1-lighter:  oklch(from var(--accent-1) calc(l + 0.20) calc(c - 0.10) h);
+  --accent-1-light:    oklch(from var(--accent-1) calc(l + 0.10) calc(c - 0.05) h);
+  --accent-1-dark:     oklch(from var(--accent-1) calc(l - 0.10) calc(c - 0.05) h);
+  --accent-1-darker:   oklch(from var(--accent-1) calc(l - 0.20) calc(c - 0.10) h);
+  --accent-1-darkest:  oklch(from var(--accent-1) calc(l - 0.30) calc(c - 0.15) h);
 
-  --vl-black: oklch(0.17 0.01 107);
-  --vl-white: oklch(0.98 0.01 107);
-  --vl-accent-1: var(--primary);
-  --vl-accent-2: var(--split-complementary-2);
-  --vl-accent-3: var(--triadic-1);
+  --accent-2-lightest: oklch(from var(--accent-2) calc(l + 0.30) calc(c - 0.15) h);
+  --accent-2-lighter:  oklch(from var(--accent-2) calc(l + 0.20) calc(c - 0.10) h);
+  --accent-2-light:    oklch(from var(--accent-2) calc(l + 0.10) calc(c - 0.05) h);
+  --accent-2-dark:     oklch(from var(--accent-2) calc(l - 0.10) calc(c - 0.05) h);
+  --accent-2-darker:   oklch(from var(--accent-2) calc(l - 0.20) calc(c - 0.10) h);
+  --accent-2-darkest:  oklch(from var(--accent-2) calc(l - 0.30) calc(c - 0.15) h);
 
-  --background: var(--vl-white);
+
+  --background: var(--white);
   --background-1: hsl(60, 16%, 92%);
   --background-2: hsl(60, 12%, 88%);
   --background-3: hsl(60, 8%, 84%);
 
-  --foreground: var(--vl-black);
+  --foreground: var(--black);
   --foreground-1: hsl(0, 0%, 20%);
   --foreground-2: hsl(0, 0%, 25%);
+  --foreground-3: hsl(0, 0%, 30%);
 
   --success-text: hsl(160, 100%, 25%);
   --success-border: hsl(160, 100%, 30%);
@@ -57,12 +65,12 @@
 }
 
 [data-theme="dark"] {
-  --background:   var(--vl-black);
+  --background:   var(--black);
   --background-1: oklch(0.27 0.01 107); 
   --background-2: oklch(0.37 0.01 107);
   --background-3: oklch(0.47 0.01 107);
 
-  --foreground: var(--vl-white);
+  --foreground: var(--white);
   --foreground-1: hsl(0, 0%, 80%);
   --foreground-2: hsl(0, 0%, 75%);
 

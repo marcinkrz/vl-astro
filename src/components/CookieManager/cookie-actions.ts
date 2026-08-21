@@ -1,12 +1,8 @@
-// cookie-actions.ts
 import type { CookiePreferences } from "./cookie-types";
 
 const COOKIE_NAME = "cookie_consent";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
-/**
- * Odczytuje wartość cookie.
- */
 function getCookie(name: string): string | null {
   const cookies = document.cookie.split("; ");
 
@@ -21,9 +17,6 @@ function getCookie(name: string): string | null {
   return null;
 }
 
-/**
- * Tworzy lub nadpisuje cookie.
- */
 function setCookie(
   name: string,
   value: string,
@@ -46,7 +39,6 @@ function setCookie(
 
   cookie += "; SameSite=Lax";
 
-  // Wymagane bezpieczne ciasteczka na HTTPS
   if (typeof window !== "undefined" && window.location.protocol === "https:") {
     cookie += "; Secure";
   }
@@ -54,9 +46,6 @@ function setCookie(
   document.cookie = cookie;
 }
 
-/**
- * Usuwa cookie.
- */
 function deleteCookie(
   name: string,
   options: {
@@ -78,18 +67,11 @@ function deleteCookie(
   document.cookie = cookie;
 }
 
-/**
- * Zapisuje preferencje użytkownika.
- */
 export function setCookieConsent(preferences: CookiePreferences): void {
   setCookie(COOKIE_NAME, JSON.stringify(preferences));
 }
 
-/**
- * Odczytuje zapisane preferencje.
- */
 export function checkCookieConsent(): CookiePreferences | null {
-  // Zabezpieczenie przed wywołaniem po stronie serwera (SSR)
   if (typeof document === "undefined") return null;
 
   const cookie = getCookie(COOKIE_NAME);
@@ -107,34 +89,27 @@ export function checkCookieConsent(): CookiePreferences | null {
   }
 }
 
-/**
- * Włącza lub wyłącza analitykę.
- */
 export function setAnalyticsCookie(isEnabled: boolean): void {
   if (isEnabled) {
     setCookie("google_analytics", "true");
     return;
   }
-
+  
   deleteCookie("google_analytics");
 
-  // Dynamiczne pobieranie domeny (z kropką na początku dla subdomen)
-  const currentDomain = window.location.hostname === "localhost" 
-    ? "localhost" 
+  const currentDomain = window.location.hostname === "localhost"
+    ? "localhost"
     : `.${window.location.hostname.replace(/^www\./, "")}`;
 
-  // Usuń wszystkie cookies Google Analytics (_ga*)
   document.cookie
     .split("; ")
     .map((cookie) => cookie.split("=")[0].trim())
     .filter((name) => name.startsWith("_ga"))
-    .forEach((name) => {
-      // Usuń ze ścieżki głównej
-      deleteCookie(name);
 
-      // Usuń dla całej domeny
+    .forEach((name) => {
+      deleteCookie(name);
       if (currentDomain !== "localhost") {
-         deleteCookie(name, { domain: currentDomain });
+        deleteCookie(name, { domain: currentDomain });
       }
     });
 }

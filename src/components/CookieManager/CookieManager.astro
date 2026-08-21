@@ -4,28 +4,35 @@ import { getT } from "@/i18n/messages";
 import Button from "../_ui/Button.astro";
 
 const locale = Astro.currentLocale === "pl" ? "pl" : "en";
-const t = getT(locale) as (key: string, vars?: Record<string, string | number>) => string;
+const t = getT(locale) as (
+  key: string,
+  vars?: Record<string, string | number>,
+) => string;
 
 const cookieTypes = getCookieTypes(t);
 ---
+
 <div
   id="cookie-banner"
   class="fixed z-40 bottom-2 inset-x-2 sm:w-[600px] md:right-auto md:left-4 lg:left-6 hidden"
 >
-  <div class="p-px bg-gradient-to-b from-[var(--background-1)] from-66% to-[var(--background-3)] rounded-2xl">
-    <div class="py-2 px-3 flex max-sm:flex-col sm:items-center justify-between text-sm leading-snug rounded-2xl">
-      <p set:html={t("cookie.bannerMsg")} class="sm:mr-2 mb-2 text-[var(--foreground)]" />
-      <div class="max-sm:w-full flex sm:flex-col-reverse max-sm:justify-end gap-2">
-        <Button
-          id="cookie-settings-button"
-          variant="secondary"
-        >
+  <div
+    class="p-px bg-gradient-to-b from-[var(--background-1)] from-66% to-[var(--background-3)] rounded-2xl"
+  >
+    <div
+      class="py-2 px-3 flex max-sm:flex-col sm:items-center justify-between text-sm leading-snug rounded-2xl"
+    >
+      <p
+        set:html={t("cookie.bannerMsg")}
+        class="sm:mr-2 mb-2 text-[var(--foreground)]"
+      />
+      <div
+        class="max-sm:w-full flex sm:flex-col-reverse max-sm:justify-end gap-2"
+      >
+        <Button id="cookie-settings-button" variant="secondary">
           {t("cookie.settings")}
         </Button>
-        <Button
-          id="cookie-accept-all"
-          variant="primary"
-        >
+        <Button id="cookie-accept-all" variant="primary">
           {t("cookie.accept")}
         </Button>
       </div>
@@ -62,8 +69,7 @@ const cookieTypes = getCookieTypes(t);
               stroke-width="1.5"
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-            />
+              d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path>
           </svg>
         </button>
       </div>
@@ -72,50 +78,46 @@ const cookieTypes = getCookieTypes(t);
           {t("cookie.modalBody")}
         </p>
         <div class="px-2 lg:px-3 space-y-2">
-          {cookieTypes.map((type) => (
-            <div class="py-2 border border-[var(--border)] rounded-lg">
-              <div class="mb-2 px-3 flex items-center justify-between">
-                <h3 class="font-semibold text-base">
-                  {type.name}
-                </h3>
-                <label class="relative inline-flex items-center cursor-pointer">
-                  <input
-                    class="cookie-toggle sr-only peer"
-                    type="checkbox"
-                    data-cookie={type.id}
-                    checked={type.required}
-                    disabled={type.required}
-                  />
-                  <div
-                    class:list={[
-                      "w-11 h-6 rounded-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--background)] after:rounded-full after:h-5 after:w-5 after:transition-all",
-                      type.required
-                        ? "bg-[var(--border)]"
-                        : "bg-[var(--danger-border)] peer-checked:bg-[var(--success-border)]",
-                    ]}
-                  />
-                </label>
-              </div>
+          {
+            cookieTypes.map((type) => (
+              <div class="py-2 border border-[var(--border)] rounded-lg">
+                <div class="mb-2 px-3 flex items-center justify-between">
+                  <h3 class="font-semibold text-base">{type.name}</h3>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input
+                      class="cookie-toggle sr-only peer"
+                      type="checkbox"
+                      data-cookie={type.id}
+                      checked={type.required}
+                      disabled={type.required}
+                    />
+                    <div
+                      class:list={[
+                        "w-11 h-6 rounded-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--background)] after:rounded-full after:h-5 after:w-5 after:transition-all",
+                        type.required
+                          ? "bg-[var(--border)]"
+                          : "bg-[var(--danger-border)] peer-checked:bg-[var(--success-border)]",
+                      ]}
+                    />
+                  </label>
+                </div>
 
-              <div class="py-2 mx-3 flex items-center justify-between border-t border-[var(--border)] text-sm">
-                <p>{type.description}</p>
+                <div class="py-2 mx-3 flex items-center justify-between border-t border-[var(--border)] text-sm">
+                  <p>{type.description}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          }
         </div>
       </div>
-      <div class="absolute bottom-0 left-0 w-full h-16 flex justify-end items-center gap-2 px-4 bg-linear-to-b from-transparent to-[var(--background-3)]">
-        <Button
-          id="cookie-save"
-          variant="secondary"
-        >
+      <div
+        class="absolute bottom-0 left-0 w-full h-16 flex justify-end items-center gap-2 px-4 bg-linear-to-b from-transparent to-[var(--background-3)]"
+      >
+        <Button id="cookie-save" variant="secondary">
           {t("cookie.save")}
         </Button>
 
-        <Button
-          id="cookie-accept-all-modal"
-          variant="primary"
-        >
+        <Button id="cookie-accept-all-modal" variant="primary">
           {t("cookie.acceptAll")}
         </Button>
       </div>
@@ -160,25 +162,29 @@ const cookieTypes = getCookieTypes(t);
 
     const btnSettings = document.getElementById("cookie-settings-button");
     const btnAcceptAll = document.getElementById("cookie-accept-all");
-    const btnAcceptAllModal = document.getElementById("cookie-accept-all-modal");
+    const btnAcceptAllModal = document.getElementById(
+      "cookie-accept-all-modal",
+    );
     const btnSave = document.getElementById("cookie-save");
     const btnClose = document.getElementById("cookie-close");
     const backdrop = document.getElementById("cookie-backdrop");
 
-    const toggles = document.querySelectorAll<HTMLInputElement>(".cookie-toggle");
+    const toggles =
+      document.querySelectorAll<HTMLInputElement>(".cookie-toggle");
 
     if (!banner || !modal) return;
 
     try {
       const storedConsent = checkCookieConsent();
-      
+
       if (!storedConsent) {
         banner.classList.remove("hidden");
       } else {
         toggles.forEach((toggle) => {
           const cookieId = toggle.dataset.cookie;
           if (cookieId && !toggle.disabled) {
-            toggle.checked = !!storedConsent[cookieId as keyof typeof storedConsent];
+            toggle.checked =
+              !!storedConsent[cookieId as keyof typeof storedConsent];
           }
         });
       }
@@ -234,13 +240,13 @@ const cookieTypes = getCookieTypes(t);
     btnSettings?.addEventListener("click", openModal);
     btnClose?.addEventListener("click", closeModal);
     backdrop?.addEventListener("click", closeModal);
-    
+
     btnAcceptAll?.addEventListener("click", handleAcceptAll);
     btnAcceptAllModal?.addEventListener("click", handleAcceptAll);
     btnSave?.addEventListener("click", handleSave);
 
     const handleOpenEvent = () => openModal();
-    document.removeEventListener("open-cookie-settings", handleOpenEvent); // Usuwamy stare, by uniknąć duplikacji
+    document.removeEventListener("open-cookie-settings", handleOpenEvent);
     document.addEventListener("open-cookie-settings", handleOpenEvent);
   });
 </script>

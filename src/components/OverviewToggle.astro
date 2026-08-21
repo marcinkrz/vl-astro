@@ -1,21 +1,36 @@
 ---
-import Button from './_ui/Button.astro';
+import Button from "./_ui/Button.astro";
 ---
+
 <Button
   id="overview-btn"
   variant="primary"
   size="icon"
   class="fixed bottom-[8px] left-[8px] z-[100] p-[6px]"
 >
-  <svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 21L16.5143 16.5065M19 10.5C19 15.1944 15.1944 19 10.5 19C5.80558 19 2 15.1944 2 10.5C2 5.80558 5.80558 2 10.5 2C15.1944 2 19 5.80558 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-  <path d="M13 10.5L10.5 10.5H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <svg
+    width="18px"
+    height="18px"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    ><path
+      d="M21 21L16.5143 16.5065M19 10.5C19 15.1944 15.1944 19 10.5 19C5.80558 19 2 15.1944 2 10.5C2 5.80558 5.80558 2 10.5 2C15.1944 2 19 5.80558 19 10.5Z"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"></path>
+    <path
+      d="M13 10.5L10.5 10.5H8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"></path>
   </svg>
 </Button>
 
 <style is:global>
   html.overview {
     font-size: 50%;
-    
+
     @media (width >= 48rem) {
       font-size: 45%;
     }
@@ -93,7 +108,7 @@ import Button from './_ui/Button.astro';
       column-rule: 1px solid var(--border);
       min-height: calc(100svh - 1px);
       margin-top: 0;
-      padding: .75rem;
+      padding: 0.75rem;
       border-left: 0;
 
       @media (width >= 48rem) {
@@ -107,7 +122,10 @@ import Button from './_ui/Button.astro';
         columns: 5;
       }
 
-      header, p, img, .overview-group {
+      header,
+      p,
+      img,
+      .grid {
         break-inside: avoid;
       }
     }
@@ -118,23 +136,30 @@ import Button from './_ui/Button.astro';
   (() => {
     const root = document.documentElement;
     const btn = document.getElementById("overview-btn");
-    if (!btn) return
+    if (!btn) return;
 
-    const STORE = "__overview__"
+    const STORE = "__overview__";
 
     const set = (on) => {
       root.classList.toggle("overview", on);
-      try { sessionStorage.setItem(STORE, on ? "1" : "0") } catch {}
-    }
+      try {
+        sessionStorage.setItem(STORE, on ? "1" : "0");
+      } catch {}
+    };
 
-    btn.addEventListener("click", () => set(!root.classList.contains("overview")));
+    btn.addEventListener("click", () =>
+      set(!root.classList.contains("overview")),
+    );
     if (!window.__overviewKeys) {
       document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && root.classList.contains("overview")) set(false);
-      })
+        if (e.key === "Escape" && root.classList.contains("overview"))
+          set(false);
+      });
       window.__overviewKeys = true;
     }
 
-    try { if (sessionStorage.getItem(STORE) === "1") set(true) } catch {}
+    try {
+      if (sessionStorage.getItem(STORE) === "1") set(true);
+    } catch {}
   })();
 </script>

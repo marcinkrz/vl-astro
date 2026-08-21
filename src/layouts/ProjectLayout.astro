@@ -1,8 +1,8 @@
 ---
-import BaseLayout from './BaseLayout.astro';
-import { getT } from '@/i18n/messages';
+import BaseLayout from "./BaseLayout.astro";
+import { getT } from "@/i18n/messages";
 
-const locale = Astro.currentLocale === 'pl' ? 'pl' : 'en';
+const locale = Astro.currentLocale === "pl" ? "pl" : "en";
 const t = getT(locale);
 
 interface Props {
@@ -29,45 +29,56 @@ const {
   pubDate,
 } = Astro.props as Props;
 ---
+
 <BaseLayout title={metaTitle} description={metaDescription}>
   <main class="container mt-16">
     <article class="space-y-24">
       <header>
-        <div class="pb-[56%] relative overflow-hidden"> 
-          {cover && (
-            <img src={cover} alt={title} class="absolute inset-0 w-full h-full object-cover" />
-          )}
+        <div class="relative aspect-video overflow-hidden">
+          {
+            cover && (
+              <img
+                src={cover}
+                alt={title}
+                class="absolute inset-0 w-full h-full object-cover"
+              />
+            )
+          }
         </div>
-
         <h1 class="display mt-6 mb-3">
           {title}
         </h1>
-        
         <p class="my-6 h2">{description}</p>
-
         <ul class="text-sm">
           <li class="grid grid-cols-[3rem_auto]">
-            <span>{t('projects.clientTitle')}:</span>
+            <span>{t("projects.clientTitle")}:</span>
             {client}
           </li>
           <li class="grid grid-cols-[3rem_auto]">
-            <span>{t('projects.yearTitle')}:</span>
-            {pubDate ? pubDate.toLocaleDateString(locale, {
-              year: 'numeric'
-            }) : null}
+            <span>{t("projects.yearTitle")}:</span>
+            {
+              pubDate
+                ? pubDate.toLocaleDateString(locale, {
+                    year: "numeric",
+                  })
+                : null
+            }
           </li>
-          {tags.length > 0 && (
-            <li class="grid grid-cols-[3rem_auto]">
-              {t('projects.tagsTitle')}:
-              <span>
-                {tags.map((tag, index) => (
-                  <span class="">
-                    <span class="text-(--foreground)">{tag}</span>{index < tags.length - 1 ? ', ' : ''}
-                  </span>
-                ))}
-              </span>
-            </li>
-          )}
+          {
+            tags.length > 0 && (
+              <li class="grid grid-cols-[3rem_auto]">
+                {t("projects.tagsTitle")}:
+                <span>
+                  {tags.map((tag, index) => (
+                    <span class="">
+                      <span class="text-(--foreground)">{tag}</span>
+                      {index < tags.length - 1 ? ", " : ""}
+                    </span>
+                  ))}
+                </span>
+              </li>
+            )
+          }
         </ul>
       </header>
       <slot />

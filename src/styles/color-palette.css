@@ -1,0 +1,15 @@
+:root {
+  /* Palette OKLCH */
+  --pallette-primary:                oklch(0.59 0.21 30);
+  
+  --analogous-1:            oklch(from var(--pallette-primary) l c calc(h + 30));
+  --analogous-2:            oklch(from var(--pallette-primary) l c calc(h - 30));
+  --complementary:          oklch(from var(--pallette-primary) l c calc(h + 180));
+  --split-complementary-1:  oklch(from var(--pallette-primary) l c calc(h - 150));
+  --split-complementary-2:  oklch(from var(--pallette-primary) l c calc(h + 150));
+  --triadic-1:              oklch(from var(--pallette-primary) l c calc(h - 120));
+  --triadic-2:              oklch(from var(--pallette-primary) l c calc(h + 120));
+  --tetradic-1:             oklch(from var(--pallette-primary) l c calc(h + 270));
+  --tetradic-2:             oklch(from var(--pallette-primary) l c calc(h + 180));
+  --tetradic-3:             oklch(from var(--pallette-primary) l c calc(h + 90));
+}

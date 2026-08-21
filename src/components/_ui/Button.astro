@@ -1,5 +1,5 @@
 ---
-import { cn } from '@/utils/styles-merge';
+import { cn } from "@/utils/styles-merge";
 
 const {
   variant = "primary",
@@ -21,7 +21,7 @@ const sizes = {
 
 const variants = {
   primary: `bg-[var(--foreground)] text-[var(--background)] hover:bg-[var(--foreground-2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--foreground-2)]`,
-  secondary: `bg-[var(--primary)] text-[var(--vl-white)] hover:bg-[var(--vl-black)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)] active:bg-[var(--vl-black)]`,
+  secondary: `bg-[var(--primary)] text-[var(--white)] hover:bg-[var(--black)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)] active:bg-[var(--black)]`,
   outline: `bg-transparent border-[var(--border-light)] text-[var(--foreground)] hover:bg-[var(--background-2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--background-2)]`,
   ghost: `bg-transparent text-[var(--foreground)] hover:bg-[var(--background-2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--background-2)]`,
   link: `text-inherit font-semibold min-h-auto p-0 bg-transparent text-[var(--foreground)] decoration-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--background-3)] active:underline`,
@@ -31,9 +31,10 @@ const classes = cn(
   base,
   sizes[size as keyof typeof sizes],
   variants[variant as keyof typeof variants],
-  className
+  className,
 );
 ---
+
 {
   href ? (
     <a class={classes} href={href} {...props}>

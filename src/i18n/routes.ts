@@ -1,27 +1,27 @@
-import type { Locale } from './messages';
+import type { Locale } from "./messages";
 
-type RouteKey = 'home' | 'projects' | 'studio' | 'contact' | 'styleguide';
+type RouteKey = "home" | "projects" | "studio" | "contact" | "styleguide";
 
 const routes: Record<RouteKey, Record<Locale, string>> = {
   home: {
-    en: '/',
-    pl: '/pl',
+    en: "/",
+    pl: "/pl",
   },
   projects: {
-    en: '/projects',
-    pl: '/pl/projekty',
+    en: "/projects",
+    pl: "/pl/projekty",
   },
   studio: {
-    en: '/studio',
-    pl: '/pl/studio',
+    en: "/studio",
+    pl: "/pl/studio",
   },
   contact: {
-    en: '/contact',
-    pl: '/pl/kontakt',
+    en: "/contact",
+    pl: "/pl/kontakt",
   },
   styleguide: {
-    en: '/style-guide',
-    pl: '/pl/wytyczne-identyfikacji',
+    en: "/style-guide",
+    pl: "/pl/wytyczne-identyfikacji",
   },
 };
 
@@ -30,5 +30,5 @@ export function getRoute(locale: Locale, key: RouteKey) {
 }
 
 export function getOtherLocale(locale: Locale): Locale {
-  return locale === 'en' ? 'pl' : 'en';
+  return locale === "en" ? "pl" : "en";
 }

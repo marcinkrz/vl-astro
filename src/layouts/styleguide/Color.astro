@@ -1,5 +1,6 @@
 ---
 import Section from "@/layouts/styleguide/Section.astro";
+// import ColorPalette from "@/layouts/styleguide/ColorPalette.astro";
 
 const {
   color_title,
@@ -34,137 +35,91 @@ const {
   <Section id="color-brand" title={color_brand_title} lead={color_brand_lead}>
     <div class="space-y-2 md:space-y-4 lg:space-y-6">
       <div class="grid grid-cols-3 gap-2 md:gap-4 lg:gap-6">
-        <div class="relative pb-[100%] lg:pb-[50%] bg-(--vl-black) border border-(--border)">
+        <div
+          class="relative aspect-square lg:aspect-video bg-(--black) border border-(--border)"
+        >
           <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
-            <p class="text-xs lg:text-sm text-(--vl-white)">
-              --vl-black<br/>cmyk(0% 0% 31% 94%)<br/>oklch(0.17 0.01 107)<br/>#10100b
+            <p class="text-xs lg:text-sm text-(--white)">
+              --black<br />cmyk(0% 0% 31% 94%)<br />oklch(0.17 0.01 107)<br
+              />#10100b
             </p>
           </div>
         </div>
-        <div class="relative pb-[100%] lg:pb-[50%] bg-(--vl-white) border border-(--border)">
+        <div
+          class="relative aspect-square lg:aspect-video bg-(--white) border border-(--border)"
+        >
           <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
-            <p class="text-xs md:text-sm text-(--vl-black)">
-              --vl-white<br/>cmyk(0% 0% 3% 2%)<br/>oklch(0.98 0.01 107)<br/>#f9f9f1
+            <p class="text-xs md:text-sm text-(--black)">
+              --white<br />cmyk(0% 0% 3% 2%)<br />oklch(0.98 0.01 107)<br
+              />#f9f9f1
             </p>
           </div>
         </div>
-      </div>
-      <div class="grid grid-cols-3 gap-2 md:gap-4 lg:gap-6">
-        <div class="relative pb-[100%] lg:pb-[50%] bg-(--vl-accent-1)">
+        <div></div>
+        <div class="relative aspect-square lg:aspect-video bg-(--primary)">
           <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
-            <p class="text-xs lg:text-sm text-(--vl-white)">
-              --vl-accent-1<br/>cmyk(0% 77% 85% 13%)<br/>oklch(0.59 0.21 30)<br/>#df3322
-            </p>
+            <p class="text-xs lg:text-sm text-(--white)">--primary</p>
           </div>
         </div>
-        <div class="relative pb-[100%] lg:pb-[50%] bg-(--vl-accent-2)">
+        <div class="relative aspect-square lg:aspect-video bg-(--accent-1)">
           <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
-            <p class="text-xs lg:text-sm text-(--vl-white)">
-              --vl-accent-2<br/>cmyk(83% 0% 34% 58%)<br/>oklch(0.47 0.1 160)<br/>#126b47
-            </p>
+            <p class="text-xs lg:text-sm text-(--white)">--accent-1</p>
           </div>
         </div>
-        <div class="relative pb-[100%] lg:pb-[50%] bg-(--vl-accent-3)">
+        <div class="relative aspect-square lg:aspect-video bg-(--accent-2)">
           <div class="absolute inset-0 p-2 md:p-4 lg:p-6 flex items-end">
-            <p class="text-xs lg:text-sm text-(--vl-white)">
-              --vl-accent-3<br/>cmyk(83% 0% 34% 58%)<br/>oklch(0.47 0.1 160)<br/>#126b47
-            </p>
+            <p class="text-xs lg:text-sm text-(--white)">--accent-2</p>
           </div>
         </div>
       </div>
     </div>
   </Section>
-  <Section id="color-palette" title={color_palette_title} lead={color_palette_lead}>
+  <Section
+    id="color-palette"
+    title={color_palette_title}
+    lead={color_palette_lead}
+  >
     <div class="space-y-2 md:space-y-4">
-      <div class="grid grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
-        <div class="relative pb-[100%] bg-(--primary)">
-          <div class="absolute inset-0 p-2 md:p-4 flex items-end">
-            <p class="text-xs text-(--vl-white)">
-              --primary
-            </p>
-          </div>
-        </div>
-        <div class="relative pb-[100%] bg-(--analogous-1)">
-          <div class="absolute inset-0 p-2 md:p-4 flex items-end">
-            <p class="text-xs text-(--vl-white)">
-              --analogous-1
-            </p>
-          </div>
-        </div>
-        <div class="relative pb-[100%] bg-(--analogous-2)">
-          <div class="absolute inset-0 p-2 md:p-4 flex items-end">
-            <p class="text-xs text-(--vl-white)">
-              --analogous-2
-            </p>
-          </div>
-        </div>
+      <div
+        class="grid grid-cols-9 mb-4 md:mb-6 lg:mb-8 border border-(--border)"
+      >
+        <div class="aspect-square bg-(--black)"></div>
+        <div class="aspect-square bg-(--primary-darkest)"></div>
+        <div class="aspect-square bg-(--primary-darker)"></div>
+        <div class="aspect-square bg-(--primary-dark)"></div>
+        <div class="aspect-square bg-(--primary)"></div>
+        <div class="aspect-square bg-(--primary-light)"></div>
+        <div class="aspect-square bg-(--primary-lighter)"></div>
+        <div class="aspect-square bg-(--primary-lightest)"></div>
+        <div class="aspect-square bg-(--white)"></div>
       </div>
-      <div class="grid grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
-        <div class="hidden lg:block relative pb-[50%]"></div>
-        <div class="hidden lg:block relative pb-[50%]"></div>
-        <div class="hidden lg:block relative pb-[50%]"></div>
-        <div class="relative pb-[100%] bg-(--tetradic-1)">
-          <div class="absolute inset-0 p-2 md:p-4 flex items-end">
-            <p class="text-xs text-(--vl-white)">
-              --tetradic-1
-            </p>
-          </div>
-        </div>
-        <div class="relative pb-[100%] bg-(--tetradic-2)">
-          <div class="absolute inset-0 p-2 md:p-4 flex items-end">
-            <p class="text-xs text-(--vl-white)">
-              --complementary<br/>--tetradic-2
-            </p>
-          </div>
-        </div>
-        <div class="relative pb-[100%] bg-(--tetradic-3)">
-          <div class="absolute inset-0 p-2 md:p-4 flex items-end">
-            <p class="text-xs text-(--vl-white)">
-              --tetradic-3
-            </p>
-          </div>
-        </div>
+      <div
+        class="grid grid-cols-9 mb-4 md:mb-6 lg:mb-8 border border-(--border)"
+      >
+        <div class="aspect-square bg-(--black)"></div>
+        <div class="aspect-square bg-(--accent-1-darkest)"></div>
+        <div class="aspect-square bg-(--accent-1-darker)"></div>
+        <div class="aspect-square bg-(--accent-1-dark)"></div>
+        <div class="aspect-square bg-(--accent-1)"></div>
+        <div class="aspect-square bg-(--accent-1-light)"></div>
+        <div class="aspect-square bg-(--accent-1-lighter)"></div>
+        <div class="aspect-square bg-(--accent-1-lightest)"></div>
+        <div class="aspect-square bg-(--white)"></div>
       </div>
-      <div class="grid grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
-        <div class="hidden lg:block relative pb-[50%]"></div>
-        <div class="hidden lg:block relative pb-[50%]"></div>
-        <div class="hidden lg:block relative pb-[50%]"></div>
-        <div class="relative pb-[100%] bg-(--triadic-1)">
-          <div class="absolute inset-0 p-2 md:p-4 flex items-end">
-            <p class="text-xs text-(--vl-white)">
-              --triadic-1
-            </p>
-          </div>
-        </div>
-        <div class="relative pb-[50%]"></div>
-        <div class="relative pb-[100%] bg-(--triadic-2)">
-          <div class="absolute inset-0 p-2 md:p-4 flex items-end">
-            <p class="text-xs text-(--vl-white)">
-              --triadic-2
-            </p>
-          </div>
-        </div>
+      <div
+        class="grid grid-cols-9 mb-4 md:mb-6 lg:mb-8 border border-(--border)"
+      >
+        <div class="aspect-square bg-(--black)"></div>
+        <div class="aspect-square bg-(--accent-2-darkest)"></div>
+        <div class="aspect-square bg-(--accent-2-darker)"></div>
+        <div class="aspect-square bg-(--accent-2-dark)"></div>
+        <div class="aspect-square bg-(--accent-2)"></div>
+        <div class="aspect-square bg-(--accent-2-light)"></div>
+        <div class="aspect-square bg-(--accent-2-lighter)"></div>
+        <div class="aspect-square bg-(--accent-2-lightest)"></div>
+        <div class="aspect-square bg-(--white)"></div>
       </div>
-      <div class="grid grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
-        <div class="hidden lg:block relative pb-[50%]"></div>
-        <div class="hidden lg:block relative pb-[50%]"></div>
-        <div class="hidden lg:block relative pb-[50%]"></div>
-        <div class="relative pb-[100%] bg-(--split-complementary-1)">
-          <div class="absolute inset-0 p-2 md:p-4 flex items-end">
-            <p class="text-xs text-(--vl-white)">
-              --split-complementary-1
-            </p>
-          </div>
-        </div>
-        <div class="relative pb-[50%]"></div>
-        <div class="relative pb-[100%] bg-(--split-complementary-2)">
-          <div class="absolute inset-0 p-2 md:p-4 flex items-end">
-            <p class="text-xs text-(--vl-white)">
-              --split-complementary-2
-            </p>
-          </div>
-        </div>
-      </div>
+      <!-- <ColorPalette /> -->
     </div>
   </Section>
 </section>

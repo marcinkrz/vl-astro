@@ -1,20 +1,19 @@
 ---
-import { getT } from '@/i18n/messages';
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import { getT } from "@/i18n/messages";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
 
-const locale = Astro.currentLocale === 'pl' ? 'pl' : 'en';
+const locale = Astro.currentLocale === "pl" ? "pl" : "en";
 const t = getT(locale);
 
 const projects = await getCollection(
-  'projects',
-  ({ data }) => data.locale === 'pl'
+  "projects",
+  ({ data }) => data.locale === "pl",
 );
 
-projects.sort((a, b) =>
-  b.data.pubDate.getTime() - a.data.pubDate.getTime()
-);
+projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 ---
+
 <BaseLayout>
   <main class="container mt-36 mb-24">
     <h1 class="display mb-3">
@@ -29,10 +28,7 @@ projects.sort((a, b) =>
           <li>
             <a href={`/pl/projekty/${project.id}`}>
               <article>
-                <img
-                  src={project.data.cover}
-                  alt={project.data.title}
-                />
+                <img src={project.data.cover} alt={project.data.title} />
                 <div class="grid grid-cols-4 gap-2">
                   <h2 class="h4">{project.data.title}</h2>
                   <p class="col-span-3 text-(--muted)">

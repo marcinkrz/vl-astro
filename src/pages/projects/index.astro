@@ -28,10 +28,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
           <li>
             <a href={`/projects/${project.id}`}>
               <article>
-                <img
-                  src={project.data.cover}
-                  alt={project.data.title}
-                />
+                <img src={project.data.cover} alt={project.data.title} />
                 <div class="grid grid-cols-4 gap-2">
                   <h2 class="h4">{project.data.title}</h2>
                   <p class="col-span-3 text-(--muted)">

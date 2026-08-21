@@ -1,38 +1,50 @@
 ---
-import { getT, type Locale } from '@/i18n/messages';
-import { getRoute } from '@/i18n/routes';
-import LangSwitch from './LangSwitch.astro';
-import Button from './_ui/Button.astro';
-import Logo from './_ui/Logo.astro';
+import { getT, type Locale } from "@/i18n/messages";
+import { getRoute } from "@/i18n/routes";
+import LangSwitch from "./LangSwitch.astro";
+import Button from "./_ui/Button.astro";
+import Logo from "./_ui/Logo.astro";
 
-const locale = (Astro.currentLocale === 'pl' ? 'pl' : 'en') as Locale;
+const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as Locale;
 const t = getT(locale);
 
 const pathname = Astro.url.pathname;
 
 const items = [
-  { key: 'projects', href: getRoute(locale, 'projects'), label: t('nav.projects') },
-  { key: 'studio', href: getRoute(locale, 'studio'), label: t('nav.studio') },
-  { key: 'contact', href: getRoute(locale, 'contact'), label: t('nav.contact') },
+  {
+    key: "projects",
+    href: getRoute(locale, "projects"),
+    label: t("nav.projects"),
+  },
+  { key: "studio", href: getRoute(locale, "studio"), label: t("nav.studio") },
+  {
+    key: "contact",
+    href: getRoute(locale, "contact"),
+    label: t("nav.contact"),
+  },
 ] as const;
 
-const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+const isActive = (href: string) =>
+  pathname === href || pathname.startsWith(`${href}/`);
 ---
+
 <header class="fixed z-101 top-0 inset-x-0">
-  <div class="relative z-2 container-full py-2 md:py-4 flex justify-between items-start">
+  <div
+    class="relative z-2 container-full py-2 md:py-4 flex justify-between items-start"
+  >
     <div class="w-full flex justify-between">
       <Logo />
       <Button
-      id="menu-toggle"
-      variant="ghost"
-      size="icon"
-      aria-label="Menu"
-      class={`md:hidden relative p-0 w-12 h-12 -mt-2 hover:bg-transparent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:bg-transparent
+        id="menu-toggle"
+        variant="ghost"
+        size="icon"
+        aria-label="Menu"
+        class={`md:hidden relative p-0 w-12 h-12 -mt-2 hover:bg-transparent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white active:bg-transparent
       group
       `}
-    >
-      <span class={
-        `before:block before:absolute before:w-3/4 before:h-[3px] before:bg-(--foreground)
+      >
+        <span
+          class={`before:block before:absolute before:w-3/4 before:h-[3px] before:bg-(--foreground)
         before:top-[8px] before:right-0
         group-[.is-active]:before:w-3/4
         group-[.is-active]:before:top-1/2
@@ -49,34 +61,38 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
         group-[.is-active]:after:rotate-225
         group-[.is-active]:after:-translate-1/2
         after:transition-all after:duration-400 after:ease-in-out
-        `}>
+        `}
+        >
         </span>
-      <span class={`
+        <span
+          class={`
         block absolute w-3/4 h-[3px] bg-(--foreground)
         top-[16px] right-0 origin-[18px_0px]
         group-[.is-active]:top-1/2
         group-[.is-active]:rotate-225
         transition-all duration-400 ease-in-out
         `}></span>
-    </Button>
+      </Button>
     </div>
     <div class="hidden md:flex gap-x-4">
       <nav>
         <ul class="flex h-full items-center gap-4 font-semibold">
-          {items.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                aria-current={isActive(item.href) ? 'page' : undefined}
-                class:list={{
-                  'text-(--foreground)': isActive(item.href),
-                  'text-(--muted)': !isActive(item.href),
-                }}
-              >
-                {item.label}
-              </a>
-            </li>
-          ))}
+          {
+            items.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={isActive(item.href) ? "page" : undefined}
+                  class:list={{
+                    "text-(--foreground)": isActive(item.href),
+                    "text-(--muted)": !isActive(item.href),
+                  }}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
         </ul>
       </nav>
       <LangSwitch />
@@ -90,8 +106,10 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
       [.is-active]:visible
       transition-visible duration-300
       group
-    `}>
-    <ul class={`
+    `}
+  >
+    <ul
+      class={`
       absolute z-1 top-[50%] left-[50%] flex flex-col gap-4 text-center
       opacity-0
       translate-x-[-50%]
@@ -99,34 +117,40 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
       group-[.is-active]:opacity-100
       group-[.is-active]:translate-y-[-50%]
       transition-all duration-300
-    `}>
-      {items.map((item) => (
-        <li>
-          <a href={item.href} class="text-[4rem] font-semibold">
-            {item.label}
-          </a>
-        </li>
-      ))}
+    `}
+    >
+      {
+        items.map((item) => (
+          <li>
+            <a href={item.href} class="text-[4rem] font-semibold">
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
       <li class="mt-12">
         <LangSwitch />
       </li>
     </ul>
-    <div class={`
+    <div
+      class={`
       absolute inset-0 bg-(--background)
       opacity-0
       group-[.is-active]:opacity-100
       transition-opacity duration-300
-    `}></div>
+    `}
+    >
+    </div>
   </nav>
 </header>
 <script is:inline>
-  document.addEventListener('astro:page-load', () => {
-    const toggleButton = document.getElementById('menu-toggle');
-    const menuItems = document.getElementById('mobile-nav');
+  document.addEventListener("astro:page-load", () => {
+    const toggleButton = document.getElementById("menu-toggle");
+    const menuItems = document.getElementById("mobile-nav");
 
-    toggleButton?.addEventListener('click', () => {
-      toggleButton?.classList.toggle('is-active');
-      menuItems?.classList.toggle('is-active');
+    toggleButton?.addEventListener("click", () => {
+      toggleButton?.classList.toggle("is-active");
+      menuItems?.classList.toggle("is-active");
     });
   });
 </script>

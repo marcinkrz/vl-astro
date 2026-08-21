@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import Button from '@/components/_ui/Button.astro';
+import Button from "@/components/_ui/Button.astro";
 import OverviewToggle from "@/components/OverviewToggle.astro";
 import Nav from "@/layouts/styleguide/Nav.astro";
 
@@ -75,8 +75,19 @@ import Components from "@/layouts/styleguide/Components.astro";
             items: [
               { id: "components", label: "Wprowadzenie" },
               { id: "components-buttons", label: "Przyciski" },
-              { id: "components-cards", label: "Karty" },
-              { id: "components-covers", label: "Okładki" },
+              { id: "components-form-els", label: "Elementy formularza" },
+            ],
+          },
+          {
+            id: "applications",
+            title: (
+              <span>
+                <span class="inline-flex w-6">05 </span>Zastosowanie
+              </span>
+            ),
+            items: [
+              { id: "applications", label: "Wprowadzenie" },
+              { id: "applications-hero", label: "Sekcja powitalna" },
             ],
           },
         ]}
@@ -86,7 +97,12 @@ import Components from "@/layouts/styleguide/Components.astro";
       class="md:col-span-3 lg:col-span-4 xl:col-span-5 pb-24 md:pb-32 space-y-24 md:space-y-32 md:border-l border-(--border)"
     >
       <Logo
-        logo_title={(<><span>01 </span><span>Logo</span></>)}
+        logo_title={(
+          <>
+            <span>01 </span>
+            <span>Logo</span>
+          </>
+        )}
         logo_lead="Logo Visual Label, stanowi fundament naszej tożsamości i jest kluczowym elementem rozpoznawczym dla naszych klientów. Aby wiernie odtworzyć nasze logo na różnych nośnikach, należy przestrzegać kilku prostych wytycznych, które zapewnią jego wyraźność i spójność w każdej sytuacji."
         btn_text="Pobierz logo"
         logo_wordmark_title="Logotyp"
@@ -97,7 +113,12 @@ import Components from "@/layouts/styleguide/Components.astro";
         logo_color_lead="Chociaż logo Visual Label i jego warianty graficzne mogą być wykorzystywane w dowolnym kolorze naszej marki, zdecydowanie zaleca się stosowanie wersji monochromatycznej."
       />
       <Typography
-        typography_title={(<><span>02 </span><span>Typografia</span></>)}
+        typography_title={(
+          <>
+            <span>02 </span>
+            <span>Typografia</span>
+          </>
+        )}
         typography_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
         btn_text="Pobierz czcionkę"
         typeface_title="Krój pisma"
@@ -116,7 +137,12 @@ import Components from "@/layouts/styleguide/Components.astro";
         sizes_pangram="Mężny bądź, chroń pułk twój i sześć flag."
       />
       <Color
-        color_title={(<><span>03 </span><span>Kolor</span></>)}
+        color_title={(
+          <>
+            <span>03 </span>
+            <span>Kolor</span>
+          </>
+        )}
         color_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
         color_brand_title="Kolory marki"
         color_brand_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
@@ -124,14 +150,27 @@ import Components from "@/layouts/styleguide/Components.astro";
         color_palette_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
       />
       <Components
-        components_title={(<><span>04 </span><span>Komponenty</span></>)}
+        components_title={(
+          <>
+            <span>04 </span>
+            <span>Komponenty</span>
+          </>
+        )}
         components_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
         components_buttons_title="Przyciski"
         components_buttons_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
       >
-        <div slot="buttons" id="components-buttons" class="space-y-4 md:space-y-8">
-          <div class="grid md:grid-cols-4 max-md:gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-6 justify-items-start pt-1 border-t border-(--border)">
-            <p class="mb-2 md:mb-4 md:col-span-4 text-xs md:text-sm text-(--muted)">
+        <div
+          slot="buttons"
+          id="components-buttons"
+          class="space-y-4 md:space-y-8"
+        >
+          <div
+            class="grid md:grid-cols-4 max-md:gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-6 justify-items-start pt-1 border-t border-(--border)"
+          >
+            <p
+              class="mb-2 md:mb-4 md:col-span-4 text-xs md:text-sm text-(--muted)"
+            >
               Wariant główny
             </p>
             <Button size="large">Primary large</Button>
@@ -139,8 +178,12 @@ import Components from "@/layouts/styleguide/Components.astro";
             <Button size="small">Primary small</Button>
             <span></span>
           </div>
-          <div class="grid md:grid-cols-4 max-md:gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-6 justify-items-start pt-1 border-t border-(--border)">
-            <p class="mb-2 md:mb-4 md:col-span-4 text-xs md:text-sm text-(--muted)">
+          <div
+            class="grid md:grid-cols-4 max-md:gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-6 justify-items-start pt-1 border-t border-(--border)"
+          >
+            <p
+              class="mb-2 md:mb-4 md:col-span-4 text-xs md:text-sm text-(--muted)"
+            >
               Wariant dodatkowy
             </p>
             <Button variant="secondary" size="large">Secondary large</Button>
@@ -148,8 +191,12 @@ import Components from "@/layouts/styleguide/Components.astro";
             <Button variant="secondary" size="small">Secondary small</Button>
             <span></span>
           </div>
-          <div class="grid md:grid-cols-4 max-md:gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-6 justify-items-start pt-1 border-t border-(--border)">
-            <p class="mb-2 md:mb-4 md:col-span-4 text-xs md:text-sm text-(--muted)">
+          <div
+            class="grid md:grid-cols-4 max-md:gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-6 justify-items-start pt-1 border-t border-(--border)"
+          >
+            <p
+              class="mb-2 md:mb-4 md:col-span-4 text-xs md:text-sm text-(--muted)"
+            >
               Wariant z konturem
             </p>
             <Button variant="outline" size="large">Outline large</Button>
@@ -157,8 +204,12 @@ import Components from "@/layouts/styleguide/Components.astro";
             <Button variant="outline" size="small">Outline small</Button>
             <span></span>
           </div>
-          <div class="grid md:grid-cols-4 max-md:gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-6 justify-items-start pt-1 border-t border-(--border)">
-            <p class="mb-2 md:mb-4 md:col-span-4 text-xs md:text-sm text-(--muted)">
+          <div
+            class="grid md:grid-cols-4 max-md:gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-6 justify-items-start pt-1 border-t border-(--border)"
+          >
+            <p
+              class="mb-2 md:mb-4 md:col-span-4 text-xs md:text-sm text-(--muted)"
+            >
               Wariant przezroczysty
             </p>
             <Button variant="ghost" size="large">Ghost large</Button>

@@ -1,51 +1,49 @@
 ---
-import '../styles/global.css';
+import "../styles/global.css";
 import { Font } from "astro:assets";
-import { ClientRouter } from 'astro:transitions';
-import { getT, type Locale } from '@/i18n/messages';
-import LangRedirect from '@/components/LangRedirect.astro';
-import CookieManager from '@/components/CookieManager/CookieManager.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import { ClientRouter } from "astro:transitions";
+import { getT, type Locale } from "@/i18n/messages";
+import LangRedirect from "@/components/LangRedirect.astro";
+import CookieManager from "@/components/CookieManager/CookieManager.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 
 interface Props {
   title?: string;
   description?: string;
 }
 
-const {
-  title,
-  description,
-} = Astro.props as Props;
+const { title, description } = Astro.props as Props;
 
-const locale = (Astro.currentLocale === 'pl' ? 'pl' : 'en') as Locale;
+const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as Locale;
 const t = getT(locale);
 
-const siteName = 'Visual Label';
+const siteName = "Visual Label";
 
 const defaultTitle =
-  locale === 'pl'
-    ? 'Visual Label — Studio kreatywne'
-    : 'Visual Label — Creative Studio';
+  locale === "pl"
+    ? "Visual Label — Studio kreatywne"
+    : "Visual Label — Creative Studio";
 
 const defaultDescription =
-  locale === 'pl'
-    ? 'Studio projektowe tworzące nowoczesne strony internetowe.'
-    : 'Creative studio building modern websites.';
+  locale === "pl"
+    ? "Studio projektowe tworzące nowoczesne strony internetowe."
+    : "Creative studio building modern websites.";
 
 const pageTitle = title ? `${title} | ${siteName}` : defaultTitle;
 const pageDescription = description ?? defaultDescription;
 ---
+
 <!doctype html>
 <html lang={locale} class="scroll-smooth">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={siteName} />
-    <meta property="og:locale" content={locale === 'pl' ? 'pl_PL' : 'en_US'} />
+    <meta property="og:locale" content={locale === "pl" ? "pl_PL" : "en_US"} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
     <meta name="twitter:card" content="summary_large_image" />
@@ -53,11 +51,11 @@ const pageDescription = description ?? defaultDescription;
     <meta name="twitter:description" content={pageDescription} />
     <link rel="canonical" href={Astro.url.href} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" />
     <LangRedirect />
     <ClientRouter />
     <Font cssVariable="--font-copy" />
-	</head>
+  </head>
   <body>
     <Header />
     <main>
@@ -65,5 +63,5 @@ const pageDescription = description ?? defaultDescription;
     </main>
     <Footer />
     <CookieManager />
-	</body>
+  </body>
 </html>

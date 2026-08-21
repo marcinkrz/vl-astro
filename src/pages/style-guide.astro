@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import Button from '@/components/_ui/Button.astro';
+import Button from "@/components/_ui/Button.astro";
 import OverviewToggle from "@/components/OverviewToggle.astro";
 import Nav from "@/layouts/styleguide/Nav.astro";
 
@@ -12,15 +12,14 @@ import Components from "@/layouts/styleguide/Components.astro";
 
 <BaseLayout>
   <OverviewToggle />
-  <div class="mt-12 md:mt-16 md:grid md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+  <div
+    id="styleguide"
+    class="mt-12 md:mt-16 md:grid md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
+  >
     <header class="max-md:mb-12 border-t border-(--border)">
       <div class="px-2 py-4 md:px-4 lg:p-6 text-xs font-mono uppercase">
-        <h1 class="font-bold">
-          Visual identity guidelines
-        </h1>
-        <p class="text-(--muted)">
-          Updated: August 15, 2026
-        </p>
+        <h1 class="font-bold">Visual identity guidelines</h1>
+        <p class="text-(--muted)">Updated: August 15, 2026</p>
       </div>
       <Nav
         sections={[
@@ -76,15 +75,34 @@ import Components from "@/layouts/styleguide/Components.astro";
             items: [
               { id: "components", label: "Introduction" },
               { id: "components-buttons", label: "Buttons" },
-              { id: "components-cards", label: "Cards" },
-              { id: "components-covers", label: "Covers" },
+              { id: "components-form-els", label: "Form elements" },
+            ],
+          },
+          {
+            id: "applications",
+            title: (
+              <span>
+                <span class="inline-flex w-6">05 </span>Applications
+              </span>
+            ),
+            items: [
+              { id: "applications", label: "Introduction" },
+              { id: "applications-hero", label: "Hero section" },
             ],
           },
         ]}
       />
     </header>
-    <article class="md:col-span-3 lg:col-span-4 xl:col-span-5 pb-24 md:pb-32 space-y-24 md:space-y-32 md:border-l border-(--border)">
-      <Logo logo_title={(<><span>01 </span><span>Logo</span></>)}
+    <article
+      class="md:col-span-3 lg:col-span-4 xl:col-span-5 pb-24 md:pb-32 space-y-24 md:space-y-32 md:border-l border-(--border)"
+    >
+      <Logo
+        logo_title={(
+          <>
+            <span>01 </span>
+            <span>Logo</span>
+          </>
+        )}
         logo_lead="The Visual Label logo is the foundation of our identity and a key element of brand recognition for our customers. To accurately reproduce our logo on various media, please follow a few simple guidelines that will ensure its clarity and consistency in every situation."
         btn_text="Download logo"
         logo_wordmark_title="Logotype"
@@ -94,22 +112,37 @@ import Components from "@/layouts/styleguide/Components.astro";
         logo_color_title="Color"
         logo_color_lead="Although the Visual Label logo and its graphic variations can be used in any of our brand colors, we strongly recommend using the monochrome version."
       />
-      <Typography typography_title={(<><span>02 </span><span>Typography</span></>)}
+      <Typography
+        typography_title={(
+          <>
+            <span>02 </span>
+            <span>Typography</span>
+          </>
+        )}
         typography_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
         btn_text="Get font"
-
         typeface_title="Typeface"
         typeface_lead="The Inter font family, designed by Rasmus Andersson, is our primary typeface."
-        typeface_heading={<>Good design<br/>is innovative</>}
+        typeface_heading={(
+          <>
+            Good design
+            <br />
+            is innovative
+          </>
+        )}
         typeface_subheading="Dieter Rams"
         typeface_copy="The possibilities for innovation are not, by any means, exhausted. Technological development is always offering new opportunities for innovative design. But innovative design always develops in tandem with innovative technology, and can never be an end in itself."
-
         sizes_title="Sizes & styles"
         sizes_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc aliquet est ac eros scelerisque scelerisque. Aliquam erat volutpat. Phasellus quis fringilla dui."
         sizes_pangram="The quick brown fox jumps over the lazy dog."
       />
       <Color
-        color_title={(<><span>03 </span><span>Color</span></>)}
+        color_title={(
+          <>
+            <span>03 </span>
+            <span>Color</span>
+          </>
+        )}
         color_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
         color_brand_title="Brand colors"
         color_brand_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
@@ -117,14 +150,27 @@ import Components from "@/layouts/styleguide/Components.astro";
         color_palette_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
       />
       <Components
-        components_title={(<><span>04 </span><span>Components</span></>)}
+        components_title={(
+          <>
+            <span>04 </span>
+            <span>Components</span>
+          </>
+        )}
         components_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
         components_buttons_title="Buttons"
         components_buttons_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
       >
-        <div slot="buttons" id="components-buttons" class="space-y-4 md:space-y-8">
-          <div class="grid md:grid-cols-4 max-md:gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-6 justify-items-start pt-1 border-t border-(--border)">
-            <p class="mb-2 md:mb-4 md:col-span-4 text-xs md:text-sm text-(--muted)">
+        <div
+          slot="buttons"
+          id="components-buttons"
+          class="space-y-4 md:space-y-8"
+        >
+          <div
+            class="grid md:grid-cols-4 max-md:gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-6 justify-items-start pt-1 border-t border-(--border)"
+          >
+            <p
+              class="mb-2 md:mb-4 md:col-span-4 text-xs md:text-sm text-(--muted)"
+            >
               Primary variant
             </p>
             <Button size="large">Primary large</Button>
@@ -132,8 +178,12 @@ import Components from "@/layouts/styleguide/Components.astro";
             <Button size="small">Primary small</Button>
             <span></span>
           </div>
-          <div class="grid md:grid-cols-4 max-md:gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-6 justify-items-start pt-1 border-t border-(--border)">
-            <p class="mb-2 md:mb-4 md:col-span-4 text-xs md:text-sm text-(--muted)">
+          <div
+            class="grid md:grid-cols-4 max-md:gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-6 justify-items-start pt-1 border-t border-(--border)"
+          >
+            <p
+              class="mb-2 md:mb-4 md:col-span-4 text-xs md:text-sm text-(--muted)"
+            >
               Secondary variant
             </p>
             <Button variant="secondary" size="large">Secondary large</Button>
@@ -141,8 +191,12 @@ import Components from "@/layouts/styleguide/Components.astro";
             <Button variant="secondary" size="small">Secondary small</Button>
             <span></span>
           </div>
-          <div class="grid md:grid-cols-4 max-md:gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-6 justify-items-start pt-1 border-t border-(--border)">
-            <p class="mb-2 md:mb-4 md:col-span-4 text-xs md:text-sm text-(--muted)">
+          <div
+            class="grid md:grid-cols-4 max-md:gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-6 justify-items-start pt-1 border-t border-(--border)"
+          >
+            <p
+              class="mb-2 md:mb-4 md:col-span-4 text-xs md:text-sm text-(--muted)"
+            >
               Outline variant
             </p>
             <Button variant="outline" size="large">Outline large</Button>
@@ -150,8 +204,12 @@ import Components from "@/layouts/styleguide/Components.astro";
             <Button variant="outline" size="small">Outline small</Button>
             <span></span>
           </div>
-          <div class="grid md:grid-cols-4 max-md:gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-6 justify-items-start pt-1 border-t border-(--border)">
-            <p class="mb-2 md:mb-4 md:col-span-4 text-xs md:text-sm text-(--muted)">
+          <div
+            class="grid md:grid-cols-4 max-md:gap-y-2 gap-x-2 md:gap-x-4 lg:gap-x-6 justify-items-start pt-1 border-t border-(--border)"
+          >
+            <p
+              class="mb-2 md:mb-4 md:col-span-4 text-xs md:text-sm text-(--muted)"
+            >
               Ghost variant
             </p>
             <Button variant="ghost" size="large">Ghost large</Button>

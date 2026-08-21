@@ -1,6 +1,6 @@
 ---
 import { getT } from "@/i18n/messages";
-import { getRoute } from '@/i18n/routes';
+import { getRoute } from "@/i18n/routes";
 import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Button from "@/components/_ui/Button.astro";
@@ -15,6 +15,7 @@ const projects = await getCollection(
 
 projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 ---
+
 <BaseLayout
   title="Visual Label — Creative Studio"
   description="Creative studio building modern websites."
@@ -28,34 +29,33 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
     <section class="mb-24 -mx-2 md:-mx-4 lg:mx-auto border-t border-(--border)">
       <header class="mt-2 mb-8 px-2 md:px-4 lg:px-6 flex justify-between">
         <h2 class="h4 text-(--muted)">Projects</h2>
-        <Button
-          href={getRoute(locale, 'projects')}
-          variant="link"
-        >
+        <Button href={getRoute(locale, "projects")} variant="link">
           {t("projects.btnTitle")}
         </Button>
       </header>
       <div class="relative w-full max-md:overflow-x-auto px-2 md:px-4 lg:px-6">
         <ul class="inline-flex md:grid grid-cols-3 gap-x-4">
-          { projects.map((project) => (
-            <li class="max-md:w-[66vw]">
-              <a href={`/projects/${project.id}`}>
-                <div class="relative pb-[75%] overflow-hidden">
-                  <img
-                    src={project.data.cover}
-                    alt={project.data.title}
-                    class="absolute w-full h-full object-cover"
-                  />
-                </div>
-                <div>
-                  <h2>{project.data.title}</h2>
-                  <p class="col-span-3 text-(--muted)">
-                    {project.data.description}
-                  </p>
-                </div>
-              </a>
-            </li>
-          ))}
+          {
+            projects.map((project) => (
+              <li class="max-md:w-[66vw]">
+                <a href={`/projects/${project.id}`}>
+                  <div class="relative pb-[75%] overflow-hidden">
+                    <img
+                      src={project.data.cover}
+                      alt={project.data.title}
+                      class="absolute w-full h-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <h2>{project.data.title}</h2>
+                    <p class="col-span-3 text-(--muted)">
+                      {project.data.description}
+                    </p>
+                  </div>
+                </a>
+              </li>
+            ))
+          }
         </ul>
       </div>
     </section>

@@ -1,12 +1,12 @@
-import { defineConfig, fontProviders } from 'astro/config';
-import mdx from '@astrojs/mdx';
-import tailwindcss from '@tailwindcss/vite';
+import { defineConfig, fontProviders } from "astro/config";
+import mdx from "@astrojs/mdx";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  output: 'static',
+  output: "static",
   i18n: {
-    locales: ['en', 'pl'],
-    defaultLocale: 'en',
+    locales: ["en", "pl"],
+    defaultLocale: "en",
     routing: {
       prefixDefaultLocale: false
     }
@@ -21,10 +21,10 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.google(),
-      name: 'Inter',
+      name: "Inter",
       weights: [400, 600],
-      subsets: ['latin', 'latin-ext'],
-      cssVariable: '--font-copy',
+      subsets: ["latin", "latin-ext"],
+      cssVariable: "--font-copy",
     }
   ]
 });
