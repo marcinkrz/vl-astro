@@ -7,8 +7,8 @@ const {
   color_lead,
   color_brand_title,
   color_brand_lead,
-  color_palette_title,
-  color_palette_lead,
+  color_shades_title,
+  color_shades_lead,
 } = Astro.props;
 ---
 
@@ -75,49 +75,46 @@ const {
     </div>
   </Section>
   <Section
-    id="color-palette"
-    title={color_palette_title}
-    lead={color_palette_lead}
+    id="color-shades"
+    title={color_shades_title}
+    lead={color_shades_lead}
   >
-    <div class="space-y-2 md:space-y-4">
-      <div
-        class="grid grid-cols-9 mb-4 md:mb-6 lg:mb-8 border border-(--border)"
-      >
-        <div class="aspect-square bg-(--black)"></div>
-        <div class="aspect-square bg-(--primary-darkest)"></div>
-        <div class="aspect-square bg-(--primary-darker)"></div>
-        <div class="aspect-square bg-(--primary-dark)"></div>
-        <div class="aspect-square bg-(--primary)"></div>
-        <div class="aspect-square bg-(--primary-light)"></div>
-        <div class="aspect-square bg-(--primary-lighter)"></div>
-        <div class="aspect-square bg-(--primary-lightest)"></div>
-        <div class="aspect-square bg-(--white)"></div>
+    <div class="grid grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+      <div>
+        <div class="aspect-3/1 bg-(--gray-darkest)">  </div>
+        <div class="aspect-3/1 bg-(--gray-darker)"></div>
+        <div class="aspect-3/1 bg-(--gray-dark)"></div>
+        <div class="aspect-3/1 bg-(--gray)"></div>
+        <div class="aspect-3/1 bg-(--gray-light)"></div>
+        <div class="aspect-3/1 bg-(--gray-lighter)"></div>
+        <div class="aspect-3/1 bg-(--gray-lightest)"></div>
       </div>
-      <div
-        class="grid grid-cols-9 mb-4 md:mb-6 lg:mb-8 border border-(--border)"
-      >
-        <div class="aspect-square bg-(--black)"></div>
-        <div class="aspect-square bg-(--accent-1-darkest)"></div>
-        <div class="aspect-square bg-(--accent-1-darker)"></div>
-        <div class="aspect-square bg-(--accent-1-dark)"></div>
-        <div class="aspect-square bg-(--accent-1)"></div>
-        <div class="aspect-square bg-(--accent-1-light)"></div>
-        <div class="aspect-square bg-(--accent-1-lighter)"></div>
-        <div class="aspect-square bg-(--accent-1-lightest)"></div>
-        <div class="aspect-square bg-(--white)"></div>
+      <div>
+        <div class="aspect-3/1 bg-(--primary-darkest)"></div>
+        <div class="aspect-3/1 bg-(--primary-darker)"></div>
+        <div class="aspect-3/1 bg-(--primary-dark)"></div>
+        <div class="aspect-3/1 bg-(--primary)"></div>
+        <div class="aspect-3/1 bg-(--primary-light)"></div>
+        <div class="aspect-3/1 bg-(--primary-lighter)"></div>
+        <div class="aspect-3/1 bg-(--primary-lightest)"></div>
       </div>
-      <div
-        class="grid grid-cols-9 mb-4 md:mb-6 lg:mb-8 border border-(--border)"
-      >
-        <div class="aspect-square bg-(--black)"></div>
-        <div class="aspect-square bg-(--accent-2-darkest)"></div>
-        <div class="aspect-square bg-(--accent-2-darker)"></div>
-        <div class="aspect-square bg-(--accent-2-dark)"></div>
-        <div class="aspect-square bg-(--accent-2)"></div>
-        <div class="aspect-square bg-(--accent-2-light)"></div>
-        <div class="aspect-square bg-(--accent-2-lighter)"></div>
-        <div class="aspect-square bg-(--accent-2-lightest)"></div>
-        <div class="aspect-square bg-(--white)"></div>
+      <div>
+        <div class="aspect-3/1 bg-(--accent-1-darkest)"></div>
+        <div class="aspect-3/1 bg-(--accent-1-darker)"></div>
+        <div class="aspect-3/1 bg-(--accent-1-dark)"></div>
+        <div class="aspect-3/1 bg-(--accent-1)"></div>
+        <div class="aspect-3/1 bg-(--accent-1-light)"></div>
+        <div class="aspect-3/1 bg-(--accent-1-lighter)"></div>
+        <div class="aspect-3/1 bg-(--accent-1-lightest)"></div>
+      </div>
+      <div>
+        <div class="aspect-3/1 bg-(--accent-2-darkest)"></div>
+        <div class="aspect-3/1 bg-(--accent-2-darker)"></div>
+        <div class="aspect-3/1 bg-(--accent-2-dark)"></div>
+        <div class="aspect-3/1 bg-(--accent-2)"></div>
+        <div class="aspect-3/1 bg-(--accent-2-light)"></div>
+        <div class="aspect-3/1 bg-(--accent-2-lighter)"></div>
+        <div class="aspect-3/1 bg-(--accent-2-lightest)"></div>
       </div>
       <!-- <ColorPalette /> -->
     </div>

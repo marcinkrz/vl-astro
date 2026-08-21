@@ -2,12 +2,20 @@
 @import "./color-palette";
 
 :root {
-  --black: oklch(0.17 0.01 107);
-  --white: oklch(0.98 0.01 107);
   --primary: var(--pallette-primary);
-  --accent-1: var(--complementary);
-  --accent-2: var(--tetradic-1);
-
+  --accent-1: var(--triadic-1);
+  --accent-2: var(--triadic-2);
+  
+  --white:            oklch(0.98 0.01 107);
+  --gray-lightest:    oklch(from var(--white) calc(l - 0.05) c h);
+  --gray-lighter:     oklch(from var(--white) calc(l - 0.10) c h);
+  --gray-light:       oklch(from var(--white) calc(l - 0.20) c h);
+  --gray:             oklch(from var(--white) calc(l - 0.35) c h);
+  --gray-dark:        oklch(from var(--white) calc(l - 0.50) c h);
+  --gray-darker:      oklch(from var(--white) calc(l - 0.65) c h);
+  --gray-darkest:     oklch(from var(--white) calc(l - 0.75) c h);
+  --black:            oklch(from var(--white) calc(l - 0.80) c h);
+  
   --primary-lightest: oklch(from var(--primary) calc(l + 0.30) calc(c - 0.15) h);
   --primary-lighter:  oklch(from var(--primary) calc(l + 0.20) calc(c - 0.10) h);
   --primary-light:    oklch(from var(--primary) calc(l + 0.10) calc(c - 0.05) h);
@@ -31,9 +39,9 @@
 
 
   --background: var(--white);
-  --background-1: hsl(60, 16%, 92%);
-  --background-2: hsl(60, 12%, 88%);
-  --background-3: hsl(60, 8%, 84%);
+  --background-1: var(--gray-lightest);
+  --background-2: var(--gray-lighter);
+  --background-3: var(--gray-light);
 
   --foreground: var(--black);
   --foreground-1: hsl(0, 0%, 20%);
@@ -58,17 +66,17 @@
 
   --muted: hsl(0, 0%, 48%);
   --muted-1: hsl(0, 0%, 44%);
-  --border: var(--background-3);
+  --border: var(--background-2);
   --border-light: var(--foreground);
 
   --focus: hsl(204, 90%, 45%);
 }
 
 [data-theme="dark"] {
-  --background:   var(--black);
-  --background-1: oklch(0.27 0.01 107); 
-  --background-2: oklch(0.37 0.01 107);
-  --background-3: oklch(0.47 0.01 107);
+  --background: var(--black);
+  --background-1: var(--gray-darkest);
+  --background-2: var(--gray-darker);
+  --background-3: var(--gray-dark);
 
   --foreground: var(--white);
   --foreground-1: hsl(0, 0%, 80%);
@@ -92,7 +100,7 @@
 
   --muted: hsl(0, 0%, 64%);
   --muted-1: hsl(0, 0%, 68%);
-  --border: var(--background-3);
+  --border: var(--background-2);
   --border-light: var(--foreground);
 
   --info-border: hsl(204, 90%, 45%);
