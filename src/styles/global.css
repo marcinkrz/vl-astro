@@ -4,7 +4,7 @@
 :root {
   --primary: var(--pallette-primary);
   --accent-1: var(--triadic-1);
-  --accent-2: var(--triadic-2);
+  --accent-2: oklch(from var(--triadic-2) l c calc(h + 20));
   
   --white:            oklch(0.98 0.01 107);
   --gray-lightest:    oklch(from var(--white) calc(l - 0.04) c h);

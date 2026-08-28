@@ -1,0 +1,31 @@
+---
+const {
+  hero_title,
+  hero_lead,
+} = Astro.props;
+---
+
+<section
+  id="applications-hero"
+  class="scroll-mt-12 md:scroll-mt-16 space-y-24 md:space-y-32"
+>
+  <header class="md:border-t border-(--border)">
+    <div
+      class="relative pt-[50%] md:pt-[25%] px-2 md:px-4 lg:px-6 bg-(--background-1) text-(--foreground)"
+    >
+      <div class="max-w-340 mx-auto">
+        <h2 class="display pb-2 md:pb-4 lg:pb-6 md:grid grid-cols-2">
+          {hero_title}
+        </h2>
+      </div>
+    </div>
+    <div class="px-2 md:px-4 lg:px-6">
+      <div class="max-w-340 mx-auto">
+        <p class="h3 mt-4 mb-8">{hero_lead}</p>
+      </div>
+    </div>
+  </header>
+  <div class="px-2 md:px-4 lg:px-6">
+    <slot />
+  </div>
+</section>

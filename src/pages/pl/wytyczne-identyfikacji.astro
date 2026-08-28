@@ -8,6 +8,7 @@ import Logo from "@/layouts/styleguide/Logo.astro";
 import Typography from "@/layouts/styleguide/Typography.astro";
 import Color from "@/layouts/styleguide/Color.astro";
 import Components from "@/layouts/styleguide/Components.astro";
+import HeroSection from "@/layouts/styleguide/HeroSection.astro"
 ---
 
 <BaseLayout>
@@ -206,6 +207,29 @@ import Components from "@/layouts/styleguide/Components.astro";
           </div>
         </div>
       </Components>
+      <HeroSection
+        hero_title={(
+          <>
+            <span>05 </span>
+            <span>Sekcja powitalna</span>
+          </>
+        )}
+        hero_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
+      >
+        <div class="max-w-340 mx-auto grid gap-16 md:gap-32 lg:gap-64">
+          <div class="aspect-square lg:aspect-4/3 xl:aspect-video flex justify-start items-end p-4 md:p-8 lg:p-16 bg-linear-to-br from-(--primary) to-(--primary-darker)">
+            <h1 class="display text-(--white)">Budowanie pożądanego wizerunku marki, w sieci i poza nią.</h1>
+          </div>
+
+          <div class="aspect-square lg:aspect-4/3 xl:aspect-video flex justify-start items-end p-4 md:p-8 lg:p-16 bg-linear-to-br from-(--accent-1) to-(--accent-1-darker)">
+            <h1 class="display text-(--white)">Budowanie pożądanego wizerunku marki, w sieci i poza nią.</h1>
+          </div>
+
+          <div class="aspect-square lg:aspect-4/3 xl:aspect-video flex justify-start items-end p-4 md:p-8 lg:p-16 bg-linear-to-br from-(--accent-2) to-(--accent-2-darker)">
+            <h1 class="display text-(--white)">Budowanie pożądanego wizerunku marki, w sieci i poza nią.</h1>
+          </div>
+        </div>
+      </HeroSection>
     </article>
   </div>
 </BaseLayout>
