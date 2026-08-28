@@ -16,14 +16,13 @@ const sizes = {
   default: "h-8 px-4 text-sm",
   large: "h-10 px-6 text-base",
   small: "h-6 px-3 text-xs !leading-none",
-  icon: "min-h-8 min-w-[2rem] px-1 text-sm",
+  icon: "min-h-8 min-w-[2rem] text-sm",
 } as const;
 
 const variants = {
   primary: `bg-[var(--foreground)] text-[var(--background)] hover:bg-[var(--foreground-2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--foreground-2)]`,
-  secondary: `bg-[var(--primary)] text-[var(--white)] hover:bg-[var(--black)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)] active:bg-[var(--black)]`,
   outline: `bg-transparent border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--background-1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--background-1)]`,
-  ghost: `bg-transparent text-[var(--foreground)] hover:bg-[var(--background-1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--background-1)]`,
+  ghost: `bg-(--background-1) text-[var(--foreground)] hover:bg-[var(--background-2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--background-2)]`,
   link: `text-inherit font-semibold min-h-auto p-0 bg-transparent text-[var(--foreground)] decoration-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--background-3)] active:underline`,
 } as const;
 

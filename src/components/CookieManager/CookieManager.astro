@@ -17,19 +17,19 @@ const cookieTypes = getCookieTypes(t);
   class="fixed z-40 bottom-2 inset-x-2 sm:w-[600px] md:right-auto md:left-4 lg:left-6 hidden"
 >
   <div
-    class="p-px bg-gradient-to-b from-[var(--background-1)] from-66% to-[var(--background-3)] rounded-2xl"
+    class="p-px bg-linear-to-b from-(--background-1) from-66% to-(--background-3) rounded-2xl"
   >
     <div
       class="py-2 px-3 flex max-sm:flex-col sm:items-center justify-between text-sm leading-snug rounded-2xl"
     >
       <p
         set:html={t("cookie.bannerMsg")}
-        class="sm:mr-2 mb-2 text-[var(--foreground)]"
+        class="sm:mr-2 mb-2 text-(--foreground)"
       />
       <div
         class="max-sm:w-full flex sm:flex-col-reverse max-sm:justify-end gap-2"
       >
-        <Button id="cookie-settings-button" variant="secondary">
+        <Button id="cookie-settings-button" variant="outline">
           {t("cookie.settings")}
         </Button>
         <Button id="cookie-accept-all" variant="primary">
@@ -44,7 +44,7 @@ const cookieTypes = getCookieTypes(t);
   class="fixed inset-0 z-[999] modal-hidden items-end md:items-center justify-center opacity-0 transition-all duration-300"
 >
   <div
-    class="relative top-1/2 left-1/2 z-20 w-[calc(100%-1rem)] sm:max-w-lg xl:max-w-xl p-px bg-gradient-to-b from-66% from-[var(--background-1)] to-[var(--background-3)] rounded-2xl z-20 transform transition-transform duration-300 -translate-1/2"
+    class="relative top-1/2 left-1/2 z-20 w-[calc(100%-1rem)] sm:max-w-lg xl:max-w-xl p-px bg-linear-to-b from-66% from-(--background-1) to-(--background-3) rounded-2xl transform transition-transform duration-300 -translate-1/2"
     id="cookie-modal-content"
   >
     <div class="relative overflow-hidden rounded-2xl">
@@ -55,7 +55,7 @@ const cookieTypes = getCookieTypes(t);
         <button
           id="cookie-close"
           type="button"
-          class="absolute right-2 p-2 text-[var(--muted)] hover:text-[var(--foreground)] transition-colors cursor-pointer"
+          class="absolute right-2 p-2 text-(--muted) hover:text-(--foreground) transition-colors cursor-pointer"
         >
           <svg
             class="w-5.5 h-5.5"
@@ -74,13 +74,13 @@ const cookieTypes = getCookieTypes(t);
         </button>
       </div>
       <div class="max-h-[calc(100svh-5rem)] overflow-y-auto pb-16">
-        <p class="mb-4 px-4 text-sm text-[var(--foreground)]">
+        <p class="mb-4 px-4 text-sm text-(--foreground)">
           {t("cookie.modalBody")}
         </p>
         <div class="px-2 lg:px-3 space-y-2">
           {
             cookieTypes.map((type) => (
-              <div class="py-2 border border-[var(--border)] rounded-lg">
+              <div class="py-2 border border-(--border) rounded-lg">
                 <div class="mb-2 px-3 flex items-center justify-between">
                   <h3 class="font-semibold text-base">{type.name}</h3>
                   <label class="relative inline-flex items-center cursor-pointer">
@@ -93,16 +93,16 @@ const cookieTypes = getCookieTypes(t);
                     />
                     <div
                       class:list={[
-                        "w-11 h-6 rounded-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--background)] after:rounded-full after:h-5 after:w-5 after:transition-all",
+                        "w-11 h-6 rounded-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-(--background) after:rounded-full after:h-5 after:w-5 after:transition-all",
                         type.required
-                          ? "bg-[var(--border)]"
-                          : "bg-[var(--danger-border)] peer-checked:bg-[var(--success-border)]",
+                          ? "bg-(--border)"
+                          : "bg-(--danger-border) peer-checked:bg-(--success-border)",
                       ]}
                     />
                   </label>
                 </div>
 
-                <div class="py-2 mx-3 flex items-center justify-between border-t border-[var(--border)] text-sm">
+                <div class="py-2 mx-3 flex items-center justify-between border-t border-(--border) text-sm">
                   <p>{type.description}</p>
                 </div>
               </div>
@@ -111,9 +111,9 @@ const cookieTypes = getCookieTypes(t);
         </div>
       </div>
       <div
-        class="absolute bottom-0 left-0 w-full h-16 flex justify-end items-center gap-2 px-4 bg-linear-to-b from-transparent to-[var(--background-3)]"
+        class="absolute bottom-0 left-0 w-full h-16 flex justify-end items-center gap-2 px-4 bg-linear-to-b from-transparent to-(--background-3)"
       >
-        <Button id="cookie-save" variant="secondary">
+        <Button id="cookie-save" variant="outline">
           {t("cookie.save")}
         </Button>
 

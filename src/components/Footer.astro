@@ -18,14 +18,14 @@ const year = new Date().getFullYear();
     <div class="ml-2 flex gap-2">
       <ThemeSwitch />
       <Button
-        variant="outline"
-        size="icon"
         onclick="document.dispatchEvent(new CustomEvent('open-cookie-settings'))"
-        class="cookie-settings-btn"
+        variant="ghost"
+        size="icon"
+        class="text-(--muted) hover:text-(--foreground) active:text-(--foreground)"
         aria-label={t("cookie.settings")}
       >
         <svg
-          class="w-4.5 h-4.5"
+          class="w-5 h-5"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           width="24"
