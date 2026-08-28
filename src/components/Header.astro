@@ -1,7 +1,6 @@
 ---
 import { getT, type Locale } from "@/i18n/messages";
 import { getRoute } from "@/i18n/routes";
-import LangSwitch from "./LangSwitch.astro";
 import Button from "./_ui/Button.astro";
 import Logo from "./_ui/Logo.astro";
 
@@ -83,8 +82,8 @@ const isActive = (href: string) =>
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   class:list={{
-                    "text-(--foreground)": isActive(item.href),
-                    "text-(--muted)": !isActive(item.href),
+                    "text-(--foreground) hover:text-(--muted) active:text-(--muted)": isActive(item.href),
+                    "text-(--muted) hover:text-(--foreground) active:text-(--foreground)": !isActive(item.href),
                   }}
                 >
                   {item.label}
@@ -94,7 +93,6 @@ const isActive = (href: string) =>
           }
         </ul>
       </nav>
-      <LangSwitch />
     </div>
   </div>
   <nav
@@ -127,9 +125,6 @@ const isActive = (href: string) =>
           </li>
         ))
       }
-      <li class="mt-12">
-        <LangSwitch />
-      </li>
     </ul>
     <div
       class={`

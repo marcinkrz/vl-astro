@@ -14,10 +14,10 @@ const cookieTypes = getCookieTypes(t);
 
 <div
   id="cookie-banner"
-  class="fixed z-40 bottom-2 inset-x-2 sm:w-[600px] md:right-auto md:left-4 lg:left-6 hidden"
+  class="fixed z-40 bottom-2 inset-x-2 sm:w-150 md:right-auto md:left-4 lg:left-6 hidden"
 >
   <div
-    class="p-px bg-linear-to-b from-(--background-1) from-66% to-(--background-3) rounded-2xl"
+    class="p-px bg-(--background-1) rounded-2xl"
   >
     <div
       class="py-2 px-3 flex max-sm:flex-col sm:items-center justify-between text-sm leading-snug rounded-2xl"
@@ -41,11 +41,11 @@ const cookieTypes = getCookieTypes(t);
 </div>
 <div
   id="cookie-modal"
-  class="fixed inset-0 z-[999] modal-hidden items-end md:items-center justify-center opacity-0 transition-all duration-300"
+  class="fixed inset-0 z-999 modal-hidden items-end md:items-center justify-center opacity-0 transition-all duration-300"
 >
   <div
-    class="relative top-1/2 left-1/2 z-20 w-[calc(100%-1rem)] sm:max-w-lg xl:max-w-xl p-px bg-linear-to-b from-66% from-(--background-1) to-(--background-3) rounded-2xl transform transition-transform duration-300 -translate-1/2"
     id="cookie-modal-content"
+    class="relative top-1/2 left-1/2 z-20 w-[calc(100%-1rem)] sm:max-w-lg xl:max-w-xl p-px bg-(--background) border border-(--border) rounded-2xl transform transition-transform duration-300 -translate-1/2"
   >
     <div class="relative overflow-hidden rounded-2xl">
       <div class="relative h-16 px-4 flex items-center justify-between">
@@ -93,7 +93,7 @@ const cookieTypes = getCookieTypes(t);
                     />
                     <div
                       class:list={[
-                        "w-11 h-6 rounded-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-(--background) after:rounded-full after:h-5 after:w-5 after:transition-all",
+                        "w-11 h-6 rounded-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-(--background) after:rounded-full after:h-5 after:w-5 after:transition-all",
                         type.required
                           ? "bg-(--border)"
                           : "bg-(--danger-border) peer-checked:bg-(--success-border)",
@@ -111,19 +111,18 @@ const cookieTypes = getCookieTypes(t);
         </div>
       </div>
       <div
-        class="absolute bottom-0 left-0 w-full h-16 flex justify-end items-center gap-2 px-4 bg-linear-to-b from-transparent to-(--background-3)"
+        class="absolute bottom-0 left-0 w-full h-16 flex justify-end items-center gap-2 px-4 bg-(--background)"
       >
         <Button id="cookie-save" variant="outline">
           {t("cookie.save")}
         </Button>
-
         <Button id="cookie-accept-all-modal" variant="primary">
           {t("cookie.acceptAll")}
         </Button>
       </div>
     </div>
   </div>
-  <div id="cookie-backdrop" class="absolute inset-0 z-10 bg-black/30"></div>
+  <div id="cookie-backdrop" class="absolute inset-0 z-10 bg-(--background) opacity-50"></div>
 </div>
 <style>
   .modal-hidden {

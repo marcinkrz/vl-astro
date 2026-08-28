@@ -21,7 +21,7 @@ const sizes = {
 
 const variants = {
   primary: `bg-[var(--foreground)] text-[var(--background)] hover:bg-[var(--foreground-2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--foreground-2)]`,
-  outline: `bg-transparent border-[var(--foreground)] text-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-(--background) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--foreground)] active:text-(--background)`,
+  outline: `bg-transparent border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--foreground)] hover:border-[var(--foreground)] hover:text-(--background) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--foreground)] active:border-[var(--foreground)] active:text-(--background)`,
   ghost: `bg-(--background-1) text-[var(--foreground)] hover:bg-[var(--background-2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--background-2)]`,
   link: `text-inherit font-semibold min-h-auto p-0 bg-transparent text-[var(--foreground)] decoration-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--background-3)] active:underline`,
 } as const;
