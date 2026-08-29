@@ -1,0 +1,210 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" class="w-full h-auto">
+  <defs>
+    <style>
+      .float { animation: floaty 5.2s ease-in-out infinite; }
+      @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-13px); } }
+      .d1{animation-delay:-1.3s}.d2{animation-delay:-2.2s}.d3{animation-delay:-3.1s}.d4{animation-delay:-4s}.d5{animation-delay:-.7s}
+      .spin { animation: spin 32s linear infinite; transform-box: fill-box; transform-origin: center; }
+      .spin-rev { animation: spin 44s linear infinite reverse; transform-box: fill-box; transform-origin: center; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .halo { animation: halo 3.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      @keyframes halo { 0%,100% { transform: scale(1); opacity:.75; } 50% { transform: scale(1.09); opacity:1; } }
+      .dashline { stroke-dasharray: 1 16; animation: dashmove 1.5s linear infinite; }
+      @keyframes dashmove { to { stroke-dashoffset: -34; } }
+      .blink { animation: blinky 2.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      @keyframes blinky { 0%,100% { opacity:0; transform: scale(.35) rotate(-20deg); } 55% { opacity:1; transform: scale(1) rotate(12deg); } }
+      .b1{animation-delay:0s}.b2{animation-delay:-.9s}.b3{animation-delay:-1.7s}.b4{animation-delay:-2.3s}.b5{animation-delay:-3.1s}
+      .spark { animation: sparky 1.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+      @keyframes sparky { 0%,100% { opacity:0; transform: scale(.3); } 45% { opacity:1; transform: scale(1.15); } 70% { opacity:.55; transform: scale(.9); } }
+      .plug { animation: plugbob 2.8s ease-in-out infinite; }
+      @keyframes plugbob { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-6px,-5px); } }
+      @media (prefers-reduced-motion: reduce) {
+        .float,.spin,.spin-rev,.halo,.dashline,.blink,.spark,.plug { animation: none; }
+      }
+      .stroke-accent-1 {
+        stroke: var(--accent-1);
+      }
+    </style>
+  </defs>
+  <g>
+
+    <!-- orbit rings -->
+    <circle class="spin-rev" cx="560" cy="430" r="172" fill="none" stroke="var(--accent-2)" stroke-width="3" stroke-dasharray="2 22" stroke-linecap="round"/>
+    <circle class="spin" cx="560" cy="430" r="142" fill="none" stroke="var(--foreground)" stroke-width="4" stroke-dasharray="3 20" stroke-linecap="round"/>
+
+    <!-- connector lines -->
+    <path id="lnk1" class="dashline" d="M472 352 Q370 300 318 295" fill="none" stroke="var(--foreground)" stroke-width="5" stroke-linecap="round"/>
+    <path id="lnk2" class="dashline" d="M648 352 Q760 285 832 252" fill="none" stroke="var(--foreground)" stroke-width="5" stroke-linecap="round"/>
+    <path id="lnk3" class="dashline" d="M460 505 Q350 545 300 556" fill="none" stroke="var(--foreground)" stroke-width="5" stroke-linecap="round"/>
+    <path id="lnk4" class="dashline" d="M520 538 Q472 630 462 682" fill="none" stroke="var(--foreground)" stroke-width="5" stroke-linecap="round"/>
+    <path id="lnk5" class="dashline" d="M668 428 Q755 425 782 422" fill="none" stroke="var(--foreground)" stroke-width="5" stroke-linecap="round"/>
+    <path id="lnk6" class="dashline" d="M575 538 Q582 660 594 724" fill="none" stroke="var(--foreground)" stroke-width="5" stroke-linecap="round"/>
+
+    <!-- dots riding the lines -->
+    <circle r="5.5" fill="var(--primary)" stroke="var(--foreground)" stroke-width="3.5">
+      <animateMotion dur="4.5s" begin="-1s" repeatCount="indefinite"><mpath href="#lnk1"/></animateMotion>
+    </circle>
+    <circle r="5.5" fill="var(--primary)" stroke="var(--foreground)" stroke-width="3.5">
+      <animateMotion dur="6s" begin="-3.2s" repeatCount="indefinite"><mpath href="#lnk2"/></animateMotion>
+    </circle>
+    <circle r="5.5" fill="var(--accent-2)" stroke="var(--foreground)" stroke-width="3.5">
+      <animateMotion dur="5.2s" begin="-2.1s" repeatCount="indefinite"><mpath href="#lnk4"/></animateMotion>
+    </circle>
+
+    <!-- dots riding the orbit ring -->
+    <g transform="translate(560 430)">
+      <circle r="6" fill="var(--primary)" stroke="var(--foreground)" stroke-width="3.5">
+        <animateMotion dur="9s" repeatCount="indefinite" path="M 142 0 A 142 142 0 1 1 -142 0 A 142 142 0 1 1 142 0"/>
+      </circle>
+      <circle r="4.5" fill="var(--accent-2)" stroke="var(--foreground)" stroke-width="3">
+        <animateMotion dur="9s" begin="-4.5s" repeatCount="indefinite" path="M 142 0 A 142 142 0 1 1 -142 0 A 142 142 0 1 1 142 0"/>
+      </circle>
+    </g>
+
+    <!-- satellite: color palette card -->
+    <g transform="translate(250 250) rotate(-10)">
+      <g class="float d1">
+        <rect x="-72" y="-96" width="144" height="192" rx="14" fill="transparent" stroke="var(--foreground)" stroke-width="6"/>
+        <rect x="-52" y="-76" width="104" height="36" rx="8" fill="var(--accent-2)" stroke="var(--foreground)" stroke-width="5"/>
+        <rect x="-52" y="-28" width="104" height="36" rx="8" fill="var(--primary)" stroke="var(--foreground)" stroke-width="5"/>
+        <rect x="-52" y="20" width="104" height="36" rx="8" fill="var(--foreground)" stroke="var(--foreground)" stroke-width="5"/>
+        <circle cx="-32" cy="38" r="7" fill="transparent"/>
+      </g>
+    </g>
+
+    <!-- satellite: eye -->
+    <g transform="translate(880 225) rotate(-6)">
+      <g class="float d2">
+        <circle r="52" fill="transparent" stroke="var(--foreground)" stroke-width="6"/>
+        <ellipse cx="14" cy="3" rx="15" ry="19" fill="var(--foreground)"/>
+        <circle cx="9" cy="-8" r="5" fill="transparent"/>
+        <path d="M-18 -48 L-26 -64 M0 -52 L0 -70 M18 -48 L26 -64" stroke="var(--foreground)" stroke-width="6" stroke-linecap="round" fill="none"/>
+      </g>
+    </g>
+
+    <!-- satellite: checkerboard -->
+    <g transform="translate(215 560) rotate(12)">
+      <g class="float d3">
+        <rect x="-58" y="-58" width="116" height="116" rx="12" fill="url(#chk)" stroke="var(--foreground)" stroke-width="6"/>
+        <circle cx="52" cy="-40" r="22" fill="var(--primary)" stroke="var(--foreground)" stroke-width="6"/>
+      </g>
+    </g>
+
+    <!-- satellite: triangle -->
+    <g transform="translate(455 725) rotate(-8)">
+      <g class="float d4">
+        <path d="M0 -60 L54 38 L-54 38 Z" fill="var(--primary)" stroke="var(--foreground)" stroke-width="7" stroke-linejoin="round"/>
+        <circle cy="10" r="15" fill="transparent" stroke="var(--foreground)" stroke-width="5"/>
+      </g>
+    </g>
+
+    <!-- satellite: hexagon -->
+    <g transform="translate(845 420) rotate(8)">
+      <g class="float d5">
+        <path d="M58 0 L29 50 L-29 50 L-58 0 L-29 -50 L29 -50 Z" fill="var(--accent-2)" stroke="var(--foreground)" stroke-width="6" stroke-linejoin="round"/>
+        <rect x="-20" y="-4.5" width="40" height="9" rx="4" fill="var(--foreground)"/>
+        <rect x="-4.5" y="-20" width="9" height="40" rx="4" fill="var(--foreground)"/>
+      </g>
+    </g>
+
+    <!-- satellite: puzzle piece -->
+    <g transform="translate(600 780) rotate(-6)">
+      <g class="float d2">
+        <path d="M-30 -48 L-15 -48 a15 15 0 1 1 30 0 L30 -48 Q48 -48 48 -30 L48 -15 a15 15 0 1 1 0 30 L48 30 Q48 48 30 48 L-30 48 Q-48 48 -48 30 L-48 -30 Q-48 -48 -30 -48 Z"
+              fill="var(--accent-2)" stroke="var(--foreground)" stroke-width="6" stroke-linejoin="round"/>
+        <circle cx="16" cy="16" r="10" fill="var(--primary)" stroke="var(--foreground)" stroke-width="4"/>
+      </g>
+    </g>
+
+    <!-- central node -->
+    <circle cx="560" cy="430" r="108" fill="transparent" stroke="var(--foreground)" stroke-width="7"/>
+    <g transform="translate(560 430)">
+      <g fill="var(--foreground)" stroke="var(--foreground)" stroke-width="11" stroke-linejoin="round">
+        <rect x="-86" y="-16" width="172" height="32" rx="16"/>
+        <rect x="-86" y="-16" width="172" height="32" rx="16" transform="rotate(45)"/>
+        <rect x="-86" y="-16" width="172" height="32" rx="16" transform="rotate(90)"/>
+        <rect x="-86" y="-16" width="172" height="32" rx="16" transform="rotate(135)"/>
+      </g>
+      <g fill="var(--primary)">
+        <rect x="-86" y="-16" width="172" height="32" rx="16"/>
+        <rect x="-86" y="-16" width="172" height="32" rx="16" transform="rotate(45)"/>
+        <rect x="-86" y="-16" width="172" height="32" rx="16" transform="rotate(90)"/>
+        <rect x="-86" y="-16" width="172" height="32" rx="16" transform="rotate(135)"/>
+      </g>
+      <circle r="13" fill="var(--foreground)"/>
+    </g>
+
+    <!-- confetti -->
+    <g transform="translate(150 170) scale(1.1)"><use href="#spk" class="blink b1" fill="var(--foreground)"/></g>
+    <g transform="translate(330 110) scale(.8)"><use href="#spk" class="blink b3" fill="var(--accent-2)"/></g>
+    <g transform="translate(760 105) scale(.9)"><use href="#spk" class="blink b2" fill="var(--foreground)"/></g>
+    <g transform="translate(1075 160) scale(1.2)"><use href="#spk" class="blink b4" fill="var(--primary)" stroke="var(--foreground)" stroke-width="3"/></g>
+    <g transform="translate(1120 330) scale(.8)"><use href="#spk" class="blink b5" fill="var(--accent-2)"/></g>
+    <g transform="translate(90 470) scale(.9)"><use href="#spk" class="blink b2" fill="var(--foreground)"/></g>
+    <g transform="translate(1130 585) scale(.7)"><use href="#spk" class="blink b1" fill="var(--accent-2)"/></g>
+    <g transform="translate(180 790) scale(1)"><use href="#spk" class="blink b4" fill="var(--accent-2)"/></g>
+    <g transform="translate(420 840) scale(.8)"><use href="#spk" class="blink b3" fill="var(--foreground)"/></g>
+    <g transform="translate(1000 855) scale(.9)"><use href="#spk" class="blink b5" fill="var(--foreground)"/></g>
+
+    <g stroke="var(--foreground)" stroke-width="6" stroke-linecap="round" fill="none">
+      <path d="M198 420 H232 M215 403 V437" transform="rotate(15 215 420)"/>
+      <path d="M1003 240 H1037 M1020 223 V257" transform="rotate(-10 1020 240)"/>
+      <path d="M88 620 H122 M105 603 V637" transform="rotate(20 105 620)"/>
+      <path d="M738 845 H772 M755 828 V862"/>
+      <path d="M1123 690 H1157 M1140 673 V707" transform="rotate(10 1140 690)"/>
+    </g>
+    <g fill="none" stroke="var(--foreground)" stroke-width="5">
+      <circle cx="395" cy="150" r="8"/>
+      <circle cx="950" cy="105" r="8"/>
+      <circle cx="1140" cy="470" r="8"/>
+      <circle cx="75" cy="755" r="8"/>
+    </g>
+    <g fill="var(--foreground)">
+      <circle cx="270" cy="65" r="5"/>
+      <circle cx="620" cy="90" r="5"/>
+      <circle cx="1000" cy="440" r="5"/>
+      <circle cx="60" cy="300" r="5"/>
+      <path d="M520 112 l16 28 h-32 Z"/>
+    </g>
+    <path d="M78 395 q16 -20 32 0 q16 20 32 0" fill="none" stroke="var(--foreground)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M985 350 q15 -18 30 0 q15 18 30 0" fill="none" stroke="var(--accent-2)" stroke-width="5" stroke-linecap="round"/>
+
+    <!-- socket port on the ring edge -->
+    <g transform="translate(650 503) rotate(38)">
+      <rect x="-17" y="-13" width="34" height="26" rx="9" fill="var(--foreground)"/>
+      <circle cx="-6" r="3" fill="transparent"/>
+      <circle cx="6" r="3" fill="transparent"/>
+    </g>
+
+    <!-- contact spark -->
+    <circle cx="652" cy="508" r="6" fill="var(--primary)"/>
+    <g transform="translate(659 516) scale(.9)"><use href="#spk" class="spark" fill="var(--foreground)"/></g>
+
+    <!-- cord -->
+    <path d="M728 570 C780 620 820 645 880 662 C940 700 950 770 930 830 C915 862 900 872 895 884"
+          fill="none" stroke="var(--foreground)" stroke-width="9" stroke-linecap="round"/>
+
+    <!-- arm + hand -->
+    <path d="M950 690 C1040 725 1130 758 1215 782" fill="none" stroke="var(--foreground)" stroke-width="92"/>
+    <ellipse cx="898" cy="660" rx="58" ry="60" transform="rotate(-14 898 660)" fill="var(--foreground)"/>
+
+    <!-- plug -->
+    <g transform="translate(696 542) rotate(38)">
+      <g class="plug">
+        <rect x="-74" y="-16" width="38" height="12" rx="6" fill="var(--foreground)"/>
+        <rect x="-74" y="4" width="38" height="12" rx="6" fill="var(--foreground)"/>
+        <rect x="-40" y="-27" width="80" height="54" rx="13" fill="transparent" stroke="var(--foreground)" stroke-width="6"/>
+        <rect x="-36" y="-9" width="72" height="18" rx="9" fill="var(--primary)"/>
+      </g>
+    </g>
+
+    <!-- fingers over the cord -->
+    <g fill="var(--foreground)">
+      <rect x="812" y="616" width="88" height="26" rx="13" transform="rotate(-8 900 629)"/>
+      <rect x="806" y="630" width="92" height="26" rx="13" transform="rotate(-2 898 643)"/>
+      <rect x="818" y="656" width="80" height="25" rx="12" transform="rotate(4 898 668)"/>
+      <rect x="836" y="678" width="64" height="24" rx="12" transform="rotate(7 900 690)"/>
+      <rect x="850" y="702" width="86" height="26" rx="13" transform="rotate(14 936 715)"/>
+    </g>
+  </g>
+</svg>

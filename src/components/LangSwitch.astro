@@ -1,5 +1,5 @@
 ---
-import { Languages } from '@lucide/astro';
+import { Languages } from "@lucide/astro";
 
 import Button from "@/components/_ui/Button.astro";
 import { getCollection } from "astro:content";
@@ -67,7 +67,7 @@ if (currentPath.startsWith(`${currentProjectsBase}/`)) {
   variant="ghost"
   class="h-8! text-(--muted) hover:text-(--foreground) active:text-(--foreground)"
 >
-  <Languages class="w-4" />
+  <Languages class="h-4" />
   <span>&nbsp;{targetLocale === "pl" ? "Polski" : "English"}</span>
 </Button>
 <script is:inline>

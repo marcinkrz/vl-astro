@@ -8,7 +8,9 @@ import Logo from "@/layouts/styleguide/Logo.astro";
 import Typography from "@/layouts/styleguide/Typography.astro";
 import Color from "@/layouts/styleguide/Color.astro";
 import Components from "@/layouts/styleguide/Components.astro";
-import HeroSection from "@/layouts/styleguide/HeroSection.astro"
+import HeroSection from "@/layouts/styleguide/HeroSection.astro";
+
+import Hero01 from "@/../public/images/hero-01.svg?raw";
 ---
 
 <BaseLayout>
@@ -211,17 +213,20 @@ import HeroSection from "@/layouts/styleguide/HeroSection.astro"
         hero_title={(
           <>
             <span>05 </span>
-            <span>Sekcja powitalna</span>
+            <span>Hero section</span>
           </>
         )}
         hero_lead="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et ex non erat vestibulum elementum. Sed consectetur neque massa, et porttitor ex posuere eu."
       >
-        <div class="max-w-340 mx-auto grid gap-16 md:gap-32 lg:gap-64">
-          <div class="aspect-square lg:aspect-4/3 xl:aspect-video flex flex-col justify-end items-start p-4 md:p-8 lg:p-16 bg-linear-to-br from-(--background) to-(--background-1)">
-            <h1 class="h1 text-(--foreground) mb-8">Budowanie pożądanego wizerunku marki, <br/>w sieci i poza nią.</h1>
-            <div class="flex max-md:flex-col gap-4">
+        <div class="max-w-340 mx-auto grid gap-16 md:gap-32 lg:gap-64 bg-linear-to-br from-(--background-1) to-(--background-2)">
+          <div class="relative z-2 aspect-2/3 lg:aspect-4/3 xl:aspect-video flex flex-col items-start p-4 md:p-8 lg:p-16">
+            <h1 class="display text-(--foreground) mb-6">Budowanie pożądanego wizerunku marki, <br/>w sieci i poza nią.</h1>
+            <div class="flex gap-4">
               <Button>Wyceń prokekt</Button>
               <Button variant="outline">Wszytskie prokekty</Button>
+            </div>
+            <div class="absolute z-1 w-full lg:w-1/2 bottom-0 right-0">
+              <div set:html={Hero01}></div>
             </div>
           </div>
         </div>

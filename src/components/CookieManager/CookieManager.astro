@@ -1,4 +1,6 @@
 ---
+import { X } from "@lucide/astro";
+
 import { getCookieTypes } from "./cookie-types";
 import { getT } from "@/i18n/messages";
 import Button from "../_ui/Button.astro";
@@ -14,25 +16,25 @@ const cookieTypes = getCookieTypes(t);
 
 <div
   id="cookie-banner"
-  class="fixed z-40 bottom-2 inset-x-2 sm:w-150 md:right-auto md:left-4 lg:left-6 hidden"
+  class="hidden fixed z-40 bottom-2 max-sm:inset-x-2 sm:left-2 sm:w-100 p-px bg-(--background-1) rounded-2xl"
 >
   <div
-    class="p-px bg-(--background-1) rounded-2xl"
+    class=""
   >
     <div
-      class="py-2 px-3 flex max-sm:flex-col sm:items-center justify-between text-sm leading-snug rounded-2xl"
+      class="py-2 px-3 flex flex-col justify-between text-xs leading-snug rounded-2xl"
     >
       <p
         set:html={t("cookie.bannerMsg")}
         class="sm:mr-2 mb-2 text-(--foreground)"
       />
       <div
-        class="max-sm:w-full flex sm:flex-col-reverse max-sm:justify-end gap-2"
+        class="max-sm:w-full flex justify-end gap-4"
       >
-        <Button id="cookie-settings-button" variant="outline">
+        <Button id="cookie-settings-button" variant="link" size="small">
           {t("cookie.settings")}
         </Button>
-        <Button id="cookie-accept-all" variant="primary">
+        <Button id="cookie-accept-all" variant="outline" size="small">
           {t("cookie.accept")}
         </Button>
       </div>
@@ -57,20 +59,7 @@ const cookieTypes = getCookieTypes(t);
           type="button"
           class="absolute right-2 p-2 text-(--muted) hover:text-(--foreground) transition-colors cursor-pointer"
         >
-          <svg
-            class="w-5.5 h-5.5"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path>
-          </svg>
+          <X class="w-4" />
         </button>
       </div>
       <div class="max-h-[calc(100svh-5rem)] overflow-y-auto pb-16">
@@ -113,7 +102,7 @@ const cookieTypes = getCookieTypes(t);
       <div
         class="absolute bottom-0 left-0 w-full h-16 flex justify-end items-center gap-2 px-4 bg-(--background)"
       >
-        <Button id="cookie-save" variant="outline">
+        <Button id="cookie-save" variant="ghost">
           {t("cookie.save")}
         </Button>
         <Button id="cookie-accept-all-modal" variant="primary">

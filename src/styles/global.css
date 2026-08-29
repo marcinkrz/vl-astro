@@ -7,13 +7,13 @@
   --accent-2: oklch(from var(--triadic-2) l c calc(h + 20));
   
   --white:            oklch(0.98 0.01 111);
-  --gray-lightest:    oklch(from var(--white) calc(l - 0.04) calc(c + 0.005) h);
-  --gray-lighter:     oklch(from var(--white) calc(l - 0.10) calc(c + 0.01) h);
-  --gray-light:       oklch(from var(--white) calc(l - 0.20) calc(c + 0.015) h);
-  --gray:             oklch(from var(--white) calc(l - 0.40) calc(c + 0.02) h);
-  --gray-dark:        oklch(from var(--white) calc(l - 0.65) calc(c + 0.015) h);
-  --gray-darker:      oklch(from var(--white) calc(l - 0.75) calc(c + 0.01) h);
-  --gray-darkest:     oklch(from var(--white) calc(l - 0.80) calc(c + 0.005) h);
+  --gray-lightest:    oklch(from var(--white) calc(l - 0.04) c h);
+  --gray-lighter:     oklch(from var(--white) calc(l - 0.10) c h);
+  --gray-light:       oklch(from var(--white) calc(l - 0.20) c h);
+  --gray:             oklch(from var(--white) calc(l - 0.40) c h);
+  --gray-dark:        oklch(from var(--white) calc(l - 0.65) c h);
+  --gray-darker:      oklch(from var(--white) calc(l - 0.75) c h);
+  --gray-darkest:     oklch(from var(--white) calc(l - 0.80) c h);
   --black:            oklch(from var(--white) calc(l - 0.85) c h);
   
   --primary-lightest: oklch(from var(--primary) calc(l + 0.30) calc(c - 0.15) h);
