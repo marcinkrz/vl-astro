@@ -10,7 +10,7 @@ const {
 } = Astro.props;
 
 const base =
-  "cursor-pointer inline-flex justify-center items-center tracking-wide leading-none whitespace-nowrap border border-transparent rounded-full transition-colors";
+  "cursor-pointer inline-flex gap-1 justify-center items-center font-semibold tracking-wide leading-none whitespace-nowrap border border-transparent rounded-full transition-colors active:scale-99";
 
 const sizes = {
   large: "text-base h-10 md:h-11 lg:h-12 px-6 has-[>svg:first-child]:[&:has(>svg:first-child)]:pl-3",
@@ -21,7 +21,7 @@ const sizes = {
 
 const variants = {
   primary: `bg-[var(--foreground)] text-[var(--background)] hover:bg-[var(--foreground-2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--foreground-2)]`,
-  outline: `bg-transparent border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--foreground)] hover:border-[var(--foreground)] hover:text-(--background) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--foreground)] active:border-[var(--foreground)] active:text-(--background)`,
+  outline: `bg-transparent border-[var(--foreground-2)] text-[var(--foreground)] hover:bg-[var(--background-1)] hover:border-[var(--foreground-3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--background-1)]`,
   ghost: `bg-(--background-1) text-[var(--foreground)] hover:bg-[var(--background-2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--background-2)]`,
   link: `text-inherit font-semibold min-h-auto p-0 bg-transparent text-[var(--foreground)] decoration-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--background-3)] active:underline`,
 } as const;

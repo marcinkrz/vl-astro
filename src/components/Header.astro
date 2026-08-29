@@ -82,8 +82,8 @@ const isActive = (href: string) =>
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   class:list={{
-                    "text-(--foreground) hover:text-(--muted) active:text-(--muted)": isActive(item.href),
-                    "text-(--muted) hover:text-(--foreground) active:text-(--foreground)": !isActive(item.href),
+                    "text-(--accent-1)": isActive(item.href),
+                    "text-(--foreground) hover:text-(--accent-1) active:text-(--accent-1)": !isActive(item.href),
                   }}
                 >
                   {item.label}

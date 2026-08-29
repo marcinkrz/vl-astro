@@ -4,12 +4,12 @@ const { id, title, lead } = Astro.props;
 
 <section id={id} class="scroll-mt-12 md:scroll-mt-16">
   <header
-    class="max-w-340 mx-auto mb-12 md:mb-16 pt-4 md:pt-6 lg:pt-8 md:grid grid-cols-2 gap-2 md:gap-4 lg:gap-6 border-t border-(--border)"
+    class="max-w-340 mx-auto mb-12 md:mb-16 pt-4 md:pt-6 lg:pt-8 px-2 md:px-4 lg:px-6 md:grid grid-cols-2 gap-2 md:gap-4 lg:gap-6 border-t border-(--border)"
   >
     <h3 class="h3 mb-4">{title}</h3>
     <p class="font-semibold">{lead}</p>
   </header>
-  <div class="max-w-340 mx-auto">
+  <div class="max-w-340 mx-auto px-2 md:px-4 lg:px-8">
     <slot />
   </div>
 </section>
