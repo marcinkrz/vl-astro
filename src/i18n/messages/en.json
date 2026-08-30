@@ -34,6 +34,50 @@
     "message": "Message",
     "submit": "Send"
   },
+  "brief-form": {
+    "button": "Next",
+    "[1]": {
+      "title": "Hello, thank you for your interest in my offer.",
+      "description": "If you are looking for a contractor for your project, please fill out this non-binding form. It only has 6 short questions, which will take you a minute to complete :)",
+      "button": "Let's get started",
+      "time": "Takes 1 minute"
+    },
+    "[2]": {
+      "title": "What services are you interested in?",
+      "description": "Choose one or more:",
+      "services": {
+        "1": "Website",
+        "2": "Online store",
+        "3": "Logo",
+        "4": "Identity",
+        "5": "Print design",
+        "6": "Other"
+      }
+    },
+    "[3]": {
+      "title": "What is your budget?",
+      "description": "Choose how much you want to spend on the service:",
+      "budget": {
+        "1": "more than 10k",
+        "2": "5-10k",
+        "3": "3-5k",
+        "4": "less than 3k",
+        "5": "I don't have a fixed budget yet"
+      }
+    },
+    "[4]": {
+      "title": "Tell me about your project",
+      "description": "Write a few words about the project you want to implement so that I can respond to you more precisely"
+    },
+    "[5]": {
+      "title": "The address of your website",
+      "description": "If you have a website, please provide its address. You can also provide a link to your company Instagram or Facebook"
+    },
+    "[last]": {
+      "title": "Your details",
+      "description": "Please leave your details so I can contact you"
+    }
+  },
   "cookie": {
     "bannerMsg": "We use cookies on our website to provide you with the best experience. You can learn more about cookies from which we use in our <a href='/privacy-policy' class='hover:underline'>privacy policy.</a>",
     "accept": "It's fine",

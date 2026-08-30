@@ -112,12 +112,7 @@
 }
 
 html {
-  @apply bg-(--background) text-(--foreground) font-(family-name:--font-copy);
-}
-
-input:not([type="checkbox"]),
-select {
-  @apply h-10;
+  @apply bg-(--background) text-(--foreground) font-(family-name:--font-copy) text-pretty;
 }
 
 .container {

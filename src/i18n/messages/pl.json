@@ -34,6 +34,50 @@
     "message": "Wiadomość",
     "submit": "Wyślij"
   },
+  "brief-form": {
+    "button": "Dalej",
+    "[1]": {
+      "title": "Cześć, dziękuje za zainteresowanie moją ofertą.",
+      "description": "Jeśli szukasz wykonawcy do swojego projektu, wypełnij ten niezobowiązujący formularz. Ma on tylko 6 krótkich pytań, których wypełnienie zajmie Ci minutkę :)",
+      "button": "Zaczynamy",
+      "time": "Zajmuje 1 minutę"
+    },
+    "[2]": {
+      "title": "Jaka usługa Cię interesuje?",
+      "description": "Wybierz jeden lub kilka:",
+      "services": {
+        "1": "Strona internetowa",
+        "2": "Sklep internetowy",
+        "3": "Logo",
+        "4": "Identyfikacja",
+        "5": "Projekt do druku",
+        "6": "Inne"
+      }
+    },
+    "[3]": {
+      "title": "Jaki jest Twój budżet?",
+      "description": "Wybierz ile chcesz przeznaczyć na realizację usługi:",
+      "budget": {
+        "1": "powyżej 10 tysięcy",
+        "2": "5-10 tysięcy",
+        "3": "3-5 tysięcy",
+        "4": "poniżej 3 tysięcy",
+        "5": "nie mam jeszcze ustalonego budżetu"
+      }
+    },
+    "[4]": {
+      "title": "Opowiedz mi o swoim projekcie",
+      "description": "Napisz kilka słów na temat projektu, który chcesz zrealizować, bym mógł precyzyjniej Ci odpisać"
+    },
+    "[5]": {
+      "title": "Adres Twojej strony w sieci",
+      "description": "Jeśli posiadasz stronę internetową, podaj proszę jej adres. Możesz także podać link do firmowego Instagrama lub Facebookać"
+    },
+    "[last]": {
+      "title": "Twoje dane",
+      "description": "Zostaw swoje dane, bym mógł się z Tobą skontaktować"
+    }
+  },
   "cookie": {
     "bannerMsg": "Używamy plików cookies na naszej stronie internetowej, aby zapewnić najlepsze wrażenia. Możesz dowiedzieć się więcej o plikach cookie z których korzystamy w <a href='/privacy-policy' class='hover:underline'>polityce prywatności.</a>",
     "accept": "W porządku",
