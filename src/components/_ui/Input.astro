@@ -1,0 +1,42 @@
+---
+interface Props {
+  as?: "input" | "textarea";
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  as = "input",
+  class: className,
+  ...props
+} = Astro.props;
+
+const inputClass = [`
+  flex w-full px-3 py-2 text-sm
+  border rounded-md border-(--border)
+  bg-(--background)
+  file:border-0 file:bg-transparent file:text-sm file:font-medium
+  
+  focus-visible:border-(--border-dark)
+  focus-visible:outline-none
+  focus-visible:ring-(--background-1) focus-visible:ring-3
+  
+  active:border-(--border-dark)
+  
+  disabled:cursor-not-allowed disabled:opacity-50
+  autofill:shadow-[inset_0_0_0_1000px_var(--background)]
+  `,
+  as === "textarea" ? "min-h-[120px] resize-y" : "h-10",
+  className,
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+{
+  as === "textarea" ? (
+    <textarea class={inputClass} {...props}></textarea>
+  ) : (
+    <input class={inputClass} {...props} />
+  )
+}

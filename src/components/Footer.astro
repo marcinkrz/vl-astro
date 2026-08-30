@@ -4,9 +4,9 @@ import { Cookie } from "@lucide/astro";
 import LangSwitch from "./LangSwitch.astro";
 import ThemeSwitch from "./ThemeSwitch.astro";
 import Button from "./_ui/Button.astro";
-import { getT } from "@/i18n/messages";
+import { getT, type Locale } from "@/i18n/messages";
 
-const locale = Astro.currentLocale === "pl" ? "pl" : "en";
+const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as Locale;
 const t = getT(locale);
 const year = new Date().getFullYear();
 ---

@@ -26,6 +26,14 @@
     "tagsTitle": "Tagi",
     "yearTitle": "Rok"
   },
+  "contact-form": {
+    "title": "Formularz kontaktowy",
+    "name": "Imię i nazwisko",
+    "firstName": "Imię",
+    "email": "Adres e-mail",
+    "message": "Wiadomość",
+    "submit": "Wyślij"
+  },
   "cookie": {
     "bannerMsg": "Używamy plików cookies na naszej stronie internetowej, aby zapewnić najlepsze wrażenia. Możesz dowiedzieć się więcej o plikach cookie z których korzystamy w <a href='/privacy-policy' class='hover:underline'>polityce prywatności.</a>",
     "accept": "W porządku",

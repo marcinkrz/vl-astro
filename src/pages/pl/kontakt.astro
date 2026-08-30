@@ -1,9 +1,15 @@
 ---
+import { type Locale } from "@/i18n/messages";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import ContactForm from "@/components/ContactForm.astro";
+
+const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as Locale;
 ---
 
 <BaseLayout title="Kontakt — Visual Label" description="Skontaktuj się z nami.">
   <div class="container mt-36 mb-24">
     <h1 class="display mb-4">Kontakt</h1>
+
+    <ContactForm locale={locale} client:load />
   </div>
 </BaseLayout>

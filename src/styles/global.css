@@ -67,7 +67,7 @@
   --muted: hsl(0, 0%, 48%);
   --muted-1: hsl(0, 0%, 44%);
   --border: var(--background-2);
-  --border-light: var(--foreground);
+  --border-dark: var(--background-3);
 
   --focus: hsl(204, 90%, 45%);
 }

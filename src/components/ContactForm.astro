@@ -1,0 +1,150 @@
+---
+import { getT, type Locale } from "@/i18n/messages";
+const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as Locale;
+const t = getT(locale);
+
+import Button from "@/components/_ui/Button.astro";
+import Input from "@/components/_ui/Input.astro";
+import { ArrowUpRight } from "@lucide/astro";
+---
+
+<form id="feedback-form" class="space-y-4">
+  <div id="response-message" class="group rounded-md bg-(--danger-bg) text-sm text-(--danger-text)">
+    <p class="group-[.error]:px-3 group-[.error]:py-2"></p>
+  </div>
+  <label class="relative block">
+    <Input
+      type="text"
+      id="firstName"
+      name="firstName"
+      placeholder=" "
+      autocomplete="given-name"
+      required
+      class="peer"
+    />
+    <span
+      class={`
+        pointer-events-none
+        absolute left-2 top-5
+        -translate-y-1/2
+        px-[0.5ch]
+        bg-(--background)
+        text-(--muted)
+        transition-all duration-150
+        peer-focus:top-0
+        peer-focus:-translate-y-1/2
+        peer-focus:text-sm
+        peer-not-placeholder-shown:top-0
+        peer-not-placeholder-shown:-translate-y-1/2
+        peer-not-placeholder-shown:text-sm
+      `}
+    >
+      {t("contact-form.firstName")}
+    </span>
+  </label>
+  <label class="relative block">
+    <Input
+      type="email"
+      id="email"
+      name="email"
+      placeholder=" "
+      autocomplete="email"
+      required
+      class="peer"
+    />
+    <span
+      class={`
+        pointer-events-none
+        absolute left-2 top-5
+        -translate-y-1/2
+        px-[0.5ch]
+        bg-(--background)
+        text-(--muted)
+        transition-all duration-150
+        peer-focus:top-0
+        peer-focus:-translate-y-1/2
+        peer-focus:text-sm
+        peer-not-placeholder-shown:top-0
+        peer-not-placeholder-shown:-translate-y-1/2
+        peer-not-placeholder-shown:text-sm
+      `}
+    >
+      {t("contact-form.email")}
+    </span>
+  </label>
+  <label class="relative block">
+    <Input
+      as="textarea"
+      id="message"
+      name="message"
+      placeholder=" "
+      required
+      class="peer"
+    />
+    <span
+      class={`
+        pointer-events-none
+        absolute left-2 top-5
+        -translate-y-1/2
+        px-[0.5ch]
+        bg-(--background)
+        text-(--muted)
+        transition-all duration-150
+        peer-focus:top-0
+        peer-focus:-translate-y-1/2
+        peer-focus:text-sm
+        peer-not-placeholder-shown:top-0
+        peer-not-placeholder-shown:-translate-y-1/2
+        peer-not-placeholder-shown:text-sm
+      `}
+    >
+      {t("contact-form.message")}
+    </span>
+  </label>
+  <Button>
+    {t("contact-form.submit")}
+    <ArrowUpRight class="h-4" />
+  </Button>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("#feedback-form");
+  const responseMessage =
+    document.querySelector<HTMLDivElement>("#response-message");
+  const responseMessageContent =
+    document.querySelector<HTMLParagraphElement>(
+      "#response-message > p"
+    );
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch("/api/contact-form", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (responseMessageContent) {
+        responseMessageContent.textContent = data.message ?? "";
+      }
+
+      if (response.ok) {
+        responseMessage?.classList.remove("error");
+        form.reset();
+      } else {
+        responseMessage?.classList.add("error");
+      }
+    } catch {
+      responseMessage?.classList.add("error");
+
+      if (responseMessageContent) {
+        responseMessageContent.textContent = "Wystąpił błąd.";
+      }
+    }
+  });
+</script>
