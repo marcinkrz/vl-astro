@@ -132,15 +132,15 @@ import Button from "./_ui/Button.astro";
   }
 </style>
 
-<script is:inline>
-  (() => {
+<script>
+  document.addEventListener('astro:page-load', () => {
     const root = document.documentElement;
     const btn = document.getElementById("overview-btn");
     if (!btn) return;
 
     const STORE = "__overview__";
 
-    const set = (on) => {
+    const set = (on: boolean) => {
       root.classList.toggle("overview", on);
       try {
         sessionStorage.setItem(STORE, on ? "1" : "0");
@@ -150,16 +150,17 @@ import Button from "./_ui/Button.astro";
     btn.addEventListener("click", () =>
       set(!root.classList.contains("overview")),
     );
-    if (!window.__overviewKeys) {
-      document.addEventListener("keydown", (e) => {
+
+    if (!(globalThis as any).__overviewKeysBound) {
+      document.addEventListener("keydown", (e: KeyboardEvent) => {
         if (e.key === "Escape" && root.classList.contains("overview"))
           set(false);
       });
-      window.__overviewKeys = true;
+      (globalThis as any).__overviewKeysBound = true;
     }
 
     try {
       if (sessionStorage.getItem(STORE) === "1") set(true);
     } catch {}
-  })();
+  })
 </script>
