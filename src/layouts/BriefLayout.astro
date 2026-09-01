@@ -153,21 +153,23 @@ const messages = {
       id="brief-i18n"
       set:html={JSON.stringify(messages)}
     />
-    <div class="min-h-[calc(100svh-4rem)] md:min-h-[calc(100svh-4.5rem)] flex flex-col gap-4 justify-center items-start">
+    <div class="min-h-[calc(100svh-8rem-1px)] flex flex-col gap-4 justify-center items-start">
       <section
         id="first"
         class="screen"
       >
-        <div>
+        <div class="flex flex-col items-start">
           <h2 class="display mb-6">{t("brief-form.[1].title")}</h2>
           <p>{t("brief-form.[1].description")}</p>
-          <Button size="large" class="mt-6 mb-2">
-            <a href="#services" data-go="services">{t("brief-form.[1].button")}</a
-            >
-          </Button>
-          <p class="pl-2.5 flex items-center text-(--muted) text-xs">
-            <Clock5 class="h-3" />{t("brief-form.[1].time")}
-          </p>
+          <div class="flex flex-col items-center">
+            <Button size="large" class="mt-6 mb-2">
+              <a href="#services" data-go="services">{t("brief-form.[1].button")}</a
+              >
+            </Button>
+            <p class="flex gap-1 items-center text-(--muted) text-xs">
+              <Clock5 class="w-3" />{t("brief-form.[1].time")}
+            </p>
+          </div>
         </div>
       </section>
       <section
