@@ -6,6 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   output: "static",
   adapter: netlify(),
+  session: false,
   i18n: {
     locales: ["en", "pl"],
     defaultLocale: "en",
