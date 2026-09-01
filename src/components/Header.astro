@@ -33,44 +33,47 @@ const isActive = (href: string) =>
   >
     <div class="w-full flex justify-between">
       <Logo />
-      <Button
-        id="menu-toggle"
-        variant="ghost"
-        size="icon"
-        aria-label="Menu"
-        class={`md:hidden relative p-0 w-12 h-12 -mt-2 bg-transparent! focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white group
-      `}
-      >
-        <span
-          class={`before:block before:absolute before:w-3/4 before:h-0.75 before:bg-(--foreground)
-        before:top-2 before:right-0
-        group-[.is-active]:before:w-3/4
-        group-[.is-active]:before:top-1/2
-        group-[.is-active]:before:-right-5
-        group-[.is-active]:before:rotate-135
-        group-[.is-active]:before:-translate-1/2
-        before:transition-all before:duration-400 before:ease-in-out
-
-        after:block after:absolute after:w-3/4 after:h-0.75 after:bg-(--foreground)
-        after:top-7 after:right-0
-        group-[.is-active]:after:w-3/4
-        group-[.is-active]:after:top-1/2
-        group-[.is-active]:after:-right-5
-        group-[.is-active]:after:rotate-225
-        group-[.is-active]:after:-translate-1/2
-        after:transition-all after:duration-400 after:ease-in-out
+      <div class="flex">
+        <Button class="md:hidden" href={getRoute(locale, "brief")}>Brief</Button>
+        <Button
+          id="menu-toggle"
+          variant="ghost"
+          size="icon"
+          aria-label="Menu"
+          class={`md:hidden relative p-0 w-12 h-8 bg-transparent! focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white group
         `}
         >
-        </span>
-        <span
-          class={`
-        block absolute w-3/4 h-0.75 bg-(--foreground)
-        top-4 right-0 origin-[18px_0px]
-        group-[.is-active]:top-1/2
-        group-[.is-active]:rotate-225
-        transition-all duration-400 ease-in-out
-        `}></span>
-      </Button>
+          <span
+            class={`before:block before:absolute before:w-3/4 before:h-0.75 before:bg-(--foreground)
+            before:top-[2px] before:right-0
+            group-[.is-active]:before:w-3/4
+            group-[.is-active]:before:top-1/2
+            group-[.is-active]:before:-right-5
+            group-[.is-active]:before:rotate-135
+            group-[.is-active]:before:-translate-1/2
+            before:transition-all before:duration-400 before:ease-in-out
+
+            after:block after:absolute after:w-3/4 after:h-0.75 after:bg-(--foreground)
+            after:top-[calc(50%-1px)] after:right-0
+            group-[.is-active]:after:w-3/4
+            group-[.is-active]:after:top-1/2
+            group-[.is-active]:after:-right-5
+            group-[.is-active]:after:rotate-225
+            group-[.is-active]:after:-translate-1/2
+            after:transition-all after:duration-400 after:ease-in-out
+          `}
+          >
+          </span>
+          <span
+            class={`
+            block absolute w-3/4 h-0.75 bg-(--foreground)
+            top-[calc(100%-5px)] right-0 origin-[18px_0px]
+            group-[.is-active]:top-1/2
+            group-[.is-active]:rotate-225
+            transition-all duration-400 ease-in-out
+          `}></span>
+        </Button>
+      </div>
     </div>
     <div class="hidden md:flex gap-x-4">
       <nav>
@@ -91,6 +94,7 @@ const isActive = (href: string) =>
               </li>
             ))
           }
+          <li><Button href={getRoute(locale, "brief")}>Brief</Button></li>
         </ul>
       </nav>
     </div>

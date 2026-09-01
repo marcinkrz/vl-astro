@@ -32,6 +32,7 @@
     "firstName": "First name",
     "email": "Email address",
     "phone": "Phone",
+    "nip": "VAT ID (optional)",
     "message": "Message",
     "submit": "Send"
   },
@@ -77,6 +78,22 @@
     "[last]": {
       "title": "Your details",
       "description": "Please leave your details so I can contact you"
+    },
+    "errors": {
+      "required": "This field is required.",
+      "email": "Enter a valid e-mail address, e.g. jan@company.com.",
+      "phone": "Enter a valid phone number, e.g. 600 100 200 or +44 20 7946 0958.",
+      "nip": "Enter a valid VAT ID (NIP) — 10 digits with a valid checksum.",
+      "website": "Enter a valid website address, e.g. yourcompany.com.",
+      "message": "Tell us briefly about your project.",
+      "services": "Select at least one service.",
+      "budget": "Select a budget range.",
+      "send-failed": "Couldn't send the form. Please try again in a moment.",
+      "network": "Can't reach the server. Check your connection and try again."
+    },
+    "state": {
+      "sending": "Sending…",
+      "sent": "Thank you! Your brief has been sent."
     }
   },
   "cookie": {

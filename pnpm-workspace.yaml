@@ -1,5 +1,6 @@
 allowBuilds:
   esbuild: true
+  sharp: true
 minimumReleaseAgeExclude:
   - '@astrojs/internal-helpers@0.10.4'
   - '@astrojs/markdown-remark@7.2.4'

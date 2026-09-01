@@ -32,6 +32,7 @@
     "firstName": "Imię",
     "email": "Adres e-mail",
     "phone": "Telefon",
+    "nip": "NIP (opcjonalnie)",
     "message": "Wiadomość",
     "submit": "Wyślij"
   },
@@ -77,6 +78,22 @@
     "[last]": {
       "title": "Twoje dane",
       "description": "Zostaw swoje dane, bym mógł się z Tobą skontaktować"
+    },
+    "errors": {
+      "required": "To pole jest wymagane.",
+      "email": "Podaj prawidłowy adres e-mail, np. jan@firma.pl.",
+      "phone": "Podaj prawidłowy numer telefonu, np. 600 100 200 lub +48 20 7946 0958.",
+      "nip": "Podaj prawidłowy numer NIP — 10 cyfr z prawidłową sumą kontrolną.",
+      "website": "Podaj prawidłowy adres strony, np. twojafirma.pl.",
+      "message": "Opisz krótko swój projekt.",
+      "services": "Wybierz co najmniej jedną usługę.",
+      "budget": "Wybierz przedział budżetu.",
+      "send-failed": "Nie udało się wysłać formularza. Spróbuj ponownie za chwilę.",
+      "network": "Brak połączenia z serwerem. Sprawdź internet i spróbuj ponownie."
+    },
+    "state": {
+      "sending": "Wysyłanie…",
+      "sent": "Dziękujemy! Brief został wysłany."
     }
   },
   "cookie": {

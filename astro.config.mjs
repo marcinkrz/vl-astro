@@ -1,9 +1,11 @@
 import { defineConfig, fontProviders } from "astro/config";
 import mdx from "@astrojs/mdx";
+import netlify from '@astrojs/netlify';
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   output: "static",
+  adapter: netlify(),
   i18n: {
     locales: ["en", "pl"],
     defaultLocale: "en",

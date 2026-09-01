@@ -1,0 +1,1413 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+import { getT, type Locale } from "@/i18n/messages";
+const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as Locale;
+const t = getT(locale);
+
+import Button from "@/components/_ui/Button.astro";
+import Input from "@/components/_ui/Input.astro";
+import { ArrowUpRight, Clock5, Undo2 } from "@lucide/astro";
+
+const messages = {
+  locale,
+  errors: {
+    required: t("brief-form.errors.required"),
+    email: t("brief-form.errors.email"),
+    phone: t("brief-form.errors.phone"),
+    nip: t("brief-form.errors.nip"),
+    website: t("brief-form.errors.website"),
+    message: t("brief-form.errors.message"),
+    services: t("brief-form.errors.services"),
+    budget: t("brief-form.errors.budget"),
+    sendFailed: t("brief-form.errors.send-failed"),
+    network: t("brief-form.errors.network"),
+  },
+  sending: t("brief-form.state.sending"),
+  sent: t("brief-form.state.sent"),
+};
+---
+
+<noscript>
+  <style>.screen {display: block !important;}
+  </style>
+</noscript>
+
+<style>
+  /* ---------- Ekrany + przejścia ---------- */
+  .screen {
+    display: none;
+  }
+  .screen.is-active {
+    display: flex;
+    animation: screen-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes screen-in {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .screen h2:focus {
+    outline: none;
+  }
+
+  /* Animacja ekranu wychodzącego — View Transitions API */
+  ::view-transition-old(root) {
+    animation: 0.25s cubic-bezier(0.4, 0, 0.2, 1) both vt-out;
+  }
+  ::view-transition-new(root) {
+    animation: 0.3s cubic-bezier(0.22, 1, 0.36, 1) both vt-in;
+  }
+  @keyframes vt-out {
+    to {
+      opacity: 0;
+      transform: translateY(-14px);
+    }
+  }
+  @keyframes vt-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .screen.is-active {
+      animation: none;
+    }
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+    }
+  }
+
+  /* ---------- Walidacja pól ---------- */
+  .field-invalid {
+    border-color: var(--danger-text) !important;
+  }
+  .field-error {
+    color: var(--danger-text);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    padding-left: 0.25rem;
+  }
+
+  /* ---------- Komunikat odpowiedzi ---------- */
+  #response-message.error p {
+    padding: 0.5rem 0.75rem;
+  }
+  #response-message.pending p {
+    padding: 0.5rem 0.75rem;
+  }
+  #response-message.success p {
+    padding: 0.5rem 0.75rem;
+  }
+  #response-message.pending {
+    background: var(--background-1);
+    color: var(--muted);
+  }
+  #response-message.success {
+    background: var(--foreground);
+    color: var(--background);
+  }
+</style>
+
+<div class="container">
+  <div
+    class="fixed top-0 left-0 right-0 h-0.5 z-50 bg-(--border)"
+    aria-hidden="true"
+  >
+    <div
+      id="brief-progress-bar"
+      class="h-full w-0 bg-(--foreground) transition-all duration-500"
+    >
+    </div>
+  </div>
+  <form
+    id="brief-form"
+    action="/api/brief"
+    method="post"
+    novalidate
+    class="flex flex-col justify-center max-w-175 mx-auto pt-16"
+  >
+    <!-- Honeypot antyspamowy (niewidoczny dla ludzi) -->
+    <input
+      type="text"
+      name="company"
+      id="company"
+      class="hidden"
+      tabindex="-1"
+      autocomplete="off"
+      aria-hidden="true"
+    />
+    <script
+      type="application/json"
+      id="brief-i18n"
+      set:html={JSON.stringify(messages)}
+    />
+    <section
+      id="first"
+      class="screen min-h-[calc(100svh-4rem)] md:min-h-[calc(100svh-4.5rem)] flex items-center"
+    >
+      <div>
+        <h2 class="display mb-6">{t("brief-form.[1].title")}</h2>
+        <p>{t("brief-form.[1].description")}</p>
+        <Button size="large" class="mt-6 mb-2">
+          <a href="#services" data-go="services">{t("brief-form.[1].button")}</a
+          >
+        </Button>
+        <p class="pl-2.5 flex items-center text-(--muted) text-xs">
+          <Clock5 class="h-3" />{t("brief-form.[1].time")}
+        </p>
+      </div>
+    </section>
+    <section
+      id="services"
+      class="screen min-h-[calc(100svh-4rem)] md:min-h-[calc(100svh-4.5rem)] flex items-center"
+    >
+      <div>
+        <h2 class="h1 mb-4">{t("brief-form.[2].title")}</h2>
+        <fieldset class="sm:max-w-85 mb-1 space-y-1">
+          <legend class="mb-4">{t("brief-form.[2].description")}</legend>
+          <div class="group h-10 grid items-center">
+            <input
+              type="checkbox"
+              id="web-page"
+              name="services"
+              value="web-page"
+              class={`
+              col-start-1 row-start-1
+              relative
+              h-10 w-10 shrink-0
+              appearance-none
+              cursor-pointer
+
+              before:content-['A']
+              before:absolute
+              before:inset-2
+              before:flex
+              before:justify-center
+              before:items-center
+              before:border
+              before:border-(--border)
+              before:rounded-full
+
+              checked:before:border-(--foreground)
+              checked:before:bg-(--foreground)
+              checked:before:text-(--background)
+
+              disabled:cursor-not-allowed
+              disabled:opacity-50
+            `}
+            />
+            <label
+              for="web-page"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              >{t("brief-form.[2].services.1")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              type="checkbox"
+              id="commerce"
+              name="services"
+              value="commerce"
+              class={`
+              col-start-1 row-start-1
+              relative
+              h-10 w-10 shrink-0
+              appearance-none
+              cursor-pointer
+
+              before:content-['B']
+              before:absolute
+              before:inset-2
+              before:flex
+              before:justify-center
+              before:items-center
+              before:border
+              before:border-(--border)
+              before:rounded-full
+
+              checked:before:border-(--foreground)
+              checked:before:bg-(--foreground)
+              checked:before:text-(--background)
+
+              disabled:cursor-not-allowed
+              disabled:opacity-50
+            `}
+            />
+            <label
+              for="commerce"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              >{t("brief-form.[2].services.2")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              type="checkbox"
+              id="logo"
+              name="services"
+              value="logo"
+              class={`
+              col-start-1 row-start-1
+              relative
+              h-10 w-10 shrink-0
+              appearance-none
+              cursor-pointer
+
+              before:content-['C']
+              before:absolute
+              before:inset-2
+              before:flex
+              before:justify-center
+              before:items-center
+              before:border
+              before:border-(--border)
+              before:rounded-full
+
+              checked:before:border-(--foreground)
+              checked:before:bg-(--foreground)
+              checked:before:text-(--background)
+
+              disabled:cursor-not-allowed
+              disabled:opacity-50
+            `}
+            />
+            <label
+              for="logo"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              >{t("brief-form.[2].services.3")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              type="checkbox"
+              id="branding"
+              name="services"
+              value="branding"
+              class={`
+              col-start-1 row-start-1
+              relative
+              h-10 w-10 shrink-0
+              appearance-none
+              cursor-pointer
+
+              before:content-['D']
+              before:absolute
+              before:inset-2
+              before:flex
+              before:justify-center
+              before:items-center
+              before:border
+              before:border-(--border)
+              before:rounded-full
+
+              checked:before:border-(--foreground)
+              checked:before:bg-(--foreground)
+              checked:before:text-(--background)
+
+              disabled:cursor-not-allowed
+              disabled:opacity-50
+            `}
+            />
+            <label
+              for="branding"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              >{t("brief-form.[2].services.4")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              type="checkbox"
+              id="print"
+              name="services"
+              value="print"
+              class={`
+              col-start-1 row-start-1
+              relative
+              h-10 w-10 shrink-0
+              appearance-none
+              cursor-pointer
+
+              before:content-['E']
+              before:absolute
+              before:inset-2
+              before:flex
+              before:justify-center
+              before:items-center
+              before:border
+              before:border-(--border)
+              before:rounded-full
+
+              checked:before:border-(--foreground)
+              checked:before:bg-(--foreground)
+              checked:before:text-(--background)
+
+              disabled:cursor-not-allowed
+              disabled:opacity-50
+            `}
+            />
+            <label
+              for="print"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              >{t("brief-form.[2].services.5")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              type="checkbox"
+              id="other-service"
+              name="services"
+              value="other"
+              class={`
+              col-start-1 row-start-1
+              relative
+              h-10 w-10 shrink-0
+              appearance-none
+              cursor-pointer
+
+              before:content-['F']
+              before:absolute
+              before:inset-2
+              before:flex
+              before:justify-center
+              before:items-center
+              before:border
+              before:border-(--border)
+              before:rounded-full
+
+              checked:before:border-(--foreground)
+              checked:before:bg-(--foreground)
+              checked:before:text-(--background)
+
+              disabled:cursor-not-allowed
+              disabled:opacity-50
+            `}
+            />
+            <label
+              for="other-service"
+              class="col-start-1 row-start-1 h-full flex items-center gap-2 pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+            >
+              <span id="other-service-label" class="shrink-0"
+                >{t("brief-form.[2].services.6")}</span
+              >
+              <input
+                type="text"
+                id="other-service-value"
+                name="other-service"
+                maxlength="80"
+                autocomplete="off"
+                class="hidden flex-1 min-w-0 bg-transparent border-0 outline-none text-inherit cursor-text"
+              />
+            </label>
+          </div>
+        </fieldset>
+        <p id="services-error" class="field-error" hidden></p>
+        <div class="flex gap-2 md:gap-4 mt-4">
+          <Button variant="ghost" size="large">
+            <a href="#first" data-go="first"><Undo2 class="h-5" /></a>
+          </Button>
+          <Button size="large">
+            <a href="#budget" data-go="budget">{t("brief-form.button")}</a>
+          </Button>
+        </div>
+      </div>
+    </section>
+    <section
+      id="budget"
+      class="screen min-h-[calc(100svh-4rem)] md:min-h-[calc(100svh-4.5rem)] flex items-center"
+    >
+      <div>
+        <h2 class="h1 mb-4">{t("brief-form.[3].title")}</h2>
+        <fieldset class="sm:max-w-85 mb-1 space-y-2">
+          <legend class="mb-4">{t("brief-form.[3].description")}</legend>
+          <div class="group h-10 grid items-center">
+            <input
+              type="radio"
+              id="budget-tier-1"
+              name="budget"
+              value="budget-tier-1"
+              class={`
+              col-start-1 row-start-1
+              relative
+              h-10 w-10 shrink-0
+              appearance-none
+              cursor-pointer
+
+              before:content-['A']
+              before:absolute
+              before:inset-2
+              before:flex
+              before:justify-center
+              before:items-center
+              before:border
+              before:border-(--border)
+              before:rounded-full
+
+              checked:before:border-(--foreground)
+              checked:before:bg-(--foreground)
+              checked:before:text-(--background)
+
+              disabled:cursor-not-allowed
+              disabled:opacity-50
+            `}
+            />
+            <label
+              for="budget-tier-1"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              >{t("brief-form.[3].budget.1")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              type="radio"
+              id="budget-tier-2"
+              name="budget"
+              value="budget-tier-2"
+              class={`
+              col-start-1 row-start-1
+              relative
+              h-10 w-10 shrink-0
+              appearance-none
+              cursor-pointer
+
+              before:content-['B']
+              before:absolute
+              before:inset-2
+              before:flex
+              before:justify-center
+              before:items-center
+              before:border
+              before:border-(--border)
+              before:rounded-full
+
+              checked:before:border-(--foreground)
+              checked:before:bg-(--foreground)
+              checked:before:text-(--background)
+
+              disabled:cursor-not-allowed
+              disabled:opacity-50
+            `}
+            />
+            <label
+              for="budget-tier-2"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              >{t("brief-form.[3].budget.2")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              type="radio"
+              id="budget-tier-3"
+              name="budget"
+              value="budget-tier-3"
+              class={`
+              col-start-1 row-start-1
+              relative
+              h-10 w-10 shrink-0
+              appearance-none
+              cursor-pointer
+
+              before:content-['C']
+              before:absolute
+              before:inset-2
+              before:flex
+              before:justify-center
+              before:items-center
+              before:border
+              before:border-(--border)
+              before:rounded-full
+
+              checked:before:border-(--foreground)
+              checked:before:bg-(--foreground)
+              checked:before:text-(--background)
+
+              disabled:cursor-not-allowed
+              disabled:opacity-50
+            `}
+            />
+            <label
+              for="budget-tier-3"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              >{t("brief-form.[3].budget.3")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              type="radio"
+              id="budget-tier-4"
+              name="budget"
+              value="budget-tier-4"
+              class={`
+              col-start-1 row-start-1
+              relative
+              h-10 w-10 shrink-0
+              appearance-none
+              cursor-pointer
+
+              before:content-['D']
+              before:absolute
+              before:inset-2
+              before:flex
+              before:justify-center
+              before:items-center
+              before:border
+              before:border-(--border)
+              before:rounded-full
+
+              checked:before:border-(--foreground)
+              checked:before:bg-(--foreground)
+              checked:before:text-(--background)
+
+              disabled:cursor-not-allowed
+              disabled:opacity-50
+            `}
+            />
+            <label
+              for="budget-tier-4"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              >{t("brief-form.[3].budget.4")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              type="radio"
+              id="budget-unknown"
+              name="budget"
+              value="budget-unknown"
+              class={`
+              col-start-1 row-start-1
+              relative
+              h-10 w-10 shrink-0
+              appearance-none
+              cursor-pointer
+
+              before:content-['E']
+              before:absolute
+              before:inset-2
+              before:flex
+              before:justify-center
+              before:items-center
+              before:border
+              before:border-(--border)
+              before:rounded-full
+
+              checked:before:border-(--foreground)
+              checked:before:bg-(--foreground)
+              checked:before:text-(--background)
+
+              disabled:cursor-not-allowed
+              disabled:opacity-50
+            `}
+            />
+            <label
+              for="budget-unknown"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              >{t("brief-form.[3].budget.5")}</label
+            >
+          </div>
+        </fieldset>
+        <p id="budget-error" class="field-error" hidden></p>
+        <div class="flex gap-2 md:gap-4 mt-4">
+          <Button variant="ghost" size="large">
+            <a href="#services" data-go="services"><Undo2 class="h-5" /></a>
+          </Button>
+          <Button size="large">
+            <a href="#brief" data-go="brief">{t("brief-form.button")}</a>
+          </Button>
+        </div>
+      </div>
+    </section>
+    <section
+      id="brief"
+      class="screen min-h-[calc(100svh-4rem)] md:min-h-[calc(100svh-4.5rem)] flex items-center"
+    >
+      <div>
+        <h2 class="h1 mb-4">{t("brief-form.[4].title")}</h2>
+        <p class="mb-4">{t("brief-form.[4].description")}</p>
+        <label class="relative block mb-1">
+          <Input
+            as="textarea"
+            id="message"
+            name="message"
+            placeholder=" "
+            maxlength="5000"
+            required
+            class="peer"
+            aria-describedby="message-error"
+          />
+          <span
+            class={`
+              pointer-events-none
+              absolute left-2 top-5
+              -translate-y-1/2
+              px-[0.5ch]
+              bg-(--background)
+              text-(--muted)
+              transition-all duration-150
+              peer-focus:top-0
+              peer-focus:-translate-y-1/2
+              peer-focus:text-sm
+              peer-not-placeholder-shown:top-0
+              peer-not-placeholder-shown:-translate-y-1/2
+              peer-not-placeholder-shown:text-sm
+            `}
+          >
+            {t("contact-form.message")}
+          </span>
+        </label>
+        <p id="message-error" class="field-error" hidden></p>
+        <div class="flex gap-2 md:gap-4 mt-4">
+          <Button variant="ghost" size="large">
+            <a href="#budget" data-go="budget"><Undo2 class="h-5" /></a>
+          </Button>
+          <Button size="large">
+            <a href="#site" data-go="site">{t("brief-form.button")}</a>
+          </Button>
+        </div>
+      </div>
+    </section>
+    <section
+      id="site"
+      class="screen min-h-[calc(100svh-4rem)] md:min-h-[calc(100svh-4.5rem)] flex items-center"
+    >
+      <div>
+        <h2 class="h1 mb-4">{t("brief-form.[5].title")}</h2>
+        <p class="mb-4">{t("brief-form.[5].description")}</p>
+        <label class="relative block mb-1">
+          <Input
+            type="text"
+            inputmode="url"
+            id="website"
+            name="website"
+            placeholder=" "
+            maxlength="300"
+            required
+            class="peer"
+            aria-describedby="website-error"
+          />
+          <span
+            class={`
+              pointer-events-none
+              absolute left-2 top-5
+              -translate-y-1/2
+              px-[0.5ch]
+              bg-(--background)
+              text-(--muted)
+              transition-all duration-150
+              peer-focus:top-0
+              peer-focus:-translate-y-1/2
+              peer-focus:text-sm
+              peer-not-placeholder-shown:top-0
+              peer-not-placeholder-shown:-translate-y-1/2
+              peer-not-placeholder-shown:text-sm
+            `}
+          >
+            https://
+          </span>
+        </label>
+        <p id="website-error" class="field-error" hidden></p>
+        <div class="flex gap-2 md:gap-4 mt-4">
+          <Button variant="ghost" size="large">
+            <a href="#brief" data-go="brief"><Undo2 class="h-5" /></a>
+          </Button>
+          <Button size="large">
+            <a href="#last" data-go="last">{t("brief-form.button")}</a>
+          </Button>
+        </div>
+      </div>
+    </section>
+    <section
+      id="last"
+      class="screen min-h-[calc(100svh-4rem)] md:min-h-[calc(100svh-4.5rem)] flex items-center"
+    >
+      <div>
+        <h2 class="h1 mb-4">{t("brief-form.[last].title")}</h2>
+        <p class="mb-4">{t("brief-form.[last].description")}</p>
+        <div class="space-y-4">
+          <div>
+            <label class="relative block">
+              <Input
+                type="text"
+                id="firstName"
+                name="firstName"
+                placeholder=" "
+                autocomplete="given-name"
+                maxlength="120"
+                required
+                class="peer"
+                aria-describedby="firstName-error"
+              />
+              <span
+                class={`
+                pointer-events-none
+                absolute left-2 top-5
+                -translate-y-1/2
+                px-[0.5ch]
+                bg-(--background)
+                text-(--muted)
+                transition-all duration-150
+                peer-focus:top-0
+                peer-focus:-translate-y-1/2
+                peer-focus:text-sm
+                peer-not-placeholder-shown:top-0
+                peer-not-placeholder-shown:-translate-y-1/2
+                peer-not-placeholder-shown:text-sm
+              `}
+              >
+                {t("contact-form.firstName")}
+              </span>
+            </label>
+            <p id="firstName-error" class="field-error mt-1" hidden></p>
+          </div>
+          <div>
+            <label class="relative block">
+              <Input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder=" "
+                autocomplete="tel"
+                maxlength="25"
+                required
+                class="peer"
+                aria-describedby="phone-error"
+              />
+              <span
+                class={`
+                pointer-events-none
+                absolute left-2 top-5 -translate-y-1/2
+                px-[0.5ch]
+                bg-(--background)
+                text-(--muted)
+                transition-all duration-150
+                peer-focus:top-0
+                peer-focus:-translate-y-1/2
+                peer-focus:text-sm
+                peer-not-placeholder-shown:top-0
+                peer-not-placeholder-shown:-translate-y-1/2
+                peer-not-placeholder-shown:text-sm
+              `}
+              >
+                {t("contact-form.phone")}
+              </span>
+            </label>
+            <p id="phone-error" class="field-error mt-1" hidden></p>
+          </div>
+          <div>
+            <label class="relative block">
+              <Input
+                type="email"
+                id="email"
+                name="email"
+                placeholder=" "
+                autocomplete="email"
+                maxlength="254"
+                required
+                class="peer"
+                aria-describedby="email-error"
+              />
+              <span
+                class={`
+                pointer-events-none
+                absolute left-2 top-5 -translate-y-1/2
+                px-[0.5ch]
+                bg-(--background)
+                text-(--muted)
+                transition-all duration-150
+                peer-focus:top-0
+                peer-focus:-translate-y-1/2
+                peer-focus:text-sm
+                peer-not-placeholder-shown:top-0
+                peer-not-placeholder-shown:-translate-y-1/2
+                peer-not-placeholder-shown:text-sm
+              `}
+              >
+                {t("contact-form.email")}
+              </span>
+            </label>
+            <p id="email-error" class="field-error mt-1" hidden></p>
+          </div>
+          <div>
+            <label class="relative block">
+              <Input
+                type="text"
+                inputmode="numeric"
+                id="nip"
+                name="nip"
+                placeholder=" "
+                autocomplete="off"
+                maxlength="16"
+                class="peer"
+                aria-describedby="nip-error"
+              />
+              <span
+                class={`
+                pointer-events-none
+                absolute left-2 top-5 -translate-y-1/2
+                px-[0.5ch]
+                bg-(--background)
+                text-(--muted)
+                transition-all duration-150
+                peer-focus:top-0
+                peer-focus:-translate-y-1/2
+                peer-focus:text-sm
+                peer-not-placeholder-shown:top-0
+                peer-not-placeholder-shown:-translate-y-1/2
+                peer-not-placeholder-shown:text-sm
+              `}
+              >
+                {t("contact-form.nip")}
+              </span>
+            </label>
+            <p id="nip-error" class="field-error mt-1" hidden></p>
+          </div>
+        </div>
+        <div class="flex gap-2 md:gap-4 mt-4">
+          <Button variant="ghost" size="large">
+            <a href="#site" data-go="site"><Undo2 class="h-5" /></a>
+          </Button>
+          <Button size="large" class="w-full" type="submit" id="brief-submit">
+            {t("contact-form.submit")}
+            <ArrowUpRight class="h-4" />
+          </Button>
+        </div>
+      </div>
+    </section>
+
+    <div
+      id="response-message"
+      class="group rounded-md bg-(--danger-bg) text-sm text-(--danger-text)"
+      aria-live="polite"
+    >
+      <p class="group-[.error]:px-3 group-[.error]:py-2"></p>
+    </div>
+  </form>
+  <slot />
+</div>
+
+<script>
+  let globalCleanups: Array<() => void> = [];
+
+  type BriefI18n = {
+    locale: string;
+    errors: Record<string, string>;
+    sending?: string;
+    sent?: string;
+  };
+
+  function initBrief(): void {
+    const form = document.getElementById(
+      "brief-form",
+    ) as HTMLFormElement | null;
+
+    if (!form) {
+      // Wyszliśmy z /brief (np. /contact) — zdejmij globalne listenery.
+      globalCleanups.forEach((fn) => fn());
+      globalCleanups = [];
+      return;
+    }
+    if (form.dataset.briefInitialized === "1") return;
+    form.dataset.briefInitialized = "1";
+
+    globalCleanups.forEach((fn) => fn());
+    globalCleanups = [];
+
+    // FIX: żaden przycisk poza właściwym submit-em nie wysyła formularza
+    // (klik w padding Buttona wokół kotwicy = niejawny submit → skok do brief).
+    form.querySelectorAll("button").forEach((b) => {
+      if (b.id !== "brief-submit") b.setAttribute("type", "button");
+    });
+
+    // ---------- i18n z <script type="application/json"> ----------
+    let i18n: BriefI18n = { locale: "en", errors: {} };
+    const i18nEl = document.getElementById("brief-i18n");
+    if (i18nEl?.textContent) {
+      try {
+        i18n = {
+          ...i18n,
+          ...(JSON.parse(i18nEl.textContent) as Partial<BriefI18n>),
+        };
+      } catch {
+        i18n = { locale: "en", errors: {} };
+      }
+    }
+    const msg: Record<string, string> = i18n.errors;
+
+    // ---------- Nawigacja ekranowa ----------
+    const screens: HTMLElement[] = Array.from(
+      form.querySelectorAll<HTMLElement>("section.screen"),
+    );
+    const order: string[] = screens.map((s) => s.id);
+    let current = 0;
+    const reduceMotion: boolean = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const progressBar = document.getElementById("brief-progress-bar");
+
+    const updateProgress = (): void => {
+      if (progressBar) {
+        progressBar.style.width = `${(current / screens.length) * 100}%`;
+      }
+    };
+
+    interface ShowOptions {
+      updateHash?: boolean;
+      focusHeading?: boolean;
+    }
+
+    function show(target: string | number, opts: ShowOptions = {}): void {
+      const index = typeof target === "number" ? target : order.indexOf(target);
+      if (index < 0 || index >= screens.length) return;
+      const next = screens[index]!;
+      const prev = screens[current];
+      // FIX: current aktualizowany SYNCHRONICZNIE — callback View Transition jest
+      // odroczony, więc pasek postępu i walidacja muszą czytać stan już teraz.
+      current = index;
+
+      const apply = (): void => {
+        if (prev && prev !== next) prev.classList.remove("is-active");
+        next.classList.add("is-active");
+      };
+
+      if (!reduceMotion && document.startViewTransition) {
+        document.startViewTransition(apply);
+      } else {
+        apply();
+      }
+
+      window.scrollTo({ top: 0, behavior: "instant" });
+      if (opts.updateHash !== false) {
+        history.replaceState(null, "", `#${next.id}`);
+      }
+      updateProgress();
+
+      if (opts.focusHeading !== false) {
+        const h = next.querySelector("h2");
+        if (h) {
+          h.setAttribute("tabindex", "-1");
+          h.focus({ preventScroll: true });
+        }
+      }
+    }
+
+    // ---------- Walidacja ----------
+    const NIP_WEIGHTS: number[] = [6, 5, 7, 2, 3, 4, 5, 6, 7];
+
+    function isValidNip(value: string): boolean {
+      const nip = value.replace(/[\s-]/g, "");
+      if (!/^\d{10}$/.test(nip)) return false;
+      let sum = 0;
+      for (let i = 0; i < 9; i++) sum += NIP_WEIGHTS[i]! * Number(nip[i]);
+      return sum % 11 === Number(nip[9]);
+    }
+
+    function isValidEmail(value: string): boolean {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value) && value.length <= 254;
+    }
+
+    function isValidPhone(value: string): boolean {
+      const compact = value.replace(/[\s\-().]/g, "");
+      if (compact.length < 7 || compact.length > 20) return false;
+      if (/^(\+48|0048)?\d{9}$/.test(compact)) return true; // PL: komórkowy i stacjonarny
+      if (/^\+\d{7,15}$/.test(compact)) return true; // +kod kraju + numer
+      if (/^00\d{8,15}$/.test(compact)) return true; // prefiks międzynarodowy 00
+      if (/^0\d{9,14}$/.test(compact)) return true; // 0 + numer (stacjonarny z „0")
+      return false;
+    }
+
+    function isValidWebsite(value: string): boolean {
+      return /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(:\d{2,5})?(\/\S*)?$/i.test(
+        value,
+      );
+    }
+
+    interface FieldDef {
+      name: string;
+      screen: string;
+      check: (v: string) => boolean;
+      error: string;
+      optional?: boolean;
+    }
+
+    // FIX: ekran „website" nazywa się teraz „site" (sekcja), pole zostaje
+    // name/id „website" — brak kolizji id, walidacja czyta INPUT.
+    const fields: FieldDef[] = [
+      {
+        name: "message",
+        screen: "brief",
+        check: (v) => v.trim().length > 0,
+        error: msg.message ?? "",
+      },
+      {
+        name: "website",
+        screen: "site",
+        check: isValidWebsite,
+        error: msg.website ?? "",
+        optional: true,
+      },
+      {
+        name: "firstName",
+        screen: "last",
+        check: (v) => v.trim().length >= 2,
+        error: msg.required ?? "",
+      },
+      {
+        name: "phone",
+        screen: "last",
+        check: isValidPhone,
+        error: msg.phone ?? "",
+      },
+      {
+        name: "email",
+        screen: "last",
+        check: isValidEmail,
+        error: msg.email ?? "",
+      },
+      {
+        name: "nip",
+        screen: "last",
+        check: isValidNip,
+        error: msg.nip ?? "",
+        optional: true,
+      },
+    ];
+
+    function fieldInput(name: string): HTMLInputElement | null {
+      return document.getElementById(name) as HTMLInputElement | null;
+    }
+
+    function setError(name: string, text: string | null): void {
+      const input = fieldInput(name);
+      const el = document.getElementById(`${name}-error`);
+      if (!input || !el) return;
+      if (text) {
+        el.textContent = text;
+        el.hidden = false;
+        input.classList.add("field-invalid");
+        input.setAttribute("aria-invalid", "true");
+      } else {
+        el.hidden = true;
+        input.classList.remove("field-invalid");
+        input.removeAttribute("aria-invalid");
+      }
+    }
+
+    function validateField(name: string): boolean {
+      const def = fields.find((f) => f.name === name);
+      const input = fieldInput(name);
+      if (!def || !input) return true;
+      const value = input.value || "";
+      if (def.optional && !value.trim()) {
+        setError(name, null);
+        return true;
+      }
+      const valid = def.check(value);
+      setError(name, valid ? null : def.error);
+      return valid;
+    }
+
+    function setGroupError(id: string, text: string | null): void {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (text) {
+        el.textContent = text;
+        el.hidden = false;
+      } else {
+        el.hidden = true;
+      }
+    }
+
+    function resetErrors(): void {
+      fields.forEach((f) => setError(f.name, null));
+      setGroupError("services-error", null);
+      setGroupError("budget-error", null);
+    }
+
+    // Walidacja całego ekranu (pola + grupy) — wywoływana przy „Dalej".
+    function validateScreen(screenId: string): boolean {
+      let ok = true;
+      let firstInvalid: HTMLInputElement | null = null;
+
+      for (const f of fields) {
+        if (f.screen !== screenId) continue;
+        if (!validateField(f.name)) {
+          ok = false;
+          const input = fieldInput(f.name);
+          if (input && !firstInvalid) firstInvalid = input;
+        }
+      }
+
+      if (screenId === "services") {
+        const any = !!form!.querySelector<HTMLInputElement>(
+          'input[name="services"]:checked',
+        );
+        setGroupError("services-error", any ? null : (msg.services ?? ""));
+        if (!any) {
+          ok = false;
+          if (!firstInvalid)
+            form!
+              .querySelector<HTMLInputElement>('input[name="services"]')
+              ?.focus();
+        }
+      }
+      if (screenId === "budget") {
+        const any = !!form!.querySelector<HTMLInputElement>(
+          'input[name="budget"]:checked',
+        );
+        setGroupError("budget-error", any ? null : (msg.budget ?? ""));
+        if (!any) {
+          ok = false;
+          if (!firstInvalid)
+            form!
+              .querySelector<HTMLInputElement>('input[name="budget"]')
+              ?.focus();
+        }
+      }
+
+      if (!ok && firstInvalid) firstInvalid.focus();
+      return ok;
+    }
+
+    // Walidacja „w locie": na blur i przy poprawianiu
+    fields.forEach((f) => {
+      const input = fieldInput(f.name);
+      if (!input) return;
+      input.addEventListener("blur", () => validateField(f.name));
+      input.addEventListener("input", () => {
+        if (input.classList.contains("field-invalid")) validateField(f.name);
+      });
+    });
+
+    // ---------- Opcja F: „Inny" — klik = pole tekstowe ----------
+    const otherCheckbox = document.getElementById(
+      "other-service",
+    ) as HTMLInputElement | null;
+    const otherInput = document.getElementById(
+      "other-service-value",
+    ) as HTMLInputElement | null;
+    const otherLabel = document.getElementById("other-service-label");
+
+    function syncOther(open: boolean): void {
+      if (!otherCheckbox || !otherInput || !otherLabel) return;
+      otherLabel.classList.toggle("hidden", open);
+      otherInput.classList.toggle("hidden", !open);
+      if (open) {
+        otherInput.focus();
+      } else {
+        otherInput.value = "";
+        otherCheckbox.value = "other";
+      }
+    }
+
+    if (otherCheckbox) {
+      otherCheckbox.addEventListener("change", () =>
+        syncOther(otherCheckbox.checked),
+      );
+    }
+    if (otherInput) {
+      otherInput.addEventListener("input", () => {
+        if (otherCheckbox)
+          otherCheckbox.value = otherInput.value.trim() || "other";
+      });
+    }
+
+    // ---------- Nawigacja ----------
+    // „Dalej" waliduje bieżący ekran, „Wstecz" zawsze przepuszcza.
+    function tryGo(targetId: string): void {
+      const targetIndex = order.indexOf(targetId);
+      if (targetIndex === -1) return;
+      const currentId = screens[current]?.id ?? "";
+      if (targetIndex > current && !validateScreen(currentId)) return;
+      show(targetId);
+    }
+
+    form.addEventListener("click", (e) => {
+      const go = (e.target as Element).closest("[data-go]");
+      if (!go) return;
+      e.preventDefault();
+      tryGo(go.getAttribute("data-go") ?? "");
+    });
+
+    // FIX: Enter na ekranach pośrednich = „Dalej" (z walidacją), nie wysyłka;
+    // na ekranie „last" Enter pozwala na natywny submit.
+    form.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter") return;
+      const el = e.target as HTMLElement;
+      const tag = el.tagName;
+      if (
+        tag === "TEXTAREA" ||
+        tag === "BUTTON" ||
+        tag === "A" ||
+        el.isContentEditable
+      )
+        return;
+      if (screens[current]?.id !== "last") {
+        e.preventDefault();
+        const nextId = order[current + 1] ?? "";
+        if (nextId) tryGo(nextId);
+      }
+    });
+
+    // Klawiatura: strzałki / PageUp-Down — nawigacja pomocnicza (bez blokowania).
+    const onKeydown = (e: KeyboardEvent): void => {
+      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      const tag = (e.target as HTMLElement).tagName;
+      if (
+        tag === "INPUT" ||
+        tag === "TEXTAREA" ||
+        tag === "SELECT" ||
+        (e.target as HTMLElement).isContentEditable
+      ) {
+        return;
+      }
+      if (e.key === "ArrowDown" || e.key === "PageDown") {
+        e.preventDefault();
+        show(Math.min(current + 1, screens.length - 1));
+      } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+        e.preventDefault();
+        show(Math.max(current - 1, 0));
+      }
+    };
+
+    const onHashchange = (): void => {
+      show(location.hash.slice(1), { updateHash: false });
+    };
+
+    document.addEventListener("keydown", onKeydown);
+    window.addEventListener("hashchange", onHashchange);
+    globalCleanups.push(() =>
+      document.removeEventListener("keydown", onKeydown),
+    );
+    globalCleanups.push(() =>
+      window.removeEventListener("hashchange", onHashchange),
+    );
+
+    // Wejście z hashem w URL / start od pierwszego ekranu
+    if (location.hash) {
+      show(location.hash.slice(1), { updateHash: false, focusHeading: false });
+    } else {
+      show(0, { updateHash: false, focusHeading: false });
+    }
+
+    // ---------- Wysyłka ----------
+    const responseBox = document.getElementById("response-message");
+    const responseText = responseBox?.querySelector("p") ?? null;
+    let submitting = false;
+
+    function showResponse(
+      kind: "error" | "pending" | "success",
+      text: string,
+    ): void {
+      if (!responseBox || !responseText) return;
+      responseBox.classList.remove("error", "pending", "success");
+      responseBox.classList.add(kind);
+      responseText.textContent = text;
+    }
+
+    interface ApiResponse {
+      ok?: boolean;
+      id?: string | null;
+      errors?: Record<string, string>;
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (submitting) return;
+
+      // Walidacja w kolejności flow: services → budget → pola poszczególnych ekranów.
+      const anyService = !!form.querySelector<HTMLInputElement>(
+        'input[name="services"]:checked',
+      );
+      const anyBudget = !!form.querySelector<HTMLInputElement>(
+        'input[name="budget"]:checked',
+      );
+      setGroupError("services-error", anyService ? null : (msg.services ?? ""));
+      setGroupError("budget-error", anyBudget ? null : (msg.budget ?? ""));
+
+      let jumpTo: string | null = null;
+      if (!anyService) jumpTo = "services";
+      else if (!anyBudget) jumpTo = "budget";
+
+      let firstBadField: FieldDef | null = null;
+      for (const f of fields) {
+        if (!validateField(f.name) && !firstBadField) firstBadField = f;
+      }
+      if (!jumpTo && firstBadField) jumpTo = firstBadField.screen;
+
+      if (jumpTo) {
+        show(jumpTo);
+        if (jumpTo === "services" || jumpTo === "budget") {
+          form
+            .querySelector<HTMLInputElement>(`input[name="${jumpTo}"]`)
+            ?.focus();
+        } else if (firstBadField) {
+          fieldInput(firstBadField.name)?.focus();
+        }
+        return;
+      }
+
+      const submitBtn = document.getElementById(
+        "brief-submit",
+      ) as HTMLButtonElement | null;
+      submitting = true;
+      if (submitBtn) submitBtn.disabled = true;
+      showResponse("pending", i18n.sending ?? "");
+
+      try {
+        const res = await fetch("/api/brief", {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: new FormData(form),
+          signal: AbortSignal.timeout(20000),
+        });
+        const data = (await res.json().catch(() => ({}))) as ApiResponse;
+
+        if (res.ok && data.ok) {
+          showResponse("success", i18n.sent ?? "");
+          form.reset();
+          syncOther(false);
+          resetErrors();
+        } else {
+          const errors = data.errors ?? {};
+          let jumped = false;
+          Object.keys(errors).forEach((name) => {
+            if (name === "_form") return;
+            const def = fields.find((f) => f.name === name);
+            if (def) {
+              setError(name, errors[name] ?? "");
+              if (!jumped) {
+                show(def.screen);
+                jumped = true;
+              }
+            }
+          });
+          showResponse(
+            "error",
+            errors["_form"] ?? msg.sendFailed ?? "Błąd wysyłki.",
+          );
+          if (!jumped) show("last");
+        }
+      } catch {
+        showResponse("error", msg.network ?? msg.sendFailed ?? "Błąd sieci.");
+      } finally {
+        submitting = false;
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+  }
+
+  // Pierwsze ładowanie…
+  initBrief();
+  // …i każda nawigacja kliencka Astro (ClientRouter podmienia DOM).
+  document.addEventListener("astro:page-load", initBrief);
+</script>
