@@ -114,6 +114,7 @@ function validateBrief(formData: FormData, t: TFn): ValidationResult {
   if (!message) errors.message = t("brief-form.errors.message");
   if (websiteRaw && !isValidWebsite(websiteRaw)) errors.website = t("brief-form.errors.website");
   if (services.length === 0) errors.services = t("brief-form.errors.services");
+  if (services.includes("other") && !otherValue) errors.services = t("brief-form.errors.other-service");
   if (!ALLOWED_BUDGETS.has(budget)) errors.budget = t("brief-form.errors.budget");
 
   const website = websiteRaw

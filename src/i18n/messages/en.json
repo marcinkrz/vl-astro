@@ -87,6 +87,7 @@
       "website": "Enter a valid website address, e.g. yourcompany.com.",
       "message": "Tell us briefly about your project.",
       "services": "Select at least one service.",
+      "other-service": "You selected \"Other\" — please describe what you need.",
       "budget": "Select a budget range.",
       "send-failed": "Couldn't send the form. Please try again in a moment.",
       "network": "Can't reach the server. Check your connection and try again."

@@ -32,7 +32,10 @@ const messages = {
 ---
 
 <noscript>
-  <style>.screen {display: block !important;}
+  <style>
+    .screen {
+      display: block !important;
+    }
   </style>
 </noscript>
 
@@ -153,18 +156,16 @@ const messages = {
       id="brief-i18n"
       set:html={JSON.stringify(messages)}
     />
-    <div class="min-h-[calc(100svh-8rem-1px)] flex flex-col gap-4 justify-center items-start">
-      <section
-        id="first"
-        class="screen"
-      >
+    <div
+      class="min-h-[calc(100svh-8rem-1px)] flex flex-col gap-4 justify-center items-start"
+    >
+      <section id="first" class="screen">
         <div class="flex flex-col items-start">
           <h2 class="display mb-6">{t("brief-form.[1].title")}</h2>
           <p>{t("brief-form.[1].description")}</p>
           <div class="flex flex-col items-center">
-            <Button size="large" class="mt-6 mb-2">
-              <a href="#services" data-go="services">{t("brief-form.[1].button")}</a
-              >
+            <Button href="#services" data-go="services" size="large" class="mt-6 mb-2">
+                {t("brief-form.[1].button")}
             </Button>
             <p class="flex gap-1 items-center text-(--muted) text-xs">
               <Clock5 class="w-3" />{t("brief-form.[1].time")}
@@ -172,10 +173,7 @@ const messages = {
           </div>
         </div>
       </section>
-      <section
-        id="services"
-        class="screen"
-      >
+      <section id="services" class="screen">
         <div>
           <h2 class="h1 mb-4">{t("brief-form.[2].title")}</h2>
           <fieldset class="sm:max-w-85 mb-1 space-y-1">
@@ -415,20 +413,12 @@ const messages = {
             </div>
           </fieldset>
           <p id="services-error" class="field-error" hidden></p>
-          <div class="flex gap-2 md:gap-4 mt-4">
-            <Button variant="ghost" size="large">
-              <a href="#first" data-go="first"><Undo2 class="h-5" /></a>
-            </Button>
-            <Button size="large">
-              <a href="#budget" data-go="budget">{t("brief-form.button")}</a>
-            </Button>
-          </div>
+          <Button href="#budget" data-go="budget" size="large" class="mt-4">
+            {t("brief-form.button")}
+          </Button>
         </div>
       </section>
-      <section
-        id="budget"
-        class="screen"
-      >
+      <section id="budget" class="screen">
         <div>
           <h2 class="h1 mb-4">{t("brief-form.[3].title")}</h2>
           <fieldset class="sm:max-w-85 mb-1 space-y-2">
@@ -621,19 +611,16 @@ const messages = {
           </fieldset>
           <p id="budget-error" class="field-error" hidden></p>
           <div class="flex gap-2 md:gap-4 mt-4">
-            <Button variant="ghost" size="large">
-              <a href="#services" data-go="services"><Undo2 class="h-5" /></a>
+            <Button href="#services" data-go="services" variant="ghost" size="large">
+              <Undo2 class="h-5" />
             </Button>
-            <Button size="large">
-              <a href="#brief" data-go="brief">{t("brief-form.button")}</a>
+            <Button href="#brief" data-go="brief" size="large">
+              {t("brief-form.button")}
             </Button>
           </div>
         </div>
       </section>
-      <section
-        id="brief"
-        class="screen"
-      >
+      <section id="brief" class="screen">
         <div>
           <h2 class="h1 mb-4">{t("brief-form.[4].title")}</h2>
           <p class="mb-4">{t("brief-form.[4].description")}</p>
@@ -670,19 +657,16 @@ const messages = {
           </label>
           <p id="message-error" class="field-error" hidden></p>
           <div class="flex gap-2 md:gap-4 mt-4">
-            <Button variant="ghost" size="large">
-              <a href="#budget" data-go="budget"><Undo2 class="h-5" /></a>
+            <Button href="#budget" data-go="budget" variant="ghost" size="large">
+              <Undo2 class="h-5" />
             </Button>
-            <Button size="large">
-              <a href="#site" data-go="site">{t("brief-form.button")}</a>
+            <Button href="#site" data-go="site" size="large">
+              {t("brief-form.button")}
             </Button>
           </div>
         </div>
       </section>
-      <section
-        id="site"
-        class="screen"
-      >
+      <section id="site" class="screen">
         <div>
           <h2 class="h1 mb-4">{t("brief-form.[5].title")}</h2>
           <p class="mb-4">{t("brief-form.[5].description")}</p>
@@ -720,19 +704,16 @@ const messages = {
           </label>
           <p id="website-error" class="field-error" hidden></p>
           <div class="flex gap-2 md:gap-4 mt-4">
-            <Button variant="ghost" size="large">
-              <a href="#brief" data-go="brief"><Undo2 class="h-5" /></a>
+            <Button href="#brief" data-go="brief" variant="ghost" size="large">
+              <Undo2 class="h-5" />
             </Button>
-            <Button size="large">
-              <a href="#last" data-go="last">{t("brief-form.button")}</a>
+            <Button href="#last" data-go="last" size="large">
+              {t("brief-form.button")}
             </Button>
           </div>
         </div>
       </section>
-      <section
-        id="last"
-        class="screen"
-      >
+      <section id="last" class="screen">
         <div>
           <h2 class="h1 mb-4">{t("brief-form.[last].title")}</h2>
           <p class="mb-4">{t("brief-form.[last].description")}</p>
@@ -876,8 +857,8 @@ const messages = {
             </div>
           </div>
           <div class="flex gap-2 md:gap-4 mt-4">
-            <Button variant="ghost" size="large">
-              <a href="#site" data-go="site"><Undo2 class="h-5" /></a>
+            <Button href="#site" data-go="site" variant="ghost" size="large">
+              <Undo2 class="h-5" />
             </Button>
             <Button size="large" class="w-full" type="submit" id="brief-submit">
               {t("contact-form.submit")}
@@ -1152,16 +1133,25 @@ const messages = {
       }
 
       if (screenId === "services") {
-        const any = !!form!.querySelector<HTMLInputElement>(
-          'input[name="services"]:checked',
-        );
-        setGroupError("services-error", any ? null : (msg.services ?? ""));
-        if (!any) {
+        const otherChecked = !!otherCheckbox?.checked;
+        const otherValue = otherInput?.value.trim() ?? "";
+        if (otherChecked && !otherValue) {
           ok = false;
-          if (!firstInvalid)
-            form!
-              .querySelector<HTMLInputElement>('input[name="services"]')
-              ?.focus();
+          otherInput?.classList.add("field-invalid");
+          if (!firstInvalid && otherInput) firstInvalid = otherInput;
+          setGroupError("services-error", msg.otherService ?? "");
+        } else {
+          const any = !!form!.querySelector<HTMLInputElement>(
+            'input[name="services"]:checked',
+          );
+          setGroupError("services-error", any ? null : (msg.services ?? ""));
+          if (!any) {
+            ok = false;
+            if (!firstInvalid)
+              form!
+                .querySelector<HTMLInputElement>('input[name="services"]')
+                ?.focus();
+          }
         }
       }
       if (screenId === "budget") {
@@ -1210,6 +1200,7 @@ const messages = {
       } else {
         otherInput.value = "";
         otherCheckbox.value = "other";
+        otherInput.classList.remove("field-invalid");
       }
     }
 
@@ -1222,6 +1213,19 @@ const messages = {
       otherInput.addEventListener("input", () => {
         if (otherCheckbox)
           otherCheckbox.value = otherInput.value.trim() || "other";
+        if (
+          otherInput.classList.contains("field-invalid") &&
+          otherInput.value.trim() !== ""
+        ) {
+          otherInput.classList.remove("field-invalid");
+          const anyChecked = !!form.querySelector<HTMLInputElement>(
+            'input[name="services"]:checked',
+          );
+          setGroupError(
+            "services-error",
+            anyChecked ? null : (msg.services ?? ""),
+          );
+        }
       });
     }
 
@@ -1328,18 +1332,28 @@ const messages = {
       e.preventDefault();
       if (submitting) return;
 
-      // Walidacja w kolejności flow: services → budget → pola poszczególnych ekranów.
       const anyService = !!form.querySelector<HTMLInputElement>(
         'input[name="services"]:checked',
       );
+      const otherEmpty =
+        !!otherCheckbox?.checked &&
+        (!otherInput || otherInput.value.trim() === "");
       const anyBudget = !!form.querySelector<HTMLInputElement>(
         'input[name="budget"]:checked',
       );
-      setGroupError("services-error", anyService ? null : (msg.services ?? ""));
+      setGroupError(
+        "services-error",
+        !anyService
+          ? (msg.services ?? "")
+          : otherEmpty
+            ? (msg.otherService ?? "")
+            : null,
+      );
+      if (otherEmpty) otherInput?.classList.add("field-invalid");
       setGroupError("budget-error", anyBudget ? null : (msg.budget ?? ""));
 
       let jumpTo: string | null = null;
-      if (!anyService) jumpTo = "services";
+      if (!anyService || otherEmpty) jumpTo = "services";
       else if (!anyBudget) jumpTo = "budget";
 
       let firstBadField: FieldDef | null = null;
@@ -1350,9 +1364,15 @@ const messages = {
 
       if (jumpTo) {
         show(jumpTo);
-        if (jumpTo === "services" || jumpTo === "budget") {
+        if (jumpTo === "services") {
+          if (otherEmpty) otherInput?.focus();
+          else
+            form
+              .querySelector<HTMLInputElement>('input[name="services"]')
+              ?.focus();
+        } else if (jumpTo === "budget") {
           form
-            .querySelector<HTMLInputElement>(`input[name="${jumpTo}"]`)
+            .querySelector<HTMLInputElement>('input[name="budget"]')
             ?.focus();
         } else if (firstBadField) {
           fieldInput(firstBadField.name)?.focus();

@@ -87,6 +87,7 @@
       "website": "Podaj prawidłowy adres strony, np. twojafirma.pl.",
       "message": "Opisz krótko swój projekt.",
       "services": "Wybierz co najmniej jedną usługę.",
+      "other-service": "Zaznaczyłeś \"Inny\" — wpisz, czego dokładnie potrzebujesz.",
       "budget": "Wybierz przedział budżetu.",
       "send-failed": "Nie udało się wysłać formularza. Spróbuj ponownie za chwilę.",
       "network": "Brak połączenia z serwerem. Sprawdź internet i spróbuj ponownie."
