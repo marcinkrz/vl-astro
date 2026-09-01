@@ -31,6 +31,7 @@
     "name": "Name and surname",
     "firstName": "First name",
     "email": "Email address",
+    "phone": "Phone",
     "message": "Message",
     "submit": "Send"
   },

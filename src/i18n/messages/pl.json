@@ -31,6 +31,7 @@
     "name": "Imię i nazwisko",
     "firstName": "Imię",
     "email": "Adres e-mail",
+    "phone": "Telefon",
     "message": "Wiadomość",
     "submit": "Wyślij"
   },

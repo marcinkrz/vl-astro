@@ -8,7 +8,7 @@ import Input from "@/components/_ui/Input.astro";
 import { ArrowUpRight } from "@lucide/astro";
 ---
 
-<form id="feedback-form" class="space-y-4">
+<form id="contact-form" class="space-y-4">
   <div id="response-message" class="group rounded-md bg-(--danger-bg) text-sm text-(--danger-text)">
     <p class="group-[.error]:px-3 group-[.error]:py-2"></p>
   </div>
@@ -108,7 +108,7 @@ import { ArrowUpRight } from "@lucide/astro";
 </form>
 
 <script>
-  const form = document.querySelector<HTMLFormElement>("#feedback-form");
+  const form = document.querySelector<HTMLFormElement>("#contact-form");
   const responseMessage =
     document.querySelector<HTMLDivElement>("#response-message");
   const responseMessageContent =

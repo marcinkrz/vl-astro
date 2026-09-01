@@ -601,6 +601,35 @@ import { ArrowUpRight, Clock5, Undo2 } from "@lucide/astro";
             </label>
             <label class="relative block">
               <Input
+                type="phone"
+                id="phone"
+                name="phone"
+                placeholder=" "
+                autocomplete="tel"
+                required
+                class="peer"
+              />
+              <span
+                class={`
+                  pointer-events-none
+                  absolute left-2 top-5 -translate-y-1/2
+                  px-[0.5ch]
+                  bg-(--background)
+                  text-(--muted)
+                  transition-all duration-150
+                  peer-focus:top-0
+                  peer-focus:-translate-y-1/2
+                  peer-focus:text-sm
+                  peer-not-placeholder-shown:top-0
+                  peer-not-placeholder-shown:-translate-y-1/2
+                  peer-not-placeholder-shown:text-sm
+                `}
+              >
+                {t("contact-form.phone")}
+              </span>
+            </label>
+            <label class="relative block">
+              <Input
                 type="email"
                 id="email"
                 name="email"
@@ -626,35 +655,6 @@ import { ArrowUpRight, Clock5, Undo2 } from "@lucide/astro";
                 `}
               >
                 {t("contact-form.email")}
-              </span>
-            </label>
-            <label class="relative block">
-              <Input
-                as="textarea"
-                id="message"
-                name="message"
-                placeholder=" "
-                required
-                class="peer"
-              />
-              <span
-                class={`
-                  pointer-events-none
-                  absolute left-2 top-5
-                  -translate-y-1/2
-                  px-[0.5ch]
-                  bg-(--background)
-                  text-(--muted)
-                  transition-all duration-150
-                  peer-focus:top-0
-                  peer-focus:-translate-y-1/2
-                  peer-focus:text-sm
-                  peer-not-placeholder-shown:top-0
-                  peer-not-placeholder-shown:-translate-y-1/2
-                  peer-not-placeholder-shown:text-sm
-                `}
-              >
-                {t("contact-form.message")}
               </span>
             </label>
           </div>
