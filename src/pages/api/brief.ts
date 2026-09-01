@@ -107,7 +107,7 @@ function validateBrief(formData: FormData, t: TFn): ValidationResult {
 
   if (firstName.length < 2) errors.firstName = t("brief-form.errors.required");
   if (!isValidEmail(email)) errors.email = t("brief-form.errors.email");
-  
+
   if (!isValidPhone(phone)) errors.phone = t("brief-form.errors.phone");
 
   if (nipRaw && !isValidNip(nipRaw)) errors.nip = t("brief-form.errors.nip"); // opcjonalny, ale poprawny
@@ -146,14 +146,14 @@ function buildEmail(data: BriefData): { html: string; text: string } {
     <h2>Nowy brief — Visual Label</h2>
     <table cellpadding="6" cellspacing="0" border="0" style="font-family:sans-serif;font-size:14px;">
       ${rows
-        .map(
-          ([label, value]) => `
+      .map(
+        ([label, value]) => `
         <tr>
           <td style="color:#666;vertical-align:top;white-space:nowrap;"><strong>${escapeHtml(label)}:</strong></td>
           <td style="white-space:pre-wrap;">${escapeHtml(value)}</td>
         </tr>`
-        )
-        .join("")}
+      )
+      .join("")}
     </table>`;
 
   const text = rows.map(([label, value]) => `${label}: ${value}`).join("\n");
@@ -210,7 +210,10 @@ export const POST: APIRoute = async ({ request }) => {
 
   if (!apiKey || !from || !to) {
     console.error("[brief] Brak zmiennych środowiskowych: RESEND_API_KEY / RESEND_FROM / RESEND_TO");
-    return jsonResponse({ ok: false, errors: { _form: t("brief-form.errors.send-failed") } }, 500);
+    return jsonResponse(
+      { ok: false, errors: { _form: t("brief-form.errors.send-failed"), debug: "missing-env" } },
+      500,
+    );
   }
 
   const { html, text } = buildEmail(data);
@@ -228,12 +231,18 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (error) {
       console.error(`[brief] Resend error: ${error.name}: ${error.message}`);
-      return jsonResponse({ ok: false, errors: { _form: t("brief-form.errors.send-failed") } }, 500);
+      return jsonResponse(
+        { ok: false, errors: { _form: t("brief-form.errors.send-failed"), debug: `resend-${error.name}` } },
+        500,
+      );
     }
 
     return jsonResponse({ ok: true, id: sent?.id ?? null });
   } catch (err) {
     console.error("[brief] Błąd połączenia z Resend:", err);
-    return jsonResponse({ ok: false, errors: { _form: t("brief-form.errors.send-failed") } }, 500);
+    return jsonResponse(
+      { ok: false, errors: { _form: t("brief-form.errors.send-failed"), debug: "network" } },
+      500,
+    );
   }
 };
