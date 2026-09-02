@@ -146,10 +146,10 @@ const messages = {
     set:html={JSON.stringify(messages)}
   />
   <div
-    class="max-w-[450px] mx-auto min-h-[calc(100svh-5rem)] flex flex-col gap-4 justify-center items-start"
+    class="w-full min-h-[calc(100svh-5rem)] flex flex-col gap-4 justify-center items-start"
   >
     <div class="container min-h-[450px]">
-      <section id="first" class="screen">
+      <section id="first" class="screen max-w-[500px] mx-auto">
         <div class="flex flex-col items-start">
           <h2 class="h1 mb-6">{t("brief-form.[1].title")}</h2>
           <p>{t("brief-form.[1].description")}</p>
@@ -163,11 +163,11 @@ const messages = {
           </div>
         </div>
       </section>
-      <section id="services" class="screen">
-        <div class="space-y-4">
+      <section id="services" class="screen max-w-[450px] mx-auto">
+        <div class="w-full space-y-4">
           <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">1 / 5</span>
           <h2 class="h2">{t("brief-form.[2].title")}</h2>
-          <fieldset class="space-y-1">
+          <fieldset class="mb-0 space-y-1">
             <legend class="mb-4">{t("brief-form.[2].description")}</legend>
             <div class="group h-10 grid items-center">
               <input
@@ -404,13 +404,13 @@ const messages = {
             </div>
           </fieldset>
           <p id="services-error" class="field-error" hidden></p>
-          <Button href="#budget" data-go="budget" size="large" class="w-full">
+          <Button href="#budget" data-go="budget" size="large" class="w-full mt-8">
             {t("brief-form.next")}
           </Button>
         </div>
       </section>
-      <section id="budget" class="screen">
-        <div class="space-y-4">
+      <section id="budget" class="screen max-w-[450px] mx-auto">
+        <div class="w-full space-y-4">
           <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">2 / 5</span>
           <h2 class="h2">{t("brief-form.[3].title")}</h2>
           <fieldset class="space-y-2">
@@ -602,8 +602,8 @@ const messages = {
             </div>
           </fieldset>
           <p id="budget-error" class="field-error" hidden></p>
-          <div class="flex gap-2 md:gap-4">
-            <Button href="#services" data-go="services" variant="ghost" size="large">
+          <div class="flex gap-4 mt-8">
+            <Button class="font-normal text-sm" href="#services" data-go="services" variant="ghost">
               {t("brief-form.prev")}
             </Button>
             <Button href="#brief" data-go="brief" size="large" class="w-full">
@@ -612,8 +612,8 @@ const messages = {
           </div>
         </div>
       </section>
-      <section id="brief" class="screen">
-        <div class="space-y-4">
+      <section id="brief" class="screen max-w-[450px] mx-auto">
+        <div class="w-full space-y-4">
           <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">3 / 5</span>
           <h2 class="h2">{t("brief-form.[4].title")}</h2>
           <p>{t("brief-form.[4].description")}</p>
@@ -649,8 +649,8 @@ const messages = {
             </span>
           </label>
           <p id="message-error" class="field-error" hidden></p>
-          <div class="flex gap-2 md:gap-4">
-            <Button href="#budget" data-go="budget" variant="ghost" size="large">
+          <div class="flex gap-4 mt-8">
+            <Button class="font-normal text-sm" href="#budget" data-go="budget" variant="ghost">
               {t("brief-form.prev")}
             </Button>
             <Button href="#site" data-go="site" size="large" class="w-full">
@@ -659,8 +659,8 @@ const messages = {
           </div>
         </div>
       </section>
-      <section id="site" class="screen">
-        <div class="space-y-4">
+      <section id="site" class="screen max-w-[450px] mx-auto">
+        <div class="w-full space-y-4">
           <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">4 / 5</span>
           <h2 class="h2">{t("brief-form.[5].title")}</h2>
           <p>{t("brief-form.[5].description")}</p>
@@ -697,8 +697,8 @@ const messages = {
             </span>
           </label>
           <p id="website-error" class="field-error" hidden></p>
-          <div class="flex gap-2 md:gap-4">
-            <Button href="#brief" data-go="brief" variant="ghost" size="large">
+          <div class="flex gap-4 mt-8">
+            <Button class="font-normal text-sm" href="#brief" data-go="brief" variant="ghost">
               {t("brief-form.prev")}
             </Button>
             <Button href="#last" data-go="last" size="large" class="w-full">
@@ -707,8 +707,8 @@ const messages = {
           </div>
         </div>
       </section>
-      <section id="last" class="screen">
-        <div class="space-y-4">
+      <section id="last" class="screen max-w-[450px] mx-auto">
+        <div class="w-full space-y-4">
           <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">5 / 5</span>
           <h2 class="h2">{t("brief-form.[last].title")}</h2>
           <p>{t("brief-form.[last].description")}</p>
@@ -851,8 +851,8 @@ const messages = {
               <p id="nip-error" class="field-error mt-1" hidden></p>
             </div>
           </div>
-          <div class="flex gap-2 md:gap-4">
-            <Button href="#site" data-go="site" variant="ghost" size="large">
+          <div class="flex gap-4 mt-8">
+            <Button class="font-normal text-sm" href="#site" data-go="site" variant="ghost">
               {t("brief-form.prev")}
             </Button>
             <Button type="submit" id="brief-submit" size="large" class="w-full">

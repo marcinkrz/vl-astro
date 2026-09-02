@@ -82,8 +82,8 @@
     },
     "errors": {
       "required": "To pole jest wymagane.",
-      "email": "Podaj prawidłowy adres e-mail, np. jan@firma.pl.",
-      "phone": "Podaj prawidłowy numer telefonu, np. 600 100 200 lub +48 20 7946 0958.",
+      "email": "Podaj prawidłowy adres e-mail.",
+      "phone": "Podaj prawidłowy numer telefonu.",
       "nip": "Podaj prawidłowy numer NIP — 10 cyfr z prawidłową sumą kontrolną.",
       "website": "Podaj prawidłowy adres strony, np. twojafirma.pl.",
       "message": "Opisz krótko swój projekt.",

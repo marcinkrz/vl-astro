@@ -82,8 +82,8 @@
     },
     "errors": {
       "required": "This field is required.",
-      "email": "Enter a valid e-mail address, e.g. jan@company.com.",
-      "phone": "Enter a valid phone number, e.g. 600 100 200 or +44 20 7946 0958.",
+      "email": "Enter a valid e-mail address.",
+      "phone": "Enter a valid phone number.",
       "nip": "Enter a valid VAT ID (NIP) — 10 digits with a valid checksum.",
       "website": "Enter a valid website address, e.g. yourcompany.com.",
       "message": "Tell us briefly about your project.",
