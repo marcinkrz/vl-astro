@@ -128,7 +128,7 @@ const messages = {
   action="/api/brief"
   method="post"
   novalidate
-  class="flex flex-col justify-center max-w-175 mx-auto pt-16"
+  class="pt-8 flex flex-col justify-center"
 >
   <!-- Honeypot antyspamowy (niewidoczny dla ludzi) -->
   <input
@@ -146,9 +146,9 @@ const messages = {
     set:html={JSON.stringify(messages)}
   />
   <div
-    class="min-h-[calc(100vh-8rem-6px)] flex flex-col gap-4 justify-center items-start"
+    class="max-w-[450px] mx-auto min-h-[calc(100svh-5rem)] flex flex-col gap-4 justify-center items-start"
   >
-    <div class="container">
+    <div class="container min-h-[450px] md:min-h-[500px]">
       <section id="first" class="screen">
         <div class="flex flex-col items-start">
           <h2 class="display mb-6">{t("brief-form.[1].title")}</h2>
@@ -164,9 +164,10 @@ const messages = {
         </div>
       </section>
       <section id="services" class="screen">
-        <div>
-          <h2 class="h1 mb-4">{t("brief-form.[2].title")}</h2>
-          <fieldset class="sm:max-w-85 mb-1 space-y-1">
+        <div class="space-y-4">
+          <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">1 / 5</span>
+          <h2 class="h1">{t("brief-form.[2].title")}</h2>
+          <fieldset class="space-y-1">
             <legend class="mb-4">{t("brief-form.[2].description")}</legend>
             <div class="group h-10 grid items-center">
               <input
@@ -403,15 +404,16 @@ const messages = {
             </div>
           </fieldset>
           <p id="services-error" class="field-error" hidden></p>
-          <Button class="mt-4" href="#budget" data-go="budget" size="large">
-            {t("brief-form.button")}
+          <Button href="#budget" data-go="budget" size="large" class="w-full">
+            {t("brief-form.next")}
           </Button>
         </div>
       </section>
       <section id="budget" class="screen">
-        <div>
-          <h2 class="h1 mb-4">{t("brief-form.[3].title")}</h2>
-          <fieldset class="sm:max-w-85 mb-1 space-y-2">
+        <div class="space-y-4">
+          <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">2 / 5</span>
+          <h2 class="h1">{t("brief-form.[3].title")}</h2>
+          <fieldset class="space-y-2">
             <legend class="mb-4">{t("brief-form.[3].description")}</legend>
             <div class="group h-10 grid items-center">
               <input
@@ -600,21 +602,22 @@ const messages = {
             </div>
           </fieldset>
           <p id="budget-error" class="field-error" hidden></p>
-          <div class="flex gap-2 md:gap-4 mt-4">
-            <Button class="px-3" href="#services" data-go="services" variant="ghost" size="large">
-              <Undo2 class="h-5" />
+          <div class="flex gap-2 md:gap-4">
+            <Button href="#services" data-go="services" variant="ghost" size="large">
+              {t("brief-form.prev")}
             </Button>
-            <Button href="#brief" data-go="brief" size="large">
-              {t("brief-form.button")}
+            <Button href="#brief" data-go="brief" size="large" class="w-full">
+              {t("brief-form.next")}
             </Button>
           </div>
         </div>
       </section>
       <section id="brief" class="screen">
-        <div>
-          <h2 class="h1 mb-4">{t("brief-form.[4].title")}</h2>
-          <p class="mb-4">{t("brief-form.[4].description")}</p>
-          <label class="relative block mb-1">
+        <div class="space-y-4">
+          <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">3 / 5</span>
+          <h2 class="h1">{t("brief-form.[4].title")}</h2>
+          <p>{t("brief-form.[4].description")}</p>
+          <label class="relative block">
             <Input
               as="textarea"
               id="message"
@@ -646,21 +649,22 @@ const messages = {
             </span>
           </label>
           <p id="message-error" class="field-error" hidden></p>
-          <div class="flex gap-2 md:gap-4 mt-4">
-            <Button class="px-3" href="#budget" data-go="budget" variant="ghost" size="large">
-              <Undo2 class="h-5" />
+          <div class="flex gap-2 md:gap-4">
+            <Button href="#budget" data-go="budget" variant="ghost" size="large">
+              {t("brief-form.prev")}
             </Button>
-            <Button href="#site" data-go="site" size="large">
-              {t("brief-form.button")}
+            <Button href="#site" data-go="site" size="large" class="w-full">
+              {t("brief-form.next")}
             </Button>
           </div>
         </div>
       </section>
       <section id="site" class="screen">
-        <div>
-          <h2 class="h1 mb-4">{t("brief-form.[5].title")}</h2>
-          <p class="mb-4">{t("brief-form.[5].description")}</p>
-          <label class="relative block mb-1">
+        <div class="space-y-4">
+          <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">4 / 5</span>
+          <h2 class="h1">{t("brief-form.[5].title")}</h2>
+          <p>{t("brief-form.[5].description")}</p>
+          <label class="relative block">
             <Input
               type="text"
               inputmode="url"
@@ -693,21 +697,22 @@ const messages = {
             </span>
           </label>
           <p id="website-error" class="field-error" hidden></p>
-          <div class="flex gap-2 md:gap-4 mt-4">
-            <Button class="px-3" href="#brief" data-go="brief" variant="ghost" size="large">
-              <Undo2 class="h-5" />
+          <div class="flex gap-2 md:gap-4">
+            <Button href="#brief" data-go="brief" variant="ghost" size="large">
+              {t("brief-form.prev")}
             </Button>
-            <Button href="#last" data-go="last" size="large">
-              {t("brief-form.button")}
+            <Button href="#last" data-go="last" size="large" class="w-full">
+              {t("brief-form.next")}
             </Button>
           </div>
         </div>
       </section>
       <section id="last" class="screen">
-        <div>
-          <h2 class="h1 mb-4">{t("brief-form.[last].title")}</h2>
-          <p class="mb-4">{t("brief-form.[last].description")}</p>
-          <div class="space-y-4">
+        <div class="space-y-4">
+          <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">5 / 5</span>
+          <h2 class="h1">{t("brief-form.[last].title")}</h2>
+          <p>{t("brief-form.[last].description")}</p>
+          <div class="space-y-2">
             <div>
               <label class="relative block">
                 <Input
@@ -846,11 +851,11 @@ const messages = {
               <p id="nip-error" class="field-error mt-1" hidden></p>
             </div>
           </div>
-          <div class="flex gap-2 md:gap-4 mt-4">
-            <Button class="px-3" href="#site" data-go="site" variant="ghost" size="large">
-              <Undo2 class="h-5" />
+          <div class="flex gap-2 md:gap-4">
+            <Button href="#site" data-go="site" variant="ghost" size="large">
+              {t("brief-form.prev")}
             </Button>
-            <Button size="large" class="w-full" type="submit" id="brief-submit">
+            <Button type="submit" id="brief-submit" size="large" class="w-full">
               {t("contact-form.submit")}
               <ArrowUpRight class="h-4" />
             </Button>
@@ -859,10 +864,15 @@ const messages = {
       </section>
       <div
         id="response-message"
-        class="group mt-8 inline-flex rounded-md bg-(--danger-bg) text-sm text-(--danger-text)"
+        class="group inline-flex rounded-md text-sm"
         aria-live="polite"
       >
-        <p class="group-[.error]:px-3 group-[.error]:py-2"></p>
+        <p class={`
+          px-3 py-2
+          group-[.pending]:bg-(--background-1)
+          group-[.error]:bg-(--danger-bg) group-[.error]:text-(--danger-text)
+          group-[.success]:bg-(--success-bg) group-[.success]:text-(--success-text)
+        `}></p>
       </div>
     </div>
   </div>
@@ -873,7 +883,7 @@ const messages = {
 >
   <div
     id="brief-progress-bar"
-    class="h-full w-0 bg-(--background-3) transition-all duration-500"
+    class="h-full w-0 bg-(--foreground) transition-all duration-500"
   >
   </div>
 </div>

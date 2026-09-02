@@ -37,7 +37,8 @@
     "submit": "Wyślij"
   },
   "brief-form": {
-    "button": "Dalej",
+    "next": "Dalej",
+    "prev": "Wstecz",
     "[1]": {
       "title": "Cześć, dziękuje za zainteresowanie moją ofertą.",
       "description": "Jeśli szukasz wykonawcy do swojego projektu, wypełnij ten niezobowiązujący formularz. Ma on tylko 6 krótkich pytań, których wypełnienie zajmie Ci minutkę :)",
