@@ -5,7 +5,13 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   output: "static",
-  adapter: netlify(),
+  adapter: netlify({
+    devFeatures: {
+      images: false,
+      environmentVariables: true,
+      edgeFunctions: false,
+    },
+  }),
   session: false,
   i18n: {
     locales: ["en", "pl"],
