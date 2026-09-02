@@ -123,42 +123,32 @@ const messages = {
   }
 </style>
 
-<div class="container">
-  <div
-    class="fixed top-0 left-0 right-0 h-0.5 z-50 bg-(--border)"
+<form
+  id="brief-form"
+  action="/api/brief"
+  method="post"
+  novalidate
+  class="flex flex-col justify-center max-w-175 mx-auto pt-16"
+>
+  <!-- Honeypot antyspamowy (niewidoczny dla ludzi) -->
+  <input
+    type="text"
+    name="company"
+    id="company"
+    class="hidden"
+    tabindex="-1"
+    autocomplete="off"
     aria-hidden="true"
+  />
+  <script
+    type="application/json"
+    id="brief-i18n"
+    set:html={JSON.stringify(messages)}
+  />
+  <div
+    class="min-h-[calc(100vh-8rem-6px)] flex flex-col gap-4 justify-center items-start"
   >
-    <div
-      id="brief-progress-bar"
-      class="h-full w-0 bg-(--foreground) transition-all duration-500"
-    >
-    </div>
-  </div>
-  <form
-    id="brief-form"
-    action="/api/brief"
-    method="post"
-    novalidate
-    class="flex flex-col justify-center max-w-175 mx-auto pt-16"
-  >
-    <!-- Honeypot antyspamowy (niewidoczny dla ludzi) -->
-    <input
-      type="text"
-      name="company"
-      id="company"
-      class="hidden"
-      tabindex="-1"
-      autocomplete="off"
-      aria-hidden="true"
-    />
-    <script
-      type="application/json"
-      id="brief-i18n"
-      set:html={JSON.stringify(messages)}
-    />
-    <div
-      class="min-h-[calc(100svh-8rem-1px)] flex flex-col gap-4 justify-center items-start"
-    >
+    <div class="container">
       <section id="first" class="screen">
         <div class="flex flex-col items-start">
           <h2 class="display mb-6">{t("brief-form.[1].title")}</h2>
@@ -413,7 +403,7 @@ const messages = {
             </div>
           </fieldset>
           <p id="services-error" class="field-error" hidden></p>
-          <Button href="#budget" data-go="budget" size="large" class="mt-4">
+          <Button class="mt-4" href="#budget" data-go="budget" size="large">
             {t("brief-form.button")}
           </Button>
         </div>
@@ -611,7 +601,7 @@ const messages = {
           </fieldset>
           <p id="budget-error" class="field-error" hidden></p>
           <div class="flex gap-2 md:gap-4 mt-4">
-            <Button href="#services" data-go="services" variant="ghost" size="large">
+            <Button class="px-3" href="#services" data-go="services" variant="ghost" size="large">
               <Undo2 class="h-5" />
             </Button>
             <Button href="#brief" data-go="brief" size="large">
@@ -657,7 +647,7 @@ const messages = {
           </label>
           <p id="message-error" class="field-error" hidden></p>
           <div class="flex gap-2 md:gap-4 mt-4">
-            <Button href="#budget" data-go="budget" variant="ghost" size="large">
+            <Button class="px-3" href="#budget" data-go="budget" variant="ghost" size="large">
               <Undo2 class="h-5" />
             </Button>
             <Button href="#site" data-go="site" size="large">
@@ -704,7 +694,7 @@ const messages = {
           </label>
           <p id="website-error" class="field-error" hidden></p>
           <div class="flex gap-2 md:gap-4 mt-4">
-            <Button href="#brief" data-go="brief" variant="ghost" size="large">
+            <Button class="px-3" href="#brief" data-go="brief" variant="ghost" size="large">
               <Undo2 class="h-5" />
             </Button>
             <Button href="#last" data-go="last" size="large">
@@ -857,7 +847,7 @@ const messages = {
             </div>
           </div>
           <div class="flex gap-2 md:gap-4 mt-4">
-            <Button href="#site" data-go="site" variant="ghost" size="large">
+            <Button class="px-3" href="#site" data-go="site" variant="ghost" size="large">
               <Undo2 class="h-5" />
             </Button>
             <Button size="large" class="w-full" type="submit" id="brief-submit">
@@ -867,17 +857,25 @@ const messages = {
           </div>
         </div>
       </section>
-
       <div
         id="response-message"
-        class="group rounded-md bg-(--danger-bg) text-sm text-(--danger-text)"
+        class="group mt-8 inline-flex rounded-md bg-(--danger-bg) text-sm text-(--danger-text)"
         aria-live="polite"
       >
         <p class="group-[.error]:px-3 group-[.error]:py-2"></p>
       </div>
     </div>
-  </form>
-  <slot />
+  </div>
+</form>
+<div
+  class="w-full h-1 bg-(--background-1)"
+  aria-hidden="true"
+>
+  <div
+    id="brief-progress-bar"
+    class="h-full w-0 bg-(--background-3) transition-all duration-500"
+  >
+  </div>
 </div>
 
 <script>

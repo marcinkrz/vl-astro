@@ -89,19 +89,19 @@
 
   --success-text: hsl(160, 100%, 25%);
   --success-border: hsl(160, 100%, 30%);
-  --success-bg: hsl(160, 30%, 90%);
+  --success-bg: hsl(160, 30%, 10%);
 
   --danger-text: hsl(0, 70%, 50%);
   --danger-border: hsl(0, 70%, 55%);
-  --danger-bg: hsl(0, 70%, 90%);
+  --danger-bg: hsl(0, 70%, 10%);
 
   --warning-text: hsl(32, 95%, 40%);
   --warning-border: hsl(32, 95%, 45%);
-  --warning-bg: hsl(32, 70%, 90%);
+  --warning-bg: hsl(32, 70%, 10%);
 
   --info-text: hsl(204, 90%, 35%);
   --info-border: hsl(204, 90%, 45%);
-  --info-bg: hsl(204, 94%, 92%);
+  --info-bg: hsl(204, 94%, 12%);
 
   --muted: hsl(0, 0%, 64%);
   --muted-1: hsl(0, 0%, 68%);

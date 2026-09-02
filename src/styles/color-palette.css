@@ -1,6 +1,6 @@
 :root {
   /* Palette OKLCH */
-  --pallette-primary:                oklch(0.59 0.21 30);
+  --pallette-primary:       oklch(0.59 0.21 30);
   
   --analogous-1:            oklch(from var(--pallette-primary) l c calc(h + 30));
   --analogous-2:            oklch(from var(--pallette-primary) l c calc(h - 30));
