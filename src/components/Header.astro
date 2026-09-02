@@ -34,7 +34,7 @@ const isActive = (href: string) =>
     <div class="w-full flex justify-between">
       <Logo />
       <div class="flex">
-        <Button class="md:hidden" href={getRoute(locale, "brief")}>Brief</Button>
+        <Button variant="outline" size="small" class="md:hidden" href={getRoute(locale, "brief")}>Brief</Button>
         <Button
           id="menu-toggle"
           variant="ghost"
@@ -76,8 +76,8 @@ const isActive = (href: string) =>
       </div>
     </div>
     <div class="hidden md:flex gap-x-4">
-      <nav>
-        <ul class="flex h-full items-center gap-4 font-semibold">
+      <nav class="text-sm">
+        <ul class="flex h-full items-center gap-6 font-semibold">
           {
             items.map((item) => (
               <li>
@@ -85,8 +85,8 @@ const isActive = (href: string) =>
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   class:list={{
-                    "text-(--accent-1)": isActive(item.href),
-                    "text-(--foreground) hover:text-(--accent-1) active:text-(--accent-1)": !isActive(item.href),
+                    "text-(--muted)": isActive(item.href),
+                    "text-(--foreground) hover:text-(--muted) active:text-(--muted)": !isActive(item.href),
                   }}
                 >
                   {item.label}
@@ -94,7 +94,7 @@ const isActive = (href: string) =>
               </li>
             ))
           }
-          <li><Button href={getRoute(locale, "brief")}>Brief</Button></li>
+          <li><Button variant="outline" size="small" href={getRoute(locale, "brief")}>Brief</Button></li>
         </ul>
       </nav>
     </div>
@@ -118,12 +118,13 @@ const isActive = (href: string) =>
       group-[.is-active]:opacity-100
       group-[.is-active]:translate-y-[-50%]
       transition-all duration-300
+      space-y-12
     `}
     >
       {
         items.map((item) => (
           <li>
-            <a href={item.href} class="text-[4rem] font-semibold">
+            <a href={item.href} class="text-5xl font-semibold">
               {item.label}
             </a>
           </li>
@@ -134,7 +135,7 @@ const isActive = (href: string) =>
       class={`
       absolute inset-0 bg-(--background)
       opacity-0
-      group-[.is-active]:opacity-100
+      group-[.is-active]:opacity-80
       transition-opacity duration-300
     `}
     >
@@ -145,9 +146,11 @@ const isActive = (href: string) =>
   document.addEventListener("astro:page-load", () => {
     const toggleButton = document.getElementById("menu-toggle");
     const menuItems = document.getElementById("mobile-nav");
+    const main = document.querySelector("main");
 
     toggleButton?.addEventListener("click", () => {
       toggleButton?.classList.toggle("is-active");
+      main?.classList.toggle("blur-sm");
       menuItems?.classList.toggle("is-active");
     });
   });

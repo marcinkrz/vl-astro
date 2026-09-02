@@ -24,7 +24,7 @@ const sizes = {
     has-[>svg:first-child~*]:pl-2
     `,
   small: `
-    text-sm !leading-none h-7 px-3
+    text-sm !leading-none h-8 px-3
     has-[>svg:first-child~*]:pl-1.5
     `,
   icon: "h-7 min-w-7 p-0 text-sm",
@@ -32,7 +32,7 @@ const sizes = {
 
 const variants = {
   primary: `bg-[var(--foreground)] text-[var(--background)] hover:bg-[var(--foreground-2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--foreground-2)]`,
-  outline: `bg-transparent border-[var(--foreground-2)] text-[var(--foreground)] hover:bg-[var(--background-1)] hover:border-[var(--foreground-3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--background-1)]`,
+  outline: `bg-transparent border-2 border-[var(--foreground-2)] text-[var(--foreground)] hover:bg-[var(--background-1)] hover:border-[var(--foreground-3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--background-1)]`,
   ghost: `bg-(--background-1) text-[var(--foreground)] hover:bg-[var(--background-2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--foreground)] active:bg-[var(--background-2)]`,
   link: `text-inherit font-semibold min-h-auto p-0 bg-transparent text-[var(--foreground)] decoration-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--background-3)] active:underline`,
 } as const;
