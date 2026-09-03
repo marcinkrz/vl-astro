@@ -4,7 +4,10 @@ import netlify from '@astrojs/netlify';
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  output: "static",
+  output: 'server',
+  security: {
+    checkOrigin: true
+  },
   adapter: netlify({
     devFeatures: {
       images: false,
