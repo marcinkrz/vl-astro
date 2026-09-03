@@ -20,14 +20,14 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
   title="Visual Label — Creative Studio"
   description="Creative studio building modern websites."
 >
-  <main class="container">
+  <main class="container-full">
     <section class="-mt-12 pb-12 h-[65vh] flex items-end">
       <h1 class="h1 text-pretty md:max-w-[75%] lg:max-w-[66%]">
         Creating the desired brand image, online and beyond.
       </h1>
     </section>
-    <section class="mb-24 -mx-2 md:-mx-4 lg:mx-auto border-t border-(--border)">
-      <header class="mt-2 mb-8 px-2 md:px-4 lg:px-6 flex justify-between">
+    <section class="mb-24 -mx-3 md:-mx-4 lg:mx-auto border-t border-(--border)">
+      <header class="mt-2 mb-8 px-3 md:px-4 lg:px-6 flex justify-between">
         <h2 class="h4 text-(--muted)">Projects</h2>
         <Button href={getRoute(locale, "projects")} variant="link">
           {t("projects.btnTitle")}

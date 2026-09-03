@@ -29,12 +29,17 @@ const isActive = (href: string) =>
 
 <header class="fixed z-101 top-0 inset-x-0">
   <div
-    class="relative z-2 container-full py-2 md:py-4 flex justify-between items-start"
+    class="relative z-2 container-full py-3 md:py-4 flex justify-between items-start"
   >
     <div class="w-full flex justify-between">
       <Logo />
       <div class="flex">
-        <Button variant="outline" size="small" class="md:hidden" href={getRoute(locale, "brief")}>Brief</Button>
+        <Button
+          variant="outline"
+          size="small"
+          class="md:hidden"
+          href={getRoute(locale, "brief")}>Brief</Button
+        >
         <Button
           id="menu-toggle"
           variant="ghost"
@@ -44,7 +49,7 @@ const isActive = (href: string) =>
         `}
         >
           <span
-            class={`before:block before:absolute before:w-3/4 before:h-0.75 before:bg-(--foreground)
+            class={`before:block before:absolute before:w-3/4 before:h-0.5 before:bg-(--foreground)
             before:top-[2px] before:right-0
             group-[.is-active]:before:w-3/4
             group-[.is-active]:before:top-1/2
@@ -53,7 +58,7 @@ const isActive = (href: string) =>
             group-[.is-active]:before:-translate-1/2
             before:transition-all before:duration-400 before:ease-in-out
 
-            after:block after:absolute after:w-3/4 after:h-0.75 after:bg-(--foreground)
+            after:block after:absolute after:w-3/4 after:h-0.5 after:bg-(--foreground)
             after:top-[calc(50%-1px)] after:right-0
             group-[.is-active]:after:w-3/4
             group-[.is-active]:after:top-1/2
@@ -66,7 +71,7 @@ const isActive = (href: string) =>
           </span>
           <span
             class={`
-            block absolute w-3/4 h-0.75 bg-(--foreground)
+            block absolute w-3/4 h-0.5 bg-(--foreground)
             top-[calc(100%-5px)] right-0 origin-[18px_0px]
             group-[.is-active]:top-1/2
             group-[.is-active]:rotate-225
@@ -86,7 +91,8 @@ const isActive = (href: string) =>
                   aria-current={isActive(item.href) ? "page" : undefined}
                   class:list={{
                     "text-(--muted)": isActive(item.href),
-                    "text-(--foreground) hover:text-(--muted) active:text-(--muted)": !isActive(item.href),
+                    "text-(--foreground) hover:text-(--muted) active:text-(--muted)":
+                      !isActive(item.href),
                   }}
                 >
                   {item.label}
@@ -94,64 +100,66 @@ const isActive = (href: string) =>
               </li>
             ))
           }
-          <li><Button variant="outline" size="small" href={getRoute(locale, "brief")}>Brief</Button></li>
+          <li>
+            <Button
+              variant="outline"
+              size="small"
+              href={getRoute(locale, "brief")}>Brief</Button
+            >
+          </li>
         </ul>
       </nav>
     </div>
   </div>
-  <nav
+
+  <div
     id="mobile-nav"
     class={`
-      fixed z-1 top-0 inset-x-0 h-svh
-      invisible
-      [.is-active]:visible
-      transition-visible duration-300
       group
+      fixed z-1 inset-0
+      flex flex-col
+      transition-transition-visible duration-300
+      invisible [.is-active]:visible
     `}
   >
-    <ul
-      class={`
-      absolute z-1 top-[50%] left-[50%] flex flex-col gap-4 text-center
-      opacity-0
-      translate-x-[-50%]
-      translate-y-[-75%]
-      group-[.is-active]:opacity-100
-      group-[.is-active]:translate-y-[-50%]
-      transition-all duration-300
-      space-y-12
-    `}
+    <nav class={`
+      relative z-2 bg-(--background)
+      transition-transition-all duration-300
+      -translate-y-full group-[.is-active]:translate-y-0
+      `}
     >
-      {
-        items.map((item) => (
-          <li>
-            <a href={item.href} class="text-5xl font-semibold">
-              {item.label}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-    <div
-      class={`
-      absolute inset-0 bg-(--background)
-      opacity-0
-      group-[.is-active]:opacity-80
-      transition-opacity duration-300
-    `}
-    >
-    </div>
-  </nav>
+      <ul class="relative z-2 container mt-24 md:mt-32 mb-12 md:mb-16 space-y-6">
+        {
+          items.map((item) => (
+            <li>
+              <a href={item.href} class="display">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div id="mobile-nav-close" class="absolute inset-0 z-1 bg-(--background) opacity-10"></div>
+  </div>
 </header>
 <script is:inline>
   document.addEventListener("astro:page-load", () => {
     const toggleButton = document.getElementById("menu-toggle");
-    const menuItems = document.getElementById("mobile-nav");
     const main = document.querySelector("main");
+    const mobileNav = document.getElementById("mobile-nav");
+    const mobileNavClose = document.getElementById("mobile-nav-close");
 
     toggleButton?.addEventListener("click", () => {
       toggleButton?.classList.toggle("is-active");
       main?.classList.toggle("blur-sm");
-      menuItems?.classList.toggle("is-active");
+      mobileNav?.classList.toggle("is-active");
+    });
+
+    mobileNavClose?.addEventListener("click", () => {
+      toggleButton?.classList.toggle("is-active");
+      main?.classList.toggle("blur-sm");
+      mobileNav?.classList.toggle("is-active");
     });
   });
 </script>
