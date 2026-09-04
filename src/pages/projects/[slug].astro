@@ -2,19 +2,31 @@
 import { getCollection, render } from "astro:content";
 import ProjectLayout from "@/layouts/ProjectLayout.astro";
 
+const { slug } = Astro.params;
+
+/* OUTPUT: STATIC */
+/*
 export async function getStaticPaths() {
   const projects = await getCollection(
     "projects",
     ({ data }) => data.locale === "en",
   );
-
   return projects.map((project) => ({
     params: { slug: project.id },
     props: { project },
   }));
 }
-
 const { project } = Astro.props;
+const { Content } = await render(project);
+*/
+
+/* OUTPUT: SERVER */
+const project = (
+  await getCollection("projects", (e) => e.data.slug === slug && e.data.locale === "en")
+)[0];
+if (!project) {
+  return new Response(null, { status: 404 });
+}
 const { Content } = await render(project);
 ---
 
