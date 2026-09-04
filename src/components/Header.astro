@@ -143,7 +143,7 @@ const isActive = (href: string) =>
     <div id="mobile-nav-close" class="absolute inset-0 z-1 bg-(--background) opacity-10"></div>
   </div>
 </header>
-<script is:inline>
+<script>
   document.addEventListener("astro:page-load", () => {
     const toggleButton = document.getElementById("menu-toggle");
     const main = document.querySelector("main");
