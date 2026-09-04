@@ -43,7 +43,7 @@ if (currentPath.startsWith(`${currentProjectsBase}/`)) {
   const projects = await getCollection("projects");
 
   const currentProject = projects.find(
-    (entry) => entry.data.locale === currentLocale && entry.id === currentSlug,
+    (entry) => entry.data.locale === currentLocale && entry.data.slug === currentSlug,
   );
 
   if (currentProject) {
@@ -54,7 +54,7 @@ if (currentPath.startsWith(`${currentProjectsBase}/`)) {
     );
 
     href = translatedProject
-      ? `${targetProjectsBase}/${translatedProject.id}`
+      ? `${targetProjectsBase}/${translatedProject.data.slug}`
       : targetProjectsBase;
   }
 }

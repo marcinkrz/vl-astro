@@ -11,11 +11,11 @@ export async function getProjectSlugMap() {
     const translated = projects.find(
       (p) =>
         p.data.locale === "pl" &&
-        p.data.slug === project.data.slug
+        p.data.projectKey === project.data.projectKey
     );
 
     if (translated) {
-      map[project.id] = translated.id;
+      map[project.data.slug] = translated.data.slug;
     }
   }
 

@@ -1,17 +1,17 @@
 ---
-const pathname = Astro.url.pathname;
 const projectSlugMap = await import('@/lib/projectSlugMap').then(m => m.getProjectSlugMap());
 const isAlreadyPolish = Astro.currentLocale === 'pl';
 ---
 
 { !isAlreadyPolish && (
-  <script is:inline define:vars={{ pathname, projectSlugMap }}>
+  <script is:inline define:vars={{ projectSlugMap }}>
     function getPolishPath(currentPath) {
       const routeMap = {
         '/': '/pl',
         '/projects': '/pl/projekty',
         '/studio': '/pl/studio',
         '/contact': '/pl/kontakt',
+        '/brief': '/pl/brief',
       };
 
       if (routeMap[currentPath]) return routeMap[currentPath];
@@ -26,6 +26,9 @@ const isAlreadyPolish = Astro.currentLocale === 'pl';
     }
 
     function handleRedirect() {
+      const currentPath = window.location.pathname;
+      if (currentPath.startsWith('/pl')) return;
+
       const storedPreference = localStorage.getItem('preferredLanguage');
       if (storedPreference === 'en') return;
 
@@ -33,7 +36,7 @@ const isAlreadyPolish = Astro.currentLocale === 'pl';
       
       if (browserLang.startsWith('pl')) {
         localStorage.setItem('preferredLanguage', 'pl');
-        window.location.replace(getPolishPath(pathname));
+        window.location.replace(getPolishPath(currentPath));
       }
     }
 
