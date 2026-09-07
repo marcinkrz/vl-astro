@@ -2,9 +2,9 @@
 
 **When modifying code or documentation in this repository, follow these rules:**
 
-- Target `dev` branch when creating Pull Requests. Do not push directly to production branches eg. `main`.
 - Always pull the latest changes from `dev` before starting work.
 - Create a new branch using the format `feature/agent-<description>` or `fix/agent-<description>`.
+- Target `dev` branch when creating Pull Requests. Do not push directly to production branches eg. `main`.
 - Use clear, imperative commit messages (e.g., "Update agent instructions for clarity").
 
 # Think Before Coding
