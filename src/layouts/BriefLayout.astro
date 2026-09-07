@@ -10,7 +10,7 @@ const t = getT(locale);
 
 import Button from "@/components/_ui/Button.astro";
 import Input from "@/components/_ui/Input.astro";
-import { ArrowUpRight, Clock5, Undo2 } from "@lucide/astro";
+import { ArrowUpRight, Clock5, Undo2, X } from "@lucide/astro";
 
 const messages = {
   locale,
@@ -101,6 +101,17 @@ const messages = {
     font-size: 0.75rem;
     line-height: 1.4;
     padding-left: 0.25rem;
+  }
+
+  #other-service-close {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .group:has(#other-service:not(:checked)) #other-service-close,
+  .group:has(#other-service-value:focus) #other-service-close,
+  .group:has(#other-service-value:not(:placeholder-shown)) #other-service-close {
+    opacity: 1;
+    visibility: visible;
   }
 
   /* ---------- Komunikat odpowiedzi ---------- */
@@ -354,7 +365,7 @@ const messages = {
                 >{t("brief-form.[2].services.5")}</label
               >
             </div>
-            <div class="group h-10 grid items-center">
+            <div class="group relative h-10 grid items-center">
               <input
                 type="checkbox"
                 id="other-service"
@@ -387,7 +398,7 @@ const messages = {
               />
               <label
                 for="other-service"
-                class="col-start-1 row-start-1 h-full flex items-center gap-2 pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+                class="col-start-1 row-start-1 h-full flex items-center gap-2 pl-10 pr-12 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
               >
                 <span id="other-service-label" class="shrink-0"
                   >{t("brief-form.[2].services.6")}</span
@@ -398,9 +409,18 @@ const messages = {
                   name="other-service"
                   maxlength="80"
                   autocomplete="off"
+                  placeholder=" "
                   class="hidden flex-1 min-w-0 bg-transparent border-0 outline-none text-inherit cursor-text"
                 />
               </label>
+              <button
+                type="button"
+                id="other-service-close"
+                aria-label={t("brief-form.close-other")}
+                class="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full text-(--muted) hover:text-(--foreground) cursor-pointer transition-opacity duration-150"
+              >
+                <X class="w-4 h-4" />
+              </button>
             </div>
           </fieldset>
           <p id="services-error" class="field-error" hidden></p>
@@ -1217,6 +1237,14 @@ const messages = {
         syncOther(otherCheckbox.checked),
       );
     }
+
+    // Powrót pola „Inny" do stanu pierwotnego — jak odznaczenie checkboxa.
+    function resetOther(): void {
+      if (!otherCheckbox?.checked) return;
+      otherCheckbox.checked = false;
+      syncOther(false);
+    }
+
     if (otherInput) {
       otherInput.addEventListener("input", () => {
         if (otherCheckbox)
@@ -1236,6 +1264,31 @@ const messages = {
         }
       });
     }
+
+    // (x): zamyka pole. stopPropagation, żeby klik nie wszedł do labelki
+    // (ponownie zaznaczyłby checkbox i pole otworzyłoby się od razu).
+    document
+      .getElementById("other-service-close")
+      ?.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        resetOther();
+        otherCheckbox?.focus();
+      });
+
+    // Klik poza wierszem „Inny" zamyka pole — ale dopiero na pointerup/click,
+    // żeby „Dalej"/„Wstecz" zdążyły najpierw zwalidować bieżący ekran.
+    const onDocClick = (e: Event): void => {
+      if (screens[current]?.id !== "services") return;
+      if (otherInput?.classList.contains("hidden")) return;
+      const target = e.target as Element | null;
+      if (target?.closest?.(".group:has(#other-service)")) return;
+      resetOther();
+    };
+    document.addEventListener("click", onDocClick);
+    globalCleanups.push(() =>
+      document.removeEventListener("click", onDocClick),
+    );
 
     // ---------- Nawigacja ----------
     // „Dalej" waliduje bieżący ekran, „Wstecz" zawsze przepuszcza.
