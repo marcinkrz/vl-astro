@@ -39,7 +39,7 @@
   "brief-form": {
     "next": "Next",
     "prev": "Prev",
-    "close-other": "Close field",
+    "close-other": "Clear field",
     "[1]": {
       "title": "Hello, thank you for your interest in my offer.",
       "description": "If you are looking for a contractor for your project, please fill out this non-binding form. It only has 6 short questions, which will take you a minute to complete :)",

@@ -107,8 +107,6 @@ const messages = {
     opacity: 0;
     visibility: hidden;
   }
-  .group:has(#other-service:not(:checked)) #other-service-close,
-  .group:has(#other-service-value:focus) #other-service-close,
   .group:has(#other-service-value:not(:placeholder-shown)) #other-service-close {
     opacity: 1;
     visibility: visible;
@@ -1238,11 +1236,12 @@ const messages = {
       );
     }
 
-    // Powrót pola „Inny" do stanu pierwotnego — jak odznaczenie checkboxa.
-    function resetOther(): void {
-      if (!otherCheckbox?.checked) return;
-      otherCheckbox.checked = false;
-      syncOther(false);
+    // (X) czyści tylko wpisaną wartość — checkbox „Inny" zostaje zaznaczony.
+    function clearOtherValue(): void {
+      if (!otherInput || !otherCheckbox) return;
+      otherInput.value = "";
+      otherCheckbox.value = "other";
+      otherInput.classList.remove("field-invalid");
     }
 
     if (otherInput) {
@@ -1265,25 +1264,27 @@ const messages = {
       });
     }
 
-    // (x): zamyka pole. stopPropagation, żeby klik nie wszedł do labelki
-    // (ponownie zaznaczyłby checkbox i pole otworzyłoby się od razu).
+    // (X) — usuwa wpisaną wartość (checkbox zostaje zaznaczony).
+    // stopPropagation, żeby klik nie wszedł do labelki (checkbox).
     document
       .getElementById("other-service-close")
       ?.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        resetOther();
-        otherCheckbox?.focus();
+        clearOtherValue();
+        otherInput?.focus();
       });
 
-    // Klik poza wierszem „Inny" zamyka pole — ale dopiero na pointerup/click,
-    // żeby „Dalej"/„Wstecz" zdążyły najpierw zwalidować bieżący ekran.
+    // Klik poza wierszem „Inny" = „zapisz i wyjdź": zamyka tylko puste, otwarte
+    // pole. Wartość NIGDY nie jest kasowana — na click (nie pointerdown), żeby
+    // „Dalej"/„Wstecz" zdążyły najpierw zwalidować bieżący ekran.
     const onDocClick = (e: Event): void => {
       if (screens[current]?.id !== "services") return;
       if (otherInput?.classList.contains("hidden")) return;
+      if (otherInput?.value) return;
       const target = e.target as Element | null;
       if (target?.closest?.(".group:has(#other-service)")) return;
-      resetOther();
+      otherCheckbox?.click();
     };
     document.addEventListener("click", onDocClick);
     globalCleanups.push(() =>
