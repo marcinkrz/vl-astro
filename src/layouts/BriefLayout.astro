@@ -10,7 +10,15 @@ const t = getT(locale);
 
 import Button from "@/components/_ui/Button.astro";
 import Input from "@/components/_ui/Input.astro";
-import { ArrowUpRight, Clock5, Undo2 } from "@lucide/astro";
+import {
+  ArrowUpRight,
+  BadgeCheck,
+  Ban,
+  Clock5,
+  Info,
+  LoaderCircle,
+  X,
+} from "@lucide/astro";
 
 const messages = {
   locale,
@@ -34,7 +42,10 @@ const messages = {
 <noscript>
   <style>
     .screen {
-      display: block !important;
+      display: flex !important;
+      height: 100svh;
+      flex-direction: column;
+      justify-content: center;
     }
   </style>
 </noscript>
@@ -96,31 +107,6 @@ const messages = {
   .field-invalid {
     border-color: var(--danger-text) !important;
   }
-  .field-error {
-    color: var(--danger-text);
-    font-size: 0.75rem;
-    line-height: 1.4;
-    padding-left: 0.25rem;
-  }
-
-  /* ---------- Komunikat odpowiedzi ---------- */
-  #response-message.error p {
-    padding: 0.5rem 0.75rem;
-  }
-  #response-message.pending p {
-    padding: 0.5rem 0.75rem;
-  }
-  #response-message.success p {
-    padding: 0.5rem 0.75rem;
-  }
-  #response-message.pending {
-    background: var(--background-1);
-    color: var(--muted);
-  }
-  #response-message.success {
-    background: var(--foreground);
-    color: var(--background);
-  }
 </style>
 
 <form
@@ -146,7 +132,7 @@ const messages = {
     set:html={JSON.stringify(messages)}
   />
   <div
-    class="w-full min-h-[calc(100svh-6rem)]  md:min-h-[calc(100svh-7rem)] mt-12 md:mt-16 flex flex-col gap-4 justify-center items-start"
+    class="w-full min-h-[calc(100svh-6rem)] md:min-h-[calc(100svh-7rem)] mt-12 md:mt-16 flex flex-col gap-4 justify-center items-start"
   >
     <div class="container min-h-[450px]">
       <section id="first" class="screen max-w-[600px] mx-auto">
@@ -154,18 +140,25 @@ const messages = {
           <h2 class="display mb-6">{t("brief-form.[1].title")}</h2>
           <p>{t("brief-form.[1].description")}</p>
           <div class="flex flex-col items-center">
-            <Button href="#services" data-go="services" size="large" class="mt-6 mb-2">
-                {t("brief-form.[1].button")}
+            <Button
+              href="#services"
+              data-go="services"
+              size="large"
+              class="mt-6 mb-2"
+            >
+              {t("brief-form.[1].button")}
             </Button>
-            <p class="flex gap-1 items-center text-(--muted) text-xs">
-              <Clock5 class="w-3" />{t("brief-form.[1].time")}
+            <p class="p-2 inline-flex text-sm leading-[1.25] text-(--muted)">
+              <Clock5 class="h-4 mr-0.5" />{t("brief-form.[1].time")}
             </p>
           </div>
         </div>
       </section>
       <section id="services" class="screen max-w-[450px] mx-auto">
         <div class="w-full space-y-4">
-          <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">1 / 5</span>
+          <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)"
+            >1 / 5</span
+          >
           <h2 class="h1">{t("brief-form.[2].title")}</h2>
           <fieldset class="mb-0 space-y-1">
             <legend class="mb-4">{t("brief-form.[2].description")}</legend>
@@ -184,12 +177,11 @@ const messages = {
 
                 before:content-['A']
                 before:absolute
-                before:inset-2
+                before:inset-1.5
+                before:bg-(--background-1)
                 before:flex
                 before:justify-center
                 before:items-center
-                before:border
-                before:border-(--border)
                 before:rounded-full
 
                 checked:before:border-(--foreground)
@@ -221,12 +213,11 @@ const messages = {
 
                 before:content-['B']
                 before:absolute
-                before:inset-2
+                before:inset-1.5
+                before:bg-(--background-1)
                 before:flex
                 before:justify-center
                 before:items-center
-                before:border
-                before:border-(--border)
                 before:rounded-full
 
                 checked:before:border-(--foreground)
@@ -258,12 +249,11 @@ const messages = {
 
                 before:content-['C']
                 before:absolute
-                before:inset-2
+                before:inset-1.5
+                before:bg-(--background-1)
                 before:flex
                 before:justify-center
                 before:items-center
-                before:border
-                before:border-(--border)
                 before:rounded-full
 
                 checked:before:border-(--foreground)
@@ -295,12 +285,11 @@ const messages = {
 
                 before:content-['D']
                 before:absolute
-                before:inset-2
+                before:inset-1.5
+                before:bg-(--background-1)
                 before:flex
                 before:justify-center
                 before:items-center
-                before:border
-                before:border-(--border)
                 before:rounded-full
 
                 checked:before:border-(--foreground)
@@ -332,12 +321,11 @@ const messages = {
 
                 before:content-['E']
                 before:absolute
-                before:inset-2
+                before:inset-1.5
+                before:bg-(--background-1)
                 before:flex
                 before:justify-center
                 before:items-center
-                before:border
-                before:border-(--border)
                 before:rounded-full
 
                 checked:before:border-(--foreground)
@@ -354,7 +342,7 @@ const messages = {
                 >{t("brief-form.[2].services.5")}</label
               >
             </div>
-            <div class="group h-10 grid items-center">
+            <div class="group relative h-10 grid items-center">
               <input
                 type="checkbox"
                 id="other-service"
@@ -369,12 +357,11 @@ const messages = {
 
                 before:content-['F']
                 before:absolute
-                before:inset-2
+                before:inset-1.5
+                before:bg-(--background-1)
                 before:flex
                 before:justify-center
                 before:items-center
-                before:border
-                before:border-(--border)
                 before:rounded-full
 
                 checked:before:border-(--foreground)
@@ -387,7 +374,7 @@ const messages = {
               />
               <label
                 for="other-service"
-                class="col-start-1 row-start-1 h-full flex items-center gap-2 pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+                class="col-start-1 row-start-1 h-full flex items-center gap-2 pl-10 pr-12 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
               >
                 <span id="other-service-label" class="shrink-0"
                   >{t("brief-form.[2].services.6")}</span
@@ -398,22 +385,54 @@ const messages = {
                   name="other-service"
                   maxlength="80"
                   autocomplete="off"
+                  placeholder=" "
                   class="hidden flex-1 min-w-0 bg-transparent border-0 outline-none text-inherit cursor-text"
                 />
               </label>
+              <Button
+                id="other-service-close"
+                variant="ghost"
+                size="icon"
+                aria-label={t("brief-form.close-other")}
+                class={`
+                  absolute right-1.5 top-1/2 -translate-y-1/2
+                  opacity-0 invisible
+                  group-has-[#other-service-value:not(:placeholder-shown)]:visible
+                  group-has-[#other-service-value:not(:placeholder-shown)]:opacity-100
+                  transition-opacity duration-150
+                `}
+              >
+                <X class="h-4" />
+              </Button>
             </div>
           </fieldset>
-          <p id="services-error" class="field-error" hidden></p>
-          <Button href="#budget" data-go="budget" size="large" class="w-full mt-8">
+          <div class="relative m-0">
+            <p
+              id="services-error"
+              class="absolute inline-flex mt-1.5 ml-1 text-sm leading-[1.25] text-(--danger-text)"
+              hidden
+            >
+              <Info class="h-4 mr-1" />
+              <span></span>
+            </p>
+          </div>
+          <Button
+            href="#budget"
+            data-go="budget"
+            size="large"
+            class="w-full mt-8"
+          >
             {t("brief-form.next")}
           </Button>
         </div>
       </section>
       <section id="budget" class="screen max-w-[450px] mx-auto">
         <div class="w-full space-y-4">
-          <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">2 / 5</span>
+          <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)"
+            >2 / 5</span
+          >
           <h2 class="h1">{t("brief-form.[3].title")}</h2>
-          <fieldset class="space-y-2">
+          <fieldset class="mb-0 space-y-2">
             <legend class="mb-4">{t("brief-form.[3].description")}</legend>
             <div class="group h-10 grid items-center">
               <input
@@ -430,12 +449,11 @@ const messages = {
 
                 before:content-['A']
                 before:absolute
-                before:inset-2
+                before:inset-1.5
+                before:bg-(--background-1)
                 before:flex
                 before:justify-center
                 before:items-center
-                before:border
-                before:border-(--border)
                 before:rounded-full
 
                 checked:before:border-(--foreground)
@@ -467,12 +485,11 @@ const messages = {
 
                 before:content-['B']
                 before:absolute
-                before:inset-2
+                before:inset-1.5
+                before:bg-(--background-1)
                 before:flex
                 before:justify-center
                 before:items-center
-                before:border
-                before:border-(--border)
                 before:rounded-full
 
                 checked:before:border-(--foreground)
@@ -504,12 +521,11 @@ const messages = {
 
                 before:content-['C']
                 before:absolute
-                before:inset-2
+                before:inset-1.5
+                before:bg-(--background-1)
                 before:flex
                 before:justify-center
                 before:items-center
-                before:border
-                before:border-(--border)
                 before:rounded-full
 
                 checked:before:border-(--foreground)
@@ -541,12 +557,11 @@ const messages = {
 
                 before:content-['D']
                 before:absolute
-                before:inset-2
+                before:inset-1.5
+                before:bg-(--background-1)
                 before:flex
                 before:justify-center
                 before:items-center
-                before:border
-                before:border-(--border)
                 before:rounded-full
 
                 checked:before:border-(--foreground)
@@ -578,12 +593,11 @@ const messages = {
 
                 before:content-['E']
                 before:absolute
-                before:inset-2
+                before:inset-1.5
+                before:bg-(--background-1)
                 before:flex
                 before:justify-center
                 before:items-center
-                before:border
-                before:border-(--border)
                 before:rounded-full
 
                 checked:before:border-(--foreground)
@@ -601,9 +615,23 @@ const messages = {
               >
             </div>
           </fieldset>
-          <p id="budget-error" class="field-error" hidden></p>
-          <div class="flex gap-4 mt-8">
-            <Button class="font-normal text-sm" href="#services" data-go="services" variant="ghost">
+          <div class="relative m-0">
+            <p
+              id="budget-error"
+              class="absolute inline-flex mt-1.5 ml-1 text-sm leading-[1.25] text-(--danger-text)"
+              hidden
+            >
+              <Info class="h-4 mr-1" />
+              <span></span>
+            </p>
+          </div>
+          <div class="flex gap-4 my-8">
+            <Button
+              class="font-normal text-sm"
+              href="#services"
+              data-go="services"
+              variant="ghost"
+            >
               {t("brief-form.prev")}
             </Button>
             <Button href="#brief" data-go="brief" size="large" class="w-full">
@@ -614,10 +642,12 @@ const messages = {
       </section>
       <section id="brief" class="screen max-w-[450px] mx-auto">
         <div class="w-full space-y-4">
-          <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">3 / 5</span>
+          <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)"
+            >3 / 5</span
+          >
           <h2 class="h1">{t("brief-form.[4].title")}</h2>
           <p>{t("brief-form.[4].description")}</p>
-          <label class="relative block">
+          <label class="relative block mb-0">
             <Input
               as="textarea"
               id="message"
@@ -648,9 +678,21 @@ const messages = {
               {t("contact-form.message")}
             </span>
           </label>
-          <p id="message-error" class="field-error" hidden></p>
-          <div class="flex gap-4 mt-8">
-            <Button class="font-normal text-sm" href="#budget" data-go="budget" variant="ghost">
+          <div class="relative m-0">
+            <p
+              id="message-error"
+              class="absolute mt-1 text-sm text-(--danger-text)"
+              hidden
+            >
+            </p>
+          </div>
+          <div class="flex gap-4 my-8">
+            <Button
+              class="font-normal text-sm"
+              href="#budget"
+              data-go="budget"
+              variant="ghost"
+            >
               {t("brief-form.prev")}
             </Button>
             <Button href="#site" data-go="site" size="large" class="w-full">
@@ -661,7 +703,9 @@ const messages = {
       </section>
       <section id="site" class="screen max-w-[450px] mx-auto">
         <div class="w-full space-y-4">
-          <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">4 / 5</span>
+          <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)"
+            >4 / 5</span
+          >
           <h2 class="h1">{t("brief-form.[5].title")}</h2>
           <p>{t("brief-form.[5].description")}</p>
           <label class="relative block">
@@ -696,9 +740,21 @@ const messages = {
               https://
             </span>
           </label>
-          <p id="website-error" class="field-error" hidden></p>
-          <div class="flex gap-4 mt-8">
-            <Button class="font-normal text-sm" href="#brief" data-go="brief" variant="ghost">
+          <div class="relative m-0">
+            <p
+              id="website-error"
+              class="absolute mt-1 text-sm text-(--danger-text)"
+              hidden
+            >
+            </p>
+          </div>
+          <div class="flex gap-4 my-8">
+            <Button
+              class="font-normal text-sm"
+              href="#brief"
+              data-go="brief"
+              variant="ghost"
+            >
               {t("brief-form.prev")}
             </Button>
             <Button href="#last" data-go="last" size="large" class="w-full">
@@ -709,10 +765,12 @@ const messages = {
       </section>
       <section id="last" class="screen max-w-[450px] mx-auto">
         <div class="w-full space-y-4">
-          <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">5 / 5</span>
+          <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)"
+            >5 / 5</span
+          >
           <h2 class="h1">{t("brief-form.[last].title")}</h2>
           <p>{t("brief-form.[last].description")}</p>
-          <div class="space-y-2">
+          <div class="space-y-3">
             <div>
               <label class="relative block">
                 <Input
@@ -746,7 +804,12 @@ const messages = {
                   {t("contact-form.firstName")}
                 </span>
               </label>
-              <p id="firstName-error" class="field-error mt-1" hidden></p>
+              <p
+                id="firstName-error"
+                class="mt-1 text-sm text-(--danger-text)"
+                hidden
+              >
+              </p>
             </div>
             <div>
               <label class="relative block">
@@ -780,7 +843,12 @@ const messages = {
                   {t("contact-form.phone")}
                 </span>
               </label>
-              <p id="phone-error" class="field-error mt-1" hidden></p>
+              <p
+                id="phone-error"
+                class="mt-1 text-sm text-(--danger-text)"
+                hidden
+              >
+              </p>
             </div>
             <div>
               <label class="relative block">
@@ -814,7 +882,12 @@ const messages = {
                   {t("contact-form.email")}
                 </span>
               </label>
-              <p id="email-error" class="field-error mt-1" hidden></p>
+              <p
+                id="email-error"
+                class="mt-1 text-sm text-(--danger-text)"
+                hidden
+              >
+              </p>
             </div>
             <div>
               <label class="relative block">
@@ -848,11 +921,21 @@ const messages = {
                   {t("contact-form.nip")}
                 </span>
               </label>
-              <p id="nip-error" class="field-error mt-1" hidden></p>
+              <p
+                id="nip-error"
+                class="mt-1 text-sm text-(--danger-text)"
+                hidden
+              >
+              </p>
             </div>
           </div>
-          <div class="flex gap-4 mt-8">
-            <Button class="font-normal text-sm" href="#site" data-go="site" variant="ghost">
+          <div class="flex gap-4 my-8">
+            <Button
+              class="font-normal text-sm"
+              href="#site"
+              data-go="site"
+              variant="ghost"
+            >
               {t("brief-form.prev")}
             </Button>
             <Button type="submit" id="brief-submit" size="large" class="w-full">
@@ -862,25 +945,32 @@ const messages = {
           </div>
         </div>
       </section>
-      <div
-        id="response-message"
-        class="group inline-flex rounded-md text-sm"
-        aria-live="polite"
-      >
-        <p class={`
-          px-3 py-2
-          group-[.pending]:bg-(--background-1)
+      <div id="response-message" class="group text-center" aria-live="polite">
+        <p
+          class={`
+          p-2 text-sm leading-[1.25] rounded-md
+          hidden group-[.pending]:inline-flex
+          group-[.pending]:text-(--muted)
+
+          hidden group-[.error]:inline-flex
           group-[.error]:bg-(--danger-bg) group-[.error]:text-(--danger-text)
+
+          hidden group-[.success]:inline-flex
           group-[.success]:bg-(--success-bg) group-[.success]:text-(--success-text)
-        `}></p>
+        `}
+        >
+          <LoaderCircle
+            class="h-4 mr-1 hidden group-[.pending]:inline-flex text-(--muted) animate-spin"
+          />
+          <BadgeCheck class="h-4 mr-1 hidden group-[.success]:inline-flex" />
+          <Ban class="h-4 mr-1 hidden group-[.error]:inline-flex" />
+          <span></span>
+        </p>
       </div>
     </div>
   </div>
 </form>
-<div
-  class="absolute top-0 w-full h-0.5 bg-(--background-1)"
-  aria-hidden="true"
->
+<div class="absolute top-0 w-full h-0.5 bg-(--background-1)" aria-hidden="true">
   <div
     id="brief-progress-bar"
     class="h-full w-0 bg-(--foreground) transition-all duration-500"
@@ -1111,9 +1201,10 @@ const messages = {
 
     function setGroupError(id: string, text: string | null): void {
       const el = document.getElementById(id);
-      if (!el) return;
+      const elChild = el?.querySelector("span");
+      if (!el || !elChild) return;
       if (text) {
-        el.textContent = text;
+        elChild.textContent = text;
         el.hidden = false;
       } else {
         el.hidden = true;
@@ -1217,6 +1308,15 @@ const messages = {
         syncOther(otherCheckbox.checked),
       );
     }
+
+    // (X) czyści tylko wpisaną wartość — checkbox „Inny" zostaje zaznaczony.
+    function clearOtherValue(): void {
+      if (!otherInput || !otherCheckbox) return;
+      otherInput.value = "";
+      otherCheckbox.value = "other";
+      otherInput.classList.remove("field-invalid");
+    }
+
     if (otherInput) {
       otherInput.addEventListener("input", () => {
         if (otherCheckbox)
@@ -1236,6 +1336,33 @@ const messages = {
         }
       });
     }
+
+    // (X) — usuwa wpisaną wartość (checkbox zostaje zaznaczony).
+    // stopPropagation, żeby klik nie wszedł do labelki (checkbox).
+    document
+      .getElementById("other-service-close")
+      ?.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        clearOtherValue();
+        otherInput?.focus();
+      });
+
+    // Klik poza wierszem „Inny" = „zapisz i wyjdź": zamyka tylko puste, otwarte
+    // pole. Wartość NIGDY nie jest kasowana — na click (nie pointerdown), żeby
+    // „Dalej"/„Wstecz" zdążyły najpierw zwalidować bieżący ekran.
+    const onDocClick = (e: Event): void => {
+      if (screens[current]?.id !== "services") return;
+      if (otherInput?.classList.contains("hidden")) return;
+      if (otherInput?.value) return;
+      const target = e.target as Element | null;
+      if (target?.closest?.(".group:has(#other-service)")) return;
+      otherCheckbox?.click();
+    };
+    document.addEventListener("click", onDocClick);
+    globalCleanups.push(() =>
+      document.removeEventListener("click", onDocClick),
+    );
 
     // ---------- Nawigacja ----------
     // „Dalej" waliduje bieżący ekran, „Wstecz" zawsze przepuszcza.
@@ -1317,7 +1444,7 @@ const messages = {
 
     // ---------- Wysyłka ----------
     const responseBox = document.getElementById("response-message");
-    const responseText = responseBox?.querySelector("p") ?? null;
+    const responseText = responseBox?.querySelector("p > span") ?? null;
     let submitting = false;
 
     function showResponse(
@@ -1379,9 +1506,7 @@ const messages = {
               .querySelector<HTMLInputElement>('input[name="services"]')
               ?.focus();
         } else if (jumpTo === "budget") {
-          form
-            .querySelector<HTMLInputElement>('input[name="budget"]')
-            ?.focus();
+          form.querySelector<HTMLInputElement>('input[name="budget"]')?.focus();
         } else if (firstBadField) {
           fieldInput(firstBadField.name)?.focus();
         }

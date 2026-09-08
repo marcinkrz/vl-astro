@@ -39,6 +39,7 @@
   "brief-form": {
     "next": "Dalej",
     "prev": "Wstecz",
+    "close-other": "Wyczyść pole",
     "[1]": {
       "title": "Cześć, dziękuje za zainteresowanie moją ofertą.",
       "description": "Jeśli szukasz wykonawcy do swojego projektu, wypełnij ten niezobowiązujący formularz. Ma on tylko 6 krótkich pytań, których wypełnienie zajmie Ci minutkę :)",
@@ -47,7 +48,7 @@
     },
     "[2]": {
       "title": "Jaka usługa Cię interesuje?",
-      "description": "Wybierz jeden lub kilka:",
+      "description": "Wybierz jedną lub kilka:",
       "services": {
         "1": "Strona internetowa",
         "2": "Sklep internetowy",
