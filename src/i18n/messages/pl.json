@@ -48,7 +48,7 @@
     },
     "[2]": {
       "title": "Jaka usługa Cię interesuje?",
-      "description": "Wybierz jeden lub kilka:",
+      "description": "Wybierz jedną lub kilka:",
       "services": {
         "1": "Strona internetowa",
         "2": "Sklep internetowy",

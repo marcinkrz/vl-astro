@@ -10,7 +10,7 @@ const t = getT(locale);
 
 import Button from "@/components/_ui/Button.astro";
 import Input from "@/components/_ui/Input.astro";
-import { ArrowUpRight, Clock5, Undo2, X } from "@lucide/astro";
+import { ArrowUpRight, BadgeCheck, Ban, Clock5, Info, LoaderCircle, X } from "@lucide/astro";
 
 const messages = {
   locale,
@@ -34,7 +34,10 @@ const messages = {
 <noscript>
   <style>
     .screen {
-      display: block !important;
+      display: flex !important;
+      height: 100svh;
+      flex-direction: column;
+      justify-content: center;
     }
   </style>
 </noscript>
@@ -96,12 +99,6 @@ const messages = {
   .field-invalid {
     border-color: var(--danger-text) !important;
   }
-  .field-error {
-    color: var(--danger-text);
-    font-size: 0.75rem;
-    line-height: 1.4;
-    padding-left: 0.25rem;
-  }
 
   #other-service-close {
     opacity: 0;
@@ -110,25 +107,6 @@ const messages = {
   .group:has(#other-service-value:not(:placeholder-shown)) #other-service-close {
     opacity: 1;
     visibility: visible;
-  }
-
-  /* ---------- Komunikat odpowiedzi ---------- */
-  #response-message.error p {
-    padding: 0.5rem 0.75rem;
-  }
-  #response-message.pending p {
-    padding: 0.5rem 0.75rem;
-  }
-  #response-message.success p {
-    padding: 0.5rem 0.75rem;
-  }
-  #response-message.pending {
-    background: var(--background-1);
-    color: var(--muted);
-  }
-  #response-message.success {
-    background: var(--foreground);
-    color: var(--background);
   }
 </style>
 
@@ -166,8 +144,8 @@ const messages = {
             <Button href="#services" data-go="services" size="large" class="mt-6 mb-2">
                 {t("brief-form.[1].button")}
             </Button>
-            <p class="flex gap-1 items-center text-(--muted) text-xs">
-              <Clock5 class="w-3" />{t("brief-form.[1].time")}
+            <p class="p-2 inline-flex text-sm leading-[1.25] text-(--muted)">
+              <Clock5 class="h-4 mr-0.5" />{t("brief-form.[1].time")}
             </p>
           </div>
         </div>
@@ -417,11 +395,16 @@ const messages = {
                 aria-label={t("brief-form.close-other")}
                 class="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full text-(--muted) hover:text-(--foreground) cursor-pointer transition-opacity duration-150"
               >
-                <X class="w-4 h-4" />
+                <X class="h-4" />
               </button>
             </div>
           </fieldset>
-          <p id="services-error" class="field-error" hidden></p>
+          <div class="relative m-0">
+            <p id="services-error" class="absolute inline-flex mt-1.5 ml-1 text-sm leading-[1.25] text-(--danger-text)" hidden>
+              <Info class="h-4 mr-1" />
+              <span></span>
+            </p>
+          </div>
           <Button href="#budget" data-go="budget" size="large" class="w-full mt-8">
             {t("brief-form.next")}
           </Button>
@@ -431,7 +414,7 @@ const messages = {
         <div class="w-full space-y-4">
           <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">2 / 5</span>
           <h2 class="h1">{t("brief-form.[3].title")}</h2>
-          <fieldset class="space-y-2">
+          <fieldset class="mb-0 space-y-2">
             <legend class="mb-4">{t("brief-form.[3].description")}</legend>
             <div class="group h-10 grid items-center">
               <input
@@ -619,8 +602,13 @@ const messages = {
               >
             </div>
           </fieldset>
-          <p id="budget-error" class="field-error" hidden></p>
-          <div class="flex gap-4 mt-8">
+          <div class="relative m-0">
+            <p id="budget-error" class="absolute inline-flex mt-1.5 ml-1 text-sm leading-[1.25] text-(--danger-text)" hidden>
+              <Info class="h-4 mr-1" />
+              <span></span>
+            </p>
+          </div>
+          <div class="flex gap-4 my-8">
             <Button class="font-normal text-sm" href="#services" data-go="services" variant="ghost">
               {t("brief-form.prev")}
             </Button>
@@ -635,7 +623,7 @@ const messages = {
           <span class="mb-0 float-right -translate-y-1/1 text-sm text-(--muted)">3 / 5</span>
           <h2 class="h1">{t("brief-form.[4].title")}</h2>
           <p>{t("brief-form.[4].description")}</p>
-          <label class="relative block">
+          <label class="relative block mb-0">
             <Input
               as="textarea"
               id="message"
@@ -666,8 +654,8 @@ const messages = {
               {t("contact-form.message")}
             </span>
           </label>
-          <p id="message-error" class="field-error" hidden></p>
-          <div class="flex gap-4 mt-8">
+          <div class="relative m-0"><p id="message-error" class="absolute mt-1 text-sm text-(--danger-text)" hidden></p></div>
+          <div class="flex gap-4 my-8">
             <Button class="font-normal text-sm" href="#budget" data-go="budget" variant="ghost">
               {t("brief-form.prev")}
             </Button>
@@ -714,8 +702,8 @@ const messages = {
               https://
             </span>
           </label>
-          <p id="website-error" class="field-error" hidden></p>
-          <div class="flex gap-4 mt-8">
+          <div class="relative m-0"><p id="website-error" class="absolute mt-1 text-sm text-(--danger-text)" hidden></p></div>
+          <div class="flex gap-4 my-8">
             <Button class="font-normal text-sm" href="#brief" data-go="brief" variant="ghost">
               {t("brief-form.prev")}
             </Button>
@@ -764,7 +752,7 @@ const messages = {
                   {t("contact-form.firstName")}
                 </span>
               </label>
-              <p id="firstName-error" class="field-error mt-1" hidden></p>
+              <p id="firstName-error" class="mt-1 text-sm text-(--danger-text)" hidden></p>
             </div>
             <div>
               <label class="relative block">
@@ -798,7 +786,7 @@ const messages = {
                   {t("contact-form.phone")}
                 </span>
               </label>
-              <p id="phone-error" class="field-error mt-1" hidden></p>
+              <p id="phone-error" class="mt-1 text-sm text-(--danger-text)" hidden></p>
             </div>
             <div>
               <label class="relative block">
@@ -832,7 +820,7 @@ const messages = {
                   {t("contact-form.email")}
                 </span>
               </label>
-              <p id="email-error" class="field-error mt-1" hidden></p>
+              <p id="email-error" class="mt-1 text-sm text-(--danger-text)" hidden></p>
             </div>
             <div>
               <label class="relative block">
@@ -866,10 +854,10 @@ const messages = {
                   {t("contact-form.nip")}
                 </span>
               </label>
-              <p id="nip-error" class="field-error mt-1" hidden></p>
+              <p id="nip-error" class="mt-1 text-sm text-(--danger-text)" hidden></p>
             </div>
           </div>
-          <div class="flex gap-4 mt-8">
+          <div class="flex gap-4 my-8">
             <Button class="font-normal text-sm" href="#site" data-go="site" variant="ghost">
               {t("brief-form.prev")}
             </Button>
@@ -882,16 +870,27 @@ const messages = {
       </section>
       <div
         id="response-message"
-        class="group inline-flex rounded-md text-sm"
+        class="group text-center"
         aria-live="polite"
       >
         <p class={`
-          px-3 py-2
-          group-[.pending]:bg-(--background-1)
+          p-2 text-sm leading-[1.25] rounded-md
+          hidden group-[.pending]:inline-flex
+          group-[.pending]:text-(--muted)
+
+          hidden group-[.error]:inline-flex
           group-[.error]:bg-(--danger-bg) group-[.error]:text-(--danger-text)
+
+          hidden group-[.success]:inline-flex
           group-[.success]:bg-(--success-bg) group-[.success]:text-(--success-text)
-        `}></p>
+        `}>
+          <LoaderCircle class="h-4 mr-1 hidden group-[.pending]:inline-flex text-(--muted) animate-spin" /> 
+          <BadgeCheck class="h-4 mr-1 hidden group-[.success]:inline-flex" /> 
+          <Ban class="h-4 mr-1 hidden group-[.error]:inline-flex" /> 
+          <span></span>
+        </p>
       </div>
+
     </div>
   </div>
 </form>
@@ -1129,9 +1128,10 @@ const messages = {
 
     function setGroupError(id: string, text: string | null): void {
       const el = document.getElementById(id);
-      if (!el) return;
+      const elChild = el?.querySelector("span")
+      if (!el || !elChild) return;
       if (text) {
-        el.textContent = text;
+        elChild.textContent = text;
         el.hidden = false;
       } else {
         el.hidden = true;
@@ -1371,7 +1371,7 @@ const messages = {
 
     // ---------- Wysyłka ----------
     const responseBox = document.getElementById("response-message");
-    const responseText = responseBox?.querySelector("p") ?? null;
+    const responseText = responseBox?.querySelector("p > span") ?? null;
     let submitting = false;
 
     function showResponse(
