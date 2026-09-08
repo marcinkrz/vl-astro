@@ -1,6 +1,6 @@
 import type { Locale } from "./messages";
 
-type RouteKey = "home" | "projects" | "studio" | "contact" | "styleguide" | "brief" | "login";
+type RouteKey = "home" | "projects" | "studio" | "contact" | "styleguide" | "brief" | "login" | "cs";
 
 const routes: Record<RouteKey, Record<Locale, string>> = {
   home: {
@@ -30,6 +30,10 @@ const routes: Record<RouteKey, Record<Locale, string>> = {
   login: {
     en: "/login",
     pl: "/pl/login",
+  },
+  cs: {
+    en: "/cs",
+    pl: "/pl/cs",
   },
 };
 
