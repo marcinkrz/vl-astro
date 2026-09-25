@@ -8,10 +8,12 @@ const isAlreadyPolish = Astro.currentLocale === 'pl';
     function getPolishPath(currentPath) {
       const routeMap = {
         '/': '/pl',
-        '/projects': '/pl/projekty',
-        '/studio': '/pl/studio',
-        '/contact': '/pl/kontakt',
         '/brief': '/pl/brief',
+        '/contact': '/pl/kontakt',
+        '/cs': '/pl/cs',
+        '/login': '/pl/login',
+        '/studio': '/pl/studio',
+        '/projects': '/pl/projekty',
       };
 
       if (routeMap[currentPath]) return routeMap[currentPath];
