@@ -27,7 +27,7 @@ const isActive = (href: string) =>
   pathname === href || pathname.startsWith(`${href}/`);
 ---
 
-<header class="fixed z-101 top-0 inset-x-0">
+<header id="main-head" class="fixed z-101 top-0 inset-x-0">
   <div
     class="relative z-2 container-full py-3 md:py-4 flex justify-between items-start"
   >
@@ -145,21 +145,24 @@ const isActive = (href: string) =>
 </header>
 <script>
   document.addEventListener("astro:page-load", () => {
-    const toggleButton = document.getElementById("menu-toggle");
+    const footer = document.getElementById("main-footer");
     const main = document.querySelector("main");
     const mobileNav = document.getElementById("mobile-nav");
     const mobileNavClose = document.getElementById("mobile-nav-close");
+    const toggleButton = document.getElementById("menu-toggle");
 
     toggleButton?.addEventListener("click", () => {
       toggleButton?.classList.toggle("is-active");
-      main?.classList.toggle("blur-sm");
       mobileNav?.classList.toggle("is-active");
+      main?.classList.toggle("blur-sm");
+      footer?.classList.toggle("blur-sm");
     });
 
     mobileNavClose?.addEventListener("click", () => {
       toggleButton?.classList.toggle("is-active");
-      main?.classList.toggle("blur-sm");
       mobileNav?.classList.toggle("is-active");
+      main?.classList.toggle("blur-sm");
+      footer?.classList.toggle("blur-sm");
     });
   });
 </script>

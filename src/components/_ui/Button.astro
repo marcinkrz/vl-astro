@@ -10,21 +10,19 @@ const {
 } = Astro.props;
 
 const base =
-  "cursor-pointer inline-flex gap-1 justify-center items-center tracking-wide leading-none whitespace-nowrap border border-transparent rounded-full transition-colors active:scale-99";
+  "cursor-pointer inline-flex gap-1 justify-center items-center tracking-wide font-semibold leading-none whitespace-nowrap border border-transparent rounded-full transition-colors active:scale-99";
 
 const sizes = {
   large: `
-    font-semibold
     text-base h-11 px-6
     has-[>svg:first-child~*]:pl-3
     `,
   default: `
-    font-semibold
     text-sm h-9 px-4
     has-[>svg:first-child~*]:pl-2
     `,
   small: `
-    text-sm !leading-none h-7.5 px-3
+    text-xs !leading-none h-7.5 px-3
     has-[>svg:first-child~*]:pl-1.5
     `,
   icon: "h-7.5 min-w-7.5 p-0 text-sm",
