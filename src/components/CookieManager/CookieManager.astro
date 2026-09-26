@@ -19,9 +19,9 @@ const cookieTypes = getCookieTypes(t);
   class="hidden fixed z-40 bottom-2 max-sm:inset-x-2 sm:left-2 sm:w-100 p-px bg-(--background-1) rounded-2xl"
 >
   <div
-    class="p-3 flex gap-3 flex-col justify-between text-xs leading-snug rounded-2xl"
+    class="p-2.5 flex gap-3 flex-col justify-between text-xs leading-snug"
   >
-    <p set:html={t("cookie.bannerMsg")} class="sm:text-balance" />
+    <p set:html={t("cookie.bannerMsg")} class="sm:text-balance text-(--muted)" />
     <div class="max-sm:w-full flex gap-2">
       <Button id="cookie-accept-all" size="small">
         {t("cookie.accept")}
@@ -39,7 +39,7 @@ const cookieTypes = getCookieTypes(t);
 >
   <div
     id="cookie-modal-content"
-    class="self-end max-sm:mb-2 sm:self-center relative overflow-hidden z-20 w-[calc(100%-1rem)] sm:max-w-lg xl:max-w-xl h-fit p-px bg-(--background-1) rounded-2xl transform translate-y-full transition-transform duration-300"
+    class="self-end max-md:mb-2 md:self-center relative overflow-hidden z-20 w-[calc(100%-1rem)] sm:max-w-lg xl:max-w-xl h-fit p-px bg-(--background-1) rounded-2xl transform translate-y-full transition-transform duration-300"
   >
     <div class="relative px-4 pt-0 flex items-center justify-between">
       <h2 class="h4 mt-4 mb-2">
@@ -48,9 +48,9 @@ const cookieTypes = getCookieTypes(t);
       <button
         id="cookie-close"
         type="button"
-        class="absolute right-2 p-2 text-(--muted) hover:text-(--foreground) transition-colors cursor-pointer"
+        class="absolute right-2 p-2 opacity-30 hover:opacity-100 transition-opacity cursor-pointer"
       >
-        <X class="w-4" />
+        <X class="w-4 stroke-[3px]" />
       </button>
     </div>
     <div class="max-h-[calc(100svh-5rem)] overflow-y-auto pb-13">
@@ -60,8 +60,8 @@ const cookieTypes = getCookieTypes(t);
       <div class="px-2 lg:px-3 space-y-2">
         {
           cookieTypes.map((type) => (
-            <div class="py-2 border border-(--border) rounded-lg">
-              <div class="mb-2 px-3 flex items-center justify-between">
+            <div class="py-1 border border-(--border) rounded-lg">
+              <div class="mb-1 px-3 flex justify-between items-end">
                 <h3 class="font-semibold text-sm">{type.name}</h3>
                 <label class="relative inline-flex items-center cursor-pointer">
                   <input
@@ -73,7 +73,7 @@ const cookieTypes = getCookieTypes(t);
                   />
                   <div
                     class:list={[
-                      "w-11 h-6 rounded-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-(--foreground) after:rounded-full after:h-5 after:w-5 after:transition-all",
+                      "w-11 h-6 rounded-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-(--white) after:rounded-full after:h-5 after:w-5 after:transition-all",
                       type.required
                         ? "bg-(--background-2) after:bg-(--background-3)!"
                         : "bg-(--danger-border) peer-checked:bg-(--success-border)",
@@ -82,7 +82,7 @@ const cookieTypes = getCookieTypes(t);
                 </label>
               </div>
 
-              <div class="py-2 mx-3 flex items-center justify-between border-t border-(--border) text-xs text-(--muted)">
+              <div class="py-1 mx-3 flex items-center justify-between border-t border-(--border) text-xs text-(--muted)">
                 <p>{type.description}</p>
               </div>
             </div>
@@ -91,7 +91,7 @@ const cookieTypes = getCookieTypes(t);
       </div>
     </div>
     <div
-      class="absolute bottom-0 left-0 w-full flex justify-end items-center gap-2 p-2 py-3"
+      class="absolute bottom-0 left-0 w-full flex justify-end items-center gap-2 p-3 bg-(--background-1)"
     >
       <Button id="cookie-save" variant="ghost" size="small">
         {t("cookie.save")}
