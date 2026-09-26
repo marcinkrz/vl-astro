@@ -21,15 +21,15 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
   description="Studio projektowe tworzące nowoczesne strony internetowe."
 >
   <main class="container-full">
-    <section class="-mt-12 pb-12 h-[65vh] flex items-end">
+    <section class="pb-12 h-[50vh] flex items-end">
       <h1 class="h1 text-pretty md:max-w-[75%] lg:max-w-[66%]">
         Budowanie pożądanego wizerunku marki, w sieci i poza nią.
       </h1>
     </section>
     <section class="mb-24 -mx-3 md:-mx-4 lg:mx-auto border-t border-(--border)">
-      <header class="mt-2 mb-8 px-3 md:px-4 lg:px-6 flex justify-between">
-        <h2 class="h4 text-(--muted)">Projekty</h2>
-        <Button href={getRoute(locale, "projects")} variant="link">
+      <header class="mt-1 mb-3 px-3 md:px-4 lg:px-6 flex justify-between">
+        <h2 class="text-(--muted)">Projekty</h2>
+        <Button href={getRoute(locale, "projects")} variant="link" class="items-baseline">
           {t("projects.btnTitle")}
         </Button>
       </header>
@@ -47,8 +47,8 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
                     />
                   </div>
                   <div>
-                    <h2 class="h4">{project.data.title}</h2>
-                    <p class="col-span-3 text-(--muted)">
+                    <h2 class="h4 mt-2">{project.data.title}</h2>
+                    <p class="col-span-3 text-sm text-(--muted)">
                       {project.data.description}
                     </p>
                   </div>
