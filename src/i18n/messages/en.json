@@ -47,7 +47,7 @@
       "time": "Takes 1 minute"
     },
     "[2]": {
-      "title": "What services are you interested in?",
+      "title": "Select services",
       "description": "Choose one or more:",
       "services": {
         "1": "Website",
@@ -70,11 +70,11 @@
       }
     },
     "[4]": {
-      "title": "Tell me about your project",
+      "title": "Describe your project",
       "description": "Write a few words about the project you want to implement so that I can respond to you more precisely"
     },
     "[5]": {
-      "title": "The address of your website",
+      "title": "Link to website or socials",
       "description": "If you have a website, please provide its address. You can also provide a link to your company Instagram or Facebook"
     },
     "[last]": {

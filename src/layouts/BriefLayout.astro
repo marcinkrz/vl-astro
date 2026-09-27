@@ -107,6 +107,60 @@ const messages = {
   .field-invalid {
     border-color: var(--danger-text) !important;
   }
+
+  /* ---------- Stepper ---------- */
+
+  .brief-progress {
+    display: block;
+    transition:
+      opacity 200ms ease,
+      visibility 200ms ease;
+  }
+
+  .brief-progress.hidden {
+    display: none;
+  }
+
+  .brief-progress-step {
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--border);
+    border-radius: 9999px;
+    background: var(--background);
+    color: var(--muted);
+    cursor: pointer;
+    transition:
+      border-color 150ms ease,
+      background-color 150ms ease,
+      color 150ms ease,
+      transform 150ms ease;
+  }
+
+  .brief-progress-step:hover {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+  }
+
+  .brief-progress-step:focus-visible {
+    outline: 2px solid var(--accent-2);
+    outline-offset: 3px;
+  }
+
+  .brief-progress-step.is-active {
+    border-color: var(--accent-2);
+    background: var(--accent-2);
+    color: var(--background);
+  }
+
+  .brief-progress-step.is-completed {
+    border-color: var(--accent-2);
+    background: var(--background);
+    color: var(--accent-2);
+  }
 </style>
 
 <form
@@ -134,60 +188,107 @@ const messages = {
   <div
     class="w-full min-h-[calc(100svh-6rem)] md:min-h-[calc(100svh-7rem)] mt-14 sm:mt-16 md:mt-32 lg:mt-56 flex flex-col gap-4 justify-start items-start"
   >
-    <div class="w-full md:w-140 mx-auto px-3 md:px-4 lg:px-6">
-      <div id="brief-progress" class="w-full">
+    <nav
+      id="brief-progress"
+      class="brief-progress w-full max-w-140 mx-auto my-6 px-3 md:px-4 lg:px-6"
+      aria-label="Form progress"
+    >
+      <div class="relative flex items-center justify-between">
         <div
-          class="w-full h-0.75 bg-(--background-1)"
+          class="absolute left-4 right-4 top-1/2 h-[2px] -translate-y-1/2 bg-(--border)"
           aria-hidden="true"
         >
           <div
-            id="brief-progress-bar"
-            class="h-full w-0 bg-(--foreground) transition-all duration-500"
+            id="brief-progress-line"
+            class="h-full w-0 bg-(--accent-2) transition-all duration-500"
           >
           </div>
         </div>
+        <button
+          type="button"
+          data-progress-step="services"
+          data-step-index="1"
+          class="brief-progress-step text-xs relative z-10"
+          aria-label="Step 1"
+        >
+          <span>1</span>
+        </button>
+        <button
+          type="button"
+          data-progress-step="budget"
+          data-step-index="2"
+          class="brief-progress-step text-xs relative z-10"
+          aria-label="Step 2"
+        >
+          <span>2</span>
+        </button>
+        <button
+          type="button"
+          data-progress-step="brief"
+          data-step-index="3"
+          class="brief-progress-step text-xs relative z-10"
+          aria-label="Step 3"
+        >
+          <span>3</span>
+        </button>
+        <button
+          type="button"
+          data-progress-step="site"
+          data-step-index="4"
+          class="brief-progress-step text-xs relative z-10"
+          aria-label="Step 4"
+        >
+          <span>4</span>
+        </button>
+        <button
+          type="button"
+          data-progress-step="last"
+          data-step-index="5"
+          class="brief-progress-step text-xs relative z-10"
+          aria-label="Step 5"
+        >
+          <span>5</span>
+        </button>
+      </div>
+    </nav>
 
-        <div class="mb-6 w-full flex justify-end">
-          <span
-            id="brief-progress-label"
-            class="pt-1 text-xs text-(--muted)"
+    <section
+      id="first"
+      class="screen w-full max-w-160 absolute top-1/2 left-1/2 -translate-1/2 px-3 md:px-4 lg:px-6"
+    >
+      <div class="flex flex-col items-start">
+        <h2 class="display mb-6 text-balance">{t("brief-form.[1].title")}</h2>
+        <p class="text-sm text-(--muted)">{t("brief-form.[1].description")}</p>
+        <div class="flex flex-col items-center">
+          <Button
+            href="#services"
+            data-go="services"
+            size="large"
+            class="mt-6 mb-2"
           >
-            0 / 5
-          </span>
+            {t("brief-form.[1].button")}
+          </Button>
+          <p class="p-2 inline-flex text-xs leading-tight text-(--muted)">
+            <Clock5 class="h-4 mr-px" />{t("brief-form.[1].time")}
+          </p>
         </div>
       </div>
-      <section id="first" class="screen w-full max-w-140 absolute top-1/2 left-1/2 -translate-1/2 px-3 md:px-4 lg:px-6">
-        <div class="flex flex-col items-start">
-          <h2 class="h1 mb-6">{t("brief-form.[1].title")}</h2>
-          <p class="text-sm text-(--muted)">{t("brief-form.[1].description")}</p>
-          <div class="flex flex-col items-center">
-            <Button
-              href="#services"
-              data-go="services"
-              size="large"
-              class="mt-6 mb-2"
-            >
-              {t("brief-form.[1].button")}
-            </Button>
-            <p class="p-2 inline-flex text-xs leading-tight text-(--muted)">
-              <Clock5 class="h-4 mr-px" />{t("brief-form.[1].time")}
-            </p>
-          </div>
-        </div>
-      </section>
-      <section id="services" class="screen">
-        <div class="w-full space-y-4">
-          <h2 class="h1 mb-6">{t("brief-form.[2].title")}</h2>
-          <fieldset class="mb-0 space-y-2">
-            <legend class="mb-6 text-sm text-(--muted)">{t("brief-form.[2].description")}</legend>
-            <div class="group h-10 grid items-center">
-              <input
-                checked
-                type="checkbox"
-                id="web-page"
-                name="services"
-                value="web-page"
-                class={`
+    </section>
+    <section id="services" class="screen w-full max-w-140 mx-auto px-3 md:px-4 lg:px-6">
+      <div class="w-full space-y-4">
+        <h2 class="display mb-8">{t("brief-form.[2].title")}</h2>
+        <fieldset class="mb-0 space-y-2">
+          <legend class="mb-6 text-sm text-(--muted) hidden"
+            >{t("brief-form.[2].description")}</legend
+          >
+          <div class="group h-10 grid items-center">
+            <input
+              checked
+              type="checkbox"
+              id="web-page"
+              name="services"
+              value="web-page"
+              class={`
                 col-start-1 row-start-1
                 relative
                 h-10 w-10 shrink-0
@@ -204,26 +305,26 @@ const messages = {
                 before:rounded-full
 
                 checked:before:border-(--foreground)
-                checked:before:bg-(--foreground)
+                checked:before:bg-(--accent-1)
                 checked:before:text-(--background)
 
                 disabled:cursor-not-allowed
                 disabled:opacity-50
               `}
-              />
-              <label
-                for="web-page"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
-                >{t("brief-form.[2].services.1")}</label
-              >
-            </div>
-            <div class="group h-10 grid items-center">
-              <input
-                type="checkbox"
-                id="commerce"
-                name="services"
-                value="commerce"
-                class={`
+            />
+            <label
+              for="web-page"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--accent-1)"
+              >{t("brief-form.[2].services.1")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              type="checkbox"
+              id="commerce"
+              name="services"
+              value="commerce"
+              class={`
                 col-start-1 row-start-1
                 relative
                 h-10 w-10 shrink-0
@@ -240,27 +341,27 @@ const messages = {
                 before:rounded-full
 
                 checked:before:border-(--foreground)
-                checked:before:bg-(--foreground)
+                checked:before:bg-(--accent-1)
                 checked:before:text-(--background)
 
                 disabled:cursor-not-allowed
                 disabled:opacity-50
               `}
-              />
-              <label
-                for="commerce"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
-                >{t("brief-form.[2].services.2")}</label
-              >
-            </div>
-            <div class="group h-10 grid items-center">
-              <input
-                checked
-                type="checkbox"
-                id="logo"
-                name="services"
-                value="logo"
-                class={`
+            />
+            <label
+              for="commerce"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--accent-1)"
+              >{t("brief-form.[2].services.2")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              checked
+              type="checkbox"
+              id="logo"
+              name="services"
+              value="logo"
+              class={`
                 col-start-1 row-start-1
                 relative
                 h-10 w-10 shrink-0
@@ -277,27 +378,27 @@ const messages = {
                 before:rounded-full
 
                 checked:before:border-(--foreground)
-                checked:before:bg-(--foreground)
+                checked:before:bg-(--accent-1)
                 checked:before:text-(--background)
 
                 disabled:cursor-not-allowed
                 disabled:opacity-50
               `}
-              />
-              <label
-                for="logo"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
-                >{t("brief-form.[2].services.3")}</label
-              >
-            </div>
-            <div class="group h-10 grid items-center">
-              <input
-                checked
-                type="checkbox"
-                id="branding"
-                name="services"
-                value="branding"
-                class={`
+            />
+            <label
+              for="logo"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--accent-1)"
+              >{t("brief-form.[2].services.3")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              checked
+              type="checkbox"
+              id="branding"
+              name="services"
+              value="branding"
+              class={`
                 col-start-1 row-start-1
                 relative
                 h-10 w-10 shrink-0
@@ -314,26 +415,26 @@ const messages = {
                 before:rounded-full
 
                 checked:before:border-(--foreground)
-                checked:before:bg-(--foreground)
+                checked:before:bg-(--accent-1)
                 checked:before:text-(--background)
 
                 disabled:cursor-not-allowed
                 disabled:opacity-50
               `}
-              />
-              <label
-                for="branding"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
-                >{t("brief-form.[2].services.4")}</label
-              >
-            </div>
-            <div class="group h-10 grid items-center">
-              <input
-                type="checkbox"
-                id="print"
-                name="services"
-                value="print"
-                class={`
+            />
+            <label
+              for="branding"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--accent-1)"
+              >{t("brief-form.[2].services.4")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              type="checkbox"
+              id="print"
+              name="services"
+              value="print"
+              class={`
                 col-start-1 row-start-1
                 relative
                 h-10 w-10 shrink-0
@@ -350,26 +451,26 @@ const messages = {
                 before:rounded-full
 
                 checked:before:border-(--foreground)
-                checked:before:bg-(--foreground)
+                checked:before:bg-(--accent-1)
                 checked:before:text-(--background)
 
                 disabled:cursor-not-allowed
                 disabled:opacity-50
               `}
-              />
-              <label
-                for="print"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
-                >{t("brief-form.[2].services.5")}</label
-              >
-            </div>
-            <div class="group relative h-10 grid items-center">
-              <input
-                type="checkbox"
-                id="other-service"
-                name="services"
-                value="other"
-                class={`
+            />
+            <label
+              for="print"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--accent-1)"
+              >{t("brief-form.[2].services.5")}</label
+            >
+          </div>
+          <div class="group relative h-10 grid items-center">
+            <input
+              type="checkbox"
+              id="other-service"
+              name="services"
+              value="other"
+              class={`
                 col-start-1 row-start-1
                 relative
                 h-10 w-10 shrink-0
@@ -386,79 +487,81 @@ const messages = {
                 before:rounded-full
 
                 checked:before:border-(--foreground)
-                checked:before:bg-(--foreground)
+                checked:before:bg-(--accent-1)
                 checked:before:text-(--background)
 
                 disabled:cursor-not-allowed
                 disabled:opacity-50
               `}
-              />
-              <label
-                for="other-service"
-                class="col-start-1 row-start-1 h-full flex items-center gap-2 pl-10 pr-12 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
+            />
+            <label
+              for="other-service"
+              class="col-start-1 row-start-1 h-full flex items-center gap-2 pl-10 pr-12 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--accent-1)"
+            >
+              <span id="other-service-label" class="shrink-0"
+                >{t("brief-form.[2].services.6")}</span
               >
-                <span id="other-service-label" class="shrink-0"
-                  >{t("brief-form.[2].services.6")}</span
-                >
-                <input
-                  type="text"
-                  id="other-service-value"
-                  name="other-service"
-                  maxlength="80"
-                  autocomplete="off"
-                  placeholder=" "
-                  class="hidden flex-1 min-w-0 bg-transparent border-0 outline-none text-inherit cursor-text"
-                />
-              </label>
-              <Button
-                id="other-service-close"
-                variant="ghost"
-                size="icon"
-                aria-label={t("brief-form.close-other")}
-                class={`
+              <input
+                type="text"
+                id="other-service-value"
+                name="other-service"
+                maxlength="80"
+                autocomplete="off"
+                placeholder=" "
+                class="hidden flex-1 min-w-0 bg-transparent border-0 outline-none text-inherit cursor-text"
+              />
+            </label>
+            <Button
+              id="other-service-close"
+              variant="ghost"
+              size="icon"
+              aria-label={t("brief-form.close-other")}
+              class={`
                   absolute right-1.5 top-1/2 -translate-y-1/2
                   opacity-0 invisible
                   group-has-[#other-service-value:not(:placeholder-shown)]:visible
                   group-has-[#other-service-value:not(:placeholder-shown)]:opacity-100
                   transition-opacity duration-150
                 `}
-              >
-                <X class="h-4" />
-              </Button>
-            </div>
-          </fieldset>
-          <div class="relative m-0">
-            <p
-              id="services-error"
-              class="absolute inline-flex mt-1.5 ml-1 text-sm leading-tight text-(--danger-text)"
-              hidden
             >
-              <Info class="h-4 mr-1" />
-              <span></span>
-            </p>
+              <X class="h-4" />
+            </Button>
           </div>
-          <Button
-            href="#budget"
-            data-go="budget"
-            size="large"
-            class="w-full mt-8"
+        </fieldset>
+        <div class="relative m-0">
+          <p
+            id="services-error"
+            class="absolute inline-flex mt-1.5 ml-1 text-sm leading-tight text-(--danger-text)"
+            hidden
           >
-            {t("brief-form.next")}
-          </Button>
+            <Info class="h-4 mr-1" />
+            <span></span>
+          </p>
         </div>
-      </section>
-      <section id="budget" class="screen">
-        <div class="w-full space-y-4">
-          <h2 class="h1 mb-6">{t("brief-form.[3].title")}</h2>
-          <fieldset class="mb-0 space-y-2">
-            <legend class="mb-6 text-sm text-(--muted)">{t("brief-form.[3].description")}</legend>
-            <div class="group h-10 grid items-center">
-              <input
-                type="radio"
-                id="budget-tier-1"
-                name="budget"
-                value="budget-tier-1"
-                class={`
+        <Button
+          href="#budget"
+          data-go="budget"
+          size="large"
+          class="w-full mt-8"
+        >
+          {t("brief-form.next")}
+        </Button>
+      </div>
+    </section>
+    <section id="budget" class="screen w-full max-w-140 mx-auto px-3 md:px-4 lg:px-6">
+      <div class="w-full space-y-4">
+        <h2 class="display mb-8">{t("brief-form.[3].title")}</h2>
+        <fieldset class="mb-0 space-y-2">
+          <legend class="mb-6 text-sm text-(--muted) hidden"
+            >{t("brief-form.[3].description")}</legend
+          >
+          <div class="group h-10 grid items-center">
+            <input
+              type="radio"
+              id="budget-tier-1"
+              name="budget"
+              value="budget-tier-1"
+              class={`
                 col-start-1 row-start-1
                 relative
                 h-10 w-10 shrink-0
@@ -475,26 +578,26 @@ const messages = {
                 before:rounded-full
 
                 checked:before:border-(--foreground)
-                checked:before:bg-(--foreground)
+                checked:before:bg-(--accent-1)
                 checked:before:text-(--background)
 
                 disabled:cursor-not-allowed
                 disabled:opacity-50
               `}
-              />
-              <label
-                for="budget-tier-1"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
-                >{t("brief-form.[3].budget.1")}</label
-              >
-            </div>
-            <div class="group h-10 grid items-center">
-              <input
-                type="radio"
-                id="budget-tier-2"
-                name="budget"
-                value="budget-tier-2"
-                class={`
+            />
+            <label
+              for="budget-tier-1"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--accent-1)"
+              >{t("brief-form.[3].budget.1")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              type="radio"
+              id="budget-tier-2"
+              name="budget"
+              value="budget-tier-2"
+              class={`
                 col-start-1 row-start-1
                 relative
                 h-10 w-10 shrink-0
@@ -511,26 +614,26 @@ const messages = {
                 before:rounded-full
 
                 checked:before:border-(--foreground)
-                checked:before:bg-(--foreground)
+                checked:before:bg-(--accent-1)
                 checked:before:text-(--background)
 
                 disabled:cursor-not-allowed
                 disabled:opacity-50
               `}
-              />
-              <label
-                for="budget-tier-2"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
-                >{t("brief-form.[3].budget.2")}</label
-              >
-            </div>
-            <div class="group h-10 grid items-center">
-              <input
-                type="radio"
-                id="budget-tier-3"
-                name="budget"
-                value="budget-tier-3"
-                class={`
+            />
+            <label
+              for="budget-tier-2"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--accent-1)"
+              >{t("brief-form.[3].budget.2")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              type="radio"
+              id="budget-tier-3"
+              name="budget"
+              value="budget-tier-3"
+              class={`
                 col-start-1 row-start-1
                 relative
                 h-10 w-10 shrink-0
@@ -547,26 +650,26 @@ const messages = {
                 before:rounded-full
 
                 checked:before:border-(--foreground)
-                checked:before:bg-(--foreground)
+                checked:before:bg-(--accent-1)
                 checked:before:text-(--background)
 
                 disabled:cursor-not-allowed
                 disabled:opacity-50
               `}
-              />
-              <label
-                for="budget-tier-3"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
-                >{t("brief-form.[3].budget.3")}</label
-              >
-            </div>
-            <div class="group h-10 grid items-center">
-              <input
-                type="radio"
-                id="budget-tier-4"
-                name="budget"
-                value="budget-tier-4"
-                class={`
+            />
+            <label
+              for="budget-tier-3"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--accent-1)"
+              >{t("brief-form.[3].budget.3")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              type="radio"
+              id="budget-tier-4"
+              name="budget"
+              value="budget-tier-4"
+              class={`
                 col-start-1 row-start-1
                 relative
                 h-10 w-10 shrink-0
@@ -583,26 +686,26 @@ const messages = {
                 before:rounded-full
 
                 checked:before:border-(--foreground)
-                checked:before:bg-(--foreground)
+                checked:before:bg-(--accent-1)
                 checked:before:text-(--background)
 
                 disabled:cursor-not-allowed
                 disabled:opacity-50
               `}
-              />
-              <label
-                for="budget-tier-4"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
-                >{t("brief-form.[3].budget.4")}</label
-              >
-            </div>
-            <div class="group h-10 grid items-center">
-              <input
-                type="radio"
-                id="budget-unknown"
-                name="budget"
-                value="budget-unknown"
-                class={`
+            />
+            <label
+              for="budget-tier-4"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--accent-1)"
+              >{t("brief-form.[3].budget.4")}</label
+            >
+          </div>
+          <div class="group h-10 grid items-center">
+            <input
+              type="radio"
+              id="budget-unknown"
+              name="budget"
+              value="budget-unknown"
+              class={`
                 col-start-1 row-start-1
                 relative
                 h-10 w-10 shrink-0
@@ -619,182 +722,188 @@ const messages = {
                 before:rounded-full
 
                 checked:before:border-(--foreground)
-                checked:before:bg-(--foreground)
+                checked:before:bg-(--accent-1)
                 checked:before:text-(--background)
 
                 disabled:cursor-not-allowed
                 disabled:opacity-50
               `}
+            />
+            <label
+              for="budget-unknown"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--accent-1)"
+              >{t("brief-form.[3].budget.5")}</label
+            >
+          </div>
+        </fieldset>
+        <div class="relative m-0">
+          <p
+            id="budget-error"
+            class="absolute inline-flex mt-1.5 ml-1 text-sm leading-[1.25] text-(--danger-text)"
+            hidden
+          >
+            <Info class="h-4 mr-1" />
+            <span></span>
+          </p>
+        </div>
+        <div class="grid grid-cols-3 gap-4 mt-10">
+          <Button
+            class="font-normal text-sm"
+            href="#services"
+            data-go="services"
+            variant="ghost"
+          >
+            {t("brief-form.prev")}
+          </Button>
+          <Button href="#brief" data-go="brief" size="large" class="col-span-2">
+            {t("brief-form.next")}
+          </Button>
+        </div>
+      </div>
+    </section>
+    <section id="brief" class="screen w-full max-w-140 mx-auto px-3 md:px-4 lg:px-6">
+      <div class="w-full space-y-4">
+        <h2 class="display mb-8">{t("brief-form.[4].title")}</h2>
+        <p class="mb-6 text-sm text-(--muted) hidden">
+          {t("brief-form.[4].description")}
+        </p>
+        <label class="relative block mb-0">
+          <Input
+            as="textarea"
+            id="message"
+            name="message"
+            placeholder=" "
+            maxlength="5000"
+            required
+            class="peer"
+            aria-describedby="message-error"
+          />
+          <span
+            class={`
+                pointer-events-none
+                absolute left-2 top-5
+                -translate-y-1/2
+                px-[0.5ch]
+                bg-(--background)
+                text-(--muted)
+                transition-all duration-150
+                peer-focus:top-0
+                peer-focus:-translate-y-1/2
+                peer-focus:text-sm
+                peer-not-placeholder-shown:top-0
+                peer-not-placeholder-shown:-translate-y-1/2
+                peer-not-placeholder-shown:text-sm
+              `}
+          >
+            {t("contact-form.message")}*
+          </span>
+        </label>
+        <div class="relative m-0">
+          <p
+            id="message-error"
+            class="absolute mt-1 text-sm text-(--danger-text)"
+            hidden
+          >
+          </p>
+        </div>
+        <div class="grid grid-cols-3 gap-4 mt-10">
+          <Button
+            class="font-normal text-sm"
+            href="#budget"
+            data-go="budget"
+            variant="ghost"
+          >
+            {t("brief-form.prev")}
+          </Button>
+          <Button href="#site" data-go="site" size="large" class="col-span-2">
+            {t("brief-form.next")}
+          </Button>
+        </div>
+      </div>
+    </section>
+    <section id="site" class="screen w-full max-w-140 mx-auto px-3 md:px-4 lg:px-6">
+      <div class="w-full space-y-4">
+        <h2 class="display mb-8">{t("brief-form.[5].title")}</h2>
+        <p class="mb-6 text-sm text-(--muted) hidden">
+          {t("brief-form.[5].description")}
+        </p>
+        <label class="relative block">
+          <Input
+            type="text"
+            inputmode="url"
+            id="website"
+            name="website"
+            placeholder=" "
+            maxlength="300"
+            required
+            class="peer"
+            aria-describedby="website-error"
+          />
+          <span
+            class={`
+                pointer-events-none
+                absolute left-2 top-5
+                -translate-y-1/2
+                px-[0.5ch]
+                bg-(--background)
+                text-(--muted)
+                transition-all duration-150
+                peer-focus:top-0
+                peer-focus:-translate-y-1/2
+                peer-focus:text-sm
+                peer-not-placeholder-shown:top-0
+                peer-not-placeholder-shown:-translate-y-1/2
+                peer-not-placeholder-shown:text-sm
+              `}
+          >
+            https://
+          </span>
+        </label>
+        <div class="relative m-0">
+          <p
+            id="website-error"
+            class="absolute mt-1 text-sm text-(--danger-text)"
+            hidden
+          >
+          </p>
+        </div>
+        <div class="grid grid-cols-3 gap-4 mt-10">
+          <Button
+            class="font-normal text-sm"
+            href="#brief"
+            data-go="brief"
+            variant="ghost"
+          >
+            {t("brief-form.prev")}
+          </Button>
+          <Button href="#last" data-go="last" size="large" class="col-span-2">
+            {t("brief-form.next")}
+          </Button>
+        </div>
+      </div>
+    </section>
+    <section id="last" class="screen w-full max-w-140 mx-auto px-3 md:px-4 lg:px-6">
+      <div class="w-full space-y-4">
+        <h2 class="display mb-8">{t("brief-form.[last].title")}</h2>
+        <p class="mb-6 text-sm text-(--muted) hidden">
+          {t("brief-form.[last].description")}
+        </p>
+        <div class="space-y-3">
+          <div>
+            <label class="relative block">
+              <Input
+                type="text"
+                id="firstName"
+                name="firstName"
+                placeholder=" "
+                autocomplete="given-name"
+                maxlength="120"
+                required
+                class="peer"
+                aria-describedby="firstName-error"
               />
-              <label
-                for="budget-unknown"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
-                >{t("brief-form.[3].budget.5")}</label
-              >
-            </div>
-          </fieldset>
-          <div class="relative m-0">
-            <p
-              id="budget-error"
-              class="absolute inline-flex mt-1.5 ml-1 text-sm leading-[1.25] text-(--danger-text)"
-              hidden
-            >
-              <Info class="h-4 mr-1" />
-              <span></span>
-            </p>
-          </div>
-          <div class="grid grid-cols-3 gap-4 mt-10">
-            <Button
-              class="font-normal text-sm"
-              href="#services"
-              data-go="services"
-              variant="ghost"
-            >
-              {t("brief-form.prev")}
-            </Button>
-            <Button href="#brief" data-go="brief" size="large" class="col-span-2">
-              {t("brief-form.next")}
-            </Button>
-          </div>
-        </div>
-      </section>
-      <section id="brief" class="screen">
-        <div class="w-full space-y-4">
-          <h2 class="h1 mb-6">{t("brief-form.[4].title")}</h2>
-          <p class="mb-6 text-sm text-(--muted)">{t("brief-form.[4].description")}</p>
-          <label class="relative block mb-0">
-            <Input
-              as="textarea"
-              id="message"
-              name="message"
-              placeholder=" "
-              maxlength="5000"
-              required
-              class="peer"
-              aria-describedby="message-error"
-            />
-            <span
-              class={`
-                pointer-events-none
-                absolute left-2 top-5
-                -translate-y-1/2
-                px-[0.5ch]
-                bg-(--background)
-                text-(--muted)
-                transition-all duration-150
-                peer-focus:top-0
-                peer-focus:-translate-y-1/2
-                peer-focus:text-sm
-                peer-not-placeholder-shown:top-0
-                peer-not-placeholder-shown:-translate-y-1/2
-                peer-not-placeholder-shown:text-sm
-              `}
-            >
-              {t("contact-form.message")}*
-            </span>
-          </label>
-          <div class="relative m-0">
-            <p
-              id="message-error"
-              class="absolute mt-1 text-sm text-(--danger-text)"
-              hidden
-            >
-            </p>
-          </div>
-          <div class="grid grid-cols-3 gap-4 mt-10">
-            <Button
-              class="font-normal text-sm"
-              href="#budget"
-              data-go="budget"
-              variant="ghost"
-            >
-              {t("brief-form.prev")}
-            </Button>
-            <Button href="#site" data-go="site" size="large" class="col-span-2">
-              {t("brief-form.next")}
-            </Button>
-          </div>
-        </div>
-      </section>
-      <section id="site" class="screen">
-        <div class="w-full space-y-4">
-          <h2 class="h1 mb-6">{t("brief-form.[5].title")}</h2>
-          <p class="mb-6 text-sm text-(--muted)">{t("brief-form.[5].description")}</p>
-          <label class="relative block">
-            <Input
-              type="text"
-              inputmode="url"
-              id="website"
-              name="website"
-              placeholder=" "
-              maxlength="300"
-              required
-              class="peer"
-              aria-describedby="website-error"
-            />
-            <span
-              class={`
-                pointer-events-none
-                absolute left-2 top-5
-                -translate-y-1/2
-                px-[0.5ch]
-                bg-(--background)
-                text-(--muted)
-                transition-all duration-150
-                peer-focus:top-0
-                peer-focus:-translate-y-1/2
-                peer-focus:text-sm
-                peer-not-placeholder-shown:top-0
-                peer-not-placeholder-shown:-translate-y-1/2
-                peer-not-placeholder-shown:text-sm
-              `}
-            >
-              https://
-            </span>
-          </label>
-          <div class="relative m-0">
-            <p
-              id="website-error"
-              class="absolute mt-1 text-sm text-(--danger-text)"
-              hidden
-            >
-            </p>
-          </div>
-          <div class="grid grid-cols-3 gap-4 mt-10">
-            <Button
-              class="font-normal text-sm"
-              href="#brief"
-              data-go="brief"
-              variant="ghost"
-            >
-              {t("brief-form.prev")}
-            </Button>
-            <Button href="#last" data-go="last" size="large" class="col-span-2">
-              {t("brief-form.next")}
-            </Button>
-          </div>
-        </div>
-      </section>
-      <section id="last" class="screen">
-        <div class="w-full space-y-4">
-          <h2 class="h1 mb-6">{t("brief-form.[last].title")}</h2>
-          <p class="mb-6 text-sm text-(--muted)">{t("brief-form.[last].description")}</p>
-          <div class="space-y-3">
-            <div>
-              <label class="relative block">
-                <Input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  placeholder=" "
-                  autocomplete="given-name"
-                  maxlength="120"
-                  required
-                  class="peer"
-                  aria-describedby="firstName-error"
-                />
-                <span
-                  class={`
+              <span
+                class={`
                   pointer-events-none
                   absolute left-2 top-5
                   -translate-y-1/2
@@ -809,154 +918,155 @@ const messages = {
                   peer-not-placeholder-shown:-translate-y-1/2
                   peer-not-placeholder-shown:text-sm
                 `}
-                >
-                  {t("contact-form.firstName")}*
-                </span>
-              </label>
-              <p
-                id="firstName-error"
-                class="mt-1 text-sm text-(--danger-text)"
-                hidden
               >
-              </p>
-            </div>
-            <div>
-              <label class="relative block">
-                <Input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  placeholder=" "
-                  autocomplete="tel"
-                  maxlength="25"
-                  required
-                  class="peer"
-                  aria-describedby="phone-error"
-                />
-                <span
-                  class={`
-                  pointer-events-none
-                  absolute left-2 top-5 -translate-y-1/2
-                  px-[0.5ch]
-                  bg-(--background)
-                  text-(--muted)
-                  transition-all duration-150
-                  peer-focus:top-0
-                  peer-focus:-translate-y-1/2
-                  peer-focus:text-sm
-                  peer-not-placeholder-shown:top-0
-                  peer-not-placeholder-shown:-translate-y-1/2
-                  peer-not-placeholder-shown:text-sm
-                `}
-                >
-                  {t("contact-form.phone")}*
-                </span>
-              </label>
-              <p
-                id="phone-error"
-                class="mt-1 text-sm text-(--danger-text)"
-                hidden
-              >
-              </p>
-            </div>
-            <div>
-              <label class="relative block">
-                <Input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder=" "
-                  autocomplete="email"
-                  maxlength="254"
-                  required
-                  class="peer"
-                  aria-describedby="email-error"
-                />
-                <span
-                  class={`
-                  pointer-events-none
-                  absolute left-2 top-5 -translate-y-1/2
-                  px-[0.5ch]
-                  bg-(--background)
-                  text-(--muted)
-                  transition-all duration-150
-                  peer-focus:top-0
-                  peer-focus:-translate-y-1/2
-                  peer-focus:text-sm
-                  peer-not-placeholder-shown:top-0
-                  peer-not-placeholder-shown:-translate-y-1/2
-                  peer-not-placeholder-shown:text-sm
-                `}
-                >
-                  {t("contact-form.email")}*
-                </span>
-              </label>
-              <p
-                id="email-error"
-                class="mt-1 text-sm text-(--danger-text)"
-                hidden
-              >
-              </p>
-            </div>
-            <div>
-              <label class="relative block">
-                <Input
-                  type="text"
-                  inputmode="numeric"
-                  id="nip"
-                  name="nip"
-                  placeholder=" "
-                  autocomplete="off"
-                  maxlength="16"
-                  class="peer"
-                  aria-describedby="nip-error"
-                />
-                <span
-                  class={`
-                  pointer-events-none
-                  absolute left-2 top-5 -translate-y-1/2
-                  px-[0.5ch]
-                  bg-(--background)
-                  text-(--muted)
-                  transition-all duration-150
-                  peer-focus:top-0
-                  peer-focus:-translate-y-1/2
-                  peer-focus:text-sm
-                  peer-not-placeholder-shown:top-0
-                  peer-not-placeholder-shown:-translate-y-1/2
-                  peer-not-placeholder-shown:text-sm
-                `}
-                >
-                  {t("contact-form.nip")}
-                </span>
-              </label>
-              <p
-                id="nip-error"
-                class="mt-1 text-sm text-(--danger-text)"
-                hidden
-              >
-              </p>
-            </div>
-          </div>
-          <div class="grid grid-cols-3 gap-4 mt-10">
-            <Button
-              class="font-normal text-sm"
-              href="#site"
-              data-go="site"
-              variant="ghost"
+                {t("contact-form.firstName")}*
+              </span>
+            </label>
+            <p
+              id="firstName-error"
+              class="mt-1 text-sm text-(--danger-text)"
+              hidden
             >
-              {t("brief-form.prev")}
-            </Button>
-            <Button type="submit" id="brief-submit" size="large" class="col-span-2">
-              {t("contact-form.submit")}
-              <ArrowUpRight class="h-4" />
-            </Button>
+            </p>
+          </div>
+          <div>
+            <label class="relative block">
+              <Input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder=" "
+                autocomplete="tel"
+                maxlength="25"
+                required
+                class="peer"
+                aria-describedby="phone-error"
+              />
+              <span
+                class={`
+                  pointer-events-none
+                  absolute left-2 top-5 -translate-y-1/2
+                  px-[0.5ch]
+                  bg-(--background)
+                  text-(--muted)
+                  transition-all duration-150
+                  peer-focus:top-0
+                  peer-focus:-translate-y-1/2
+                  peer-focus:text-sm
+                  peer-not-placeholder-shown:top-0
+                  peer-not-placeholder-shown:-translate-y-1/2
+                  peer-not-placeholder-shown:text-sm
+                `}
+              >
+                {t("contact-form.phone")}*
+              </span>
+            </label>
+            <p
+              id="phone-error"
+              class="mt-1 text-sm text-(--danger-text)"
+              hidden
+            >
+            </p>
+          </div>
+          <div>
+            <label class="relative block">
+              <Input
+                type="email"
+                id="email"
+                name="email"
+                placeholder=" "
+                autocomplete="email"
+                maxlength="254"
+                required
+                class="peer"
+                aria-describedby="email-error"
+              />
+              <span
+                class={`
+                  pointer-events-none
+                  absolute left-2 top-5 -translate-y-1/2
+                  px-[0.5ch]
+                  bg-(--background)
+                  text-(--muted)
+                  transition-all duration-150
+                  peer-focus:top-0
+                  peer-focus:-translate-y-1/2
+                  peer-focus:text-sm
+                  peer-not-placeholder-shown:top-0
+                  peer-not-placeholder-shown:-translate-y-1/2
+                  peer-not-placeholder-shown:text-sm
+                `}
+              >
+                {t("contact-form.email")}*
+              </span>
+            </label>
+            <p
+              id="email-error"
+              class="mt-1 text-sm text-(--danger-text)"
+              hidden
+            >
+            </p>
+          </div>
+          <div>
+            <label class="relative block">
+              <Input
+                type="text"
+                inputmode="numeric"
+                id="nip"
+                name="nip"
+                placeholder=" "
+                autocomplete="off"
+                maxlength="16"
+                class="peer"
+                aria-describedby="nip-error"
+              />
+              <span
+                class={`
+                  pointer-events-none
+                  absolute left-2 top-5 -translate-y-1/2
+                  px-[0.5ch]
+                  bg-(--background)
+                  text-(--muted)
+                  transition-all duration-150
+                  peer-focus:top-0
+                  peer-focus:-translate-y-1/2
+                  peer-focus:text-sm
+                  peer-not-placeholder-shown:top-0
+                  peer-not-placeholder-shown:-translate-y-1/2
+                  peer-not-placeholder-shown:text-sm
+                `}
+              >
+                {t("contact-form.nip")}
+              </span>
+            </label>
+            <p id="nip-error" class="mt-1 text-sm text-(--danger-text)" hidden>
+            </p>
           </div>
         </div>
-      </section>
-      <div id="response-message" class="group text-center" aria-live="polite">
-        <p
-          class={`
+        <div class="grid grid-cols-3 gap-4 mt-10">
+          <Button
+            class="font-normal text-sm"
+            href="#site"
+            data-go="site"
+            variant="ghost"
+          >
+            {t("brief-form.prev")}
+          </Button>
+          <Button
+            type="submit"
+            id="brief-submit"
+            size="large"
+            class="col-span-2"
+          >
+            {t("contact-form.submit")}
+            <ArrowUpRight class="h-4" />
+          </Button>
+        </div>
+      </div>
+    </section>
+    <div id="response-message" class="group text-center" aria-live="polite">
+      <p
+        class={`
           p-2 text-sm leading-tight rounded-md hidden
           group-[.pending]:inline-flex
           group-[.pending]:text-(--muted)
@@ -965,19 +1075,17 @@ const messages = {
           group-[.success]:inline-flex
           group-[.success]:bg-(--success-bg) group-[.success]:text-(--success-text)
         `}
-        >
-          <LoaderCircle
-            class="h-4 mr-1 hidden group-[.pending]:inline-flex text-(--muted) animate-spin"
-          />
-          <BadgeCheck class="h-4 mr-1 hidden group-[.success]:inline-flex" />
-          <Ban class="h-4 mr-1 hidden group-[.error]:inline-flex" />
-          <span></span>
-        </p>
-      </div>
+      >
+        <LoaderCircle
+          class="h-4 mr-1 hidden group-[.pending]:inline-flex text-(--muted) animate-spin"
+        />
+        <BadgeCheck class="h-4 mr-1 hidden group-[.success]:inline-flex" />
+        <Ban class="h-4 mr-1 hidden group-[.error]:inline-flex" />
+        <span></span>
+      </p>
     </div>
   </div>
 </form>
-
 
 <script>
   let globalCleanups: Array<() => void> = [];
@@ -1036,27 +1144,54 @@ const messages = {
     const reduceMotion: boolean = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    
+
     const TOTAL_STEPS = 5;
 
     const progress = document.getElementById("brief-progress");
-    const progressBar = document.getElementById("brief-progress-bar");
-    const progressLabel = document.getElementById("brief-progress-label");
+    const progressLine = document.getElementById("brief-progress-line");
+
+    const progressSteps = Array.from(
+      document.querySelectorAll<HTMLButtonElement>(
+        "#brief-progress [data-progress-step]",
+      ),
+    );
 
     const updateProgress = (): void => {
       const isIntro = current === 0;
-      const step = Math.min(current, TOTAL_STEPS);
 
       progress?.classList.toggle("hidden", isIntro);
 
-      if (progressBar) {
-        progressBar.style.width = `${(step / TOTAL_STEPS) * 100}%`;
+      if (isIntro) {
+        progressLine?.style.setProperty("width", "0%");
+      } else {
+        const progressPercent = ((current - 1) / (TOTAL_STEPS - 1)) * 100;
+
+        progressLine?.style.setProperty("width", `${progressPercent}%`);
       }
 
-      if (progressLabel) {
-        progressLabel.textContent = `${step} / ${TOTAL_STEPS}`;
-      }
+      progressSteps.forEach((step) => {
+        const stepIndex = Number(step.dataset.stepIndex);
+
+        step.classList.toggle("is-active", stepIndex === current);
+        step.classList.toggle("is-completed", stepIndex < current);
+
+        if (stepIndex === current) {
+          step.setAttribute("aria-current", "step");
+        } else {
+          step.removeAttribute("aria-current");
+        }
+      });
     };
+
+    progressSteps.forEach((step) => {
+      step.addEventListener("click", () => {
+        const target = step.dataset.progressStep;
+
+        if (!target) return;
+
+        tryGo(target);
+      });
+    });
 
     interface ShowOptions {
       updateHash?: boolean;
