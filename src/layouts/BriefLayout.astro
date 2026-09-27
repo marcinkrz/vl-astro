@@ -131,7 +131,7 @@ const messages = {
     border: 2px solid var(--border);
     border-radius: 9999px;
     background: var(--background);
-    color: var(--muted);
+    color: var(--border);
     cursor: pointer;
     transition:
       border-color 150ms ease,
@@ -146,20 +146,20 @@ const messages = {
   }
 
   .brief-progress-step:focus-visible {
-    outline: 2px solid var(--accent-2);
+    outline: 2px solid var(--focus);
     outline-offset: 3px;
   }
 
   .brief-progress-step.is-active {
-    border-color: var(--accent-2);
-    background: var(--accent-2);
+    border-color: var(--foreground);
+    background: var(--foreground);
     color: var(--background);
   }
 
   .brief-progress-step.is-completed {
-    border-color: var(--accent-2);
+    border-color: var(--foreground);
     background: var(--background);
-    color: var(--accent-2);
+    color: var(--foreground);
   }
 </style>
 
