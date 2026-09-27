@@ -132,10 +132,31 @@ const messages = {
     set:html={JSON.stringify(messages)}
   />
   <div
-    class="w-full min-h-[calc(100svh-6rem)] md:min-h-[calc(100svh-7rem)] mt-12 md:mt-16 flex flex-col gap-4 justify-center items-start"
+    class="w-full min-h-[calc(100svh-6rem)] md:min-h-[calc(100svh-7rem)] mt-14 md:mt-16 lg:mt-56 flex flex-col gap-4 justify-start items-start"
   >
-    <div class="container min-h-110">
-      <section id="first" class="screen max-w-150 mx-auto">
+    <div class="max-w-140 lg:w-140 mx-auto px-3 md:px-4 lg:px-6">
+      <div id="brief-progress" class="w-full">
+        <div
+          class="w-full h-0.5 bg-(--background-1)"
+          aria-hidden="true"
+        >
+          <div
+            id="brief-progress-bar"
+            class="h-full w-0 bg-(--foreground) transition-all duration-500"
+          >
+          </div>
+        </div>
+
+        <div class="mb-6 w-full flex justify-end">
+          <span
+            id="brief-progress-label"
+            class="pt-1 text-xs text-(--muted)"
+          >
+            0 / 5
+          </span>
+        </div>
+      </div>
+      <section id="first" class="screen min-w-80 max-w-140 absolute top-1/2 left-1/2 -translate-1/2">
         <div class="flex flex-col items-start">
           <h2 class="h1 mb-6">{t("brief-form.[1].title")}</h2>
           <p class="text-sm text-(--muted)">{t("brief-form.[1].description")}</p>
@@ -154,14 +175,11 @@ const messages = {
           </div>
         </div>
       </section>
-      <section id="services" class="screen max-w-110 mx-auto">
+      <section id="services" class="screen">
         <div class="w-full space-y-4">
-          <span class="w-full flex justify-end mb-3 pt-1 border-t border-(--border) text-xs text-(--muted)"
-            >1 / 5</span
-          >
           <h2 class="h1 mb-6">{t("brief-form.[2].title")}</h2>
           <fieldset class="mb-0 space-y-2">
-            <legend class="mb-3 text-sm text-(--muted)">{t("brief-form.[2].description")}</legend>
+            <legend class="mb-6 text-sm text-(--muted)">{t("brief-form.[2].description")}</legend>
             <div class="group h-10 grid items-center">
               <input
                 checked
@@ -195,7 +213,7 @@ const messages = {
               />
               <label
                 for="web-page"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
                 >{t("brief-form.[2].services.1")}</label
               >
             </div>
@@ -231,7 +249,7 @@ const messages = {
               />
               <label
                 for="commerce"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
                 >{t("brief-form.[2].services.2")}</label
               >
             </div>
@@ -268,7 +286,7 @@ const messages = {
               />
               <label
                 for="logo"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
                 >{t("brief-form.[2].services.3")}</label
               >
             </div>
@@ -305,7 +323,7 @@ const messages = {
               />
               <label
                 for="branding"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
                 >{t("brief-form.[2].services.4")}</label
               >
             </div>
@@ -341,7 +359,7 @@ const messages = {
               />
               <label
                 for="print"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
                 >{t("brief-form.[2].services.5")}</label
               >
             </div>
@@ -377,7 +395,7 @@ const messages = {
               />
               <label
                 for="other-service"
-                class="col-start-1 row-start-1 h-full flex items-center gap-2 pl-10 pr-12 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+                class="col-start-1 row-start-1 h-full flex items-center gap-2 pl-10 pr-12 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
               >
                 <span id="other-service-label" class="shrink-0"
                   >{t("brief-form.[2].services.6")}</span
@@ -429,14 +447,11 @@ const messages = {
           </Button>
         </div>
       </section>
-      <section id="budget" class="screen max-w-110 mx-auto">
+      <section id="budget" class="screen">
         <div class="w-full space-y-4">
-          <span class="w-full flex justify-end mb-3 pt-1 border-t border-(--border) text-xs text-(--muted)"
-            >2 / 5</span
-          >
           <h2 class="h1 mb-6">{t("brief-form.[3].title")}</h2>
           <fieldset class="mb-0 space-y-2">
-            <legend class="mb-3 text-sm text-(--muted)">{t("brief-form.[3].description")}</legend>
+            <legend class="mb-6 text-sm text-(--muted)">{t("brief-form.[3].description")}</legend>
             <div class="group h-10 grid items-center">
               <input
                 type="radio"
@@ -469,7 +484,7 @@ const messages = {
               />
               <label
                 for="budget-tier-1"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
                 >{t("brief-form.[3].budget.1")}</label
               >
             </div>
@@ -505,7 +520,7 @@ const messages = {
               />
               <label
                 for="budget-tier-2"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
                 >{t("brief-form.[3].budget.2")}</label
               >
             </div>
@@ -541,7 +556,7 @@ const messages = {
               />
               <label
                 for="budget-tier-3"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
                 >{t("brief-form.[3].budget.3")}</label
               >
             </div>
@@ -577,7 +592,7 @@ const messages = {
               />
               <label
                 for="budget-tier-4"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
                 >{t("brief-form.[3].budget.4")}</label
               >
             </div>
@@ -613,7 +628,7 @@ const messages = {
               />
               <label
                 for="budget-unknown"
-                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+                class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground-3)"
                 >{t("brief-form.[3].budget.5")}</label
               >
             </div>
@@ -643,13 +658,10 @@ const messages = {
           </div>
         </div>
       </section>
-      <section id="brief" class="screen max-w-110 mx-auto">
+      <section id="brief" class="screen">
         <div class="w-full space-y-4">
-          <span class="w-full flex justify-end mb-3 pt-1 border-t border-(--border) text-xs text-(--muted)"
-            >3 / 5</span
-          >
           <h2 class="h1 mb-6">{t("brief-form.[4].title")}</h2>
-          <p class="mb-3 text-sm text-(--muted)">{t("brief-form.[4].description")}</p>
+          <p class="mb-6 text-sm text-(--muted)">{t("brief-form.[4].description")}</p>
           <label class="relative block mb-0">
             <Input
               as="textarea"
@@ -704,13 +716,10 @@ const messages = {
           </div>
         </div>
       </section>
-      <section id="site" class="screen max-w-110 mx-auto">
+      <section id="site" class="screen">
         <div class="w-full space-y-4">
-          <span class="w-full flex justify-end mb-3 pt-1 border-t border-(--border) text-xs text-(--muted)"
-            >4 / 5</span
-          >
           <h2 class="h1 mb-6">{t("brief-form.[5].title")}</h2>
-          <p class="mb-3 text-sm text-(--muted)">{t("brief-form.[5].description")}</p>
+          <p class="mb-6 text-sm text-(--muted)">{t("brief-form.[5].description")}</p>
           <label class="relative block">
             <Input
               type="text"
@@ -766,13 +775,10 @@ const messages = {
           </div>
         </div>
       </section>
-      <section id="last" class="screen max-w-110 mx-auto">
+      <section id="last" class="screen">
         <div class="w-full space-y-4">
-          <span class="w-full flex justify-end mb-3 pt-1 border-t border-(--border) text-xs text-(--muted)"
-            >5 / 5</span
-          >
           <h2 class="h1 mb-6">{t("brief-form.[last].title")}</h2>
-          <p class="mb-3 text-sm text-(--muted)">{t("brief-form.[last].description")}</p>
+          <p class="mb-6 text-sm text-(--muted)">{t("brief-form.[last].description")}</p>
           <div class="space-y-3">
             <div>
               <label class="relative block">
@@ -971,13 +977,7 @@ const messages = {
     </div>
   </div>
 </form>
-<div class="absolute bottom-0 w-full h-0.5 bg-(--background-1)" aria-hidden="true">
-  <div
-    id="brief-progress-bar"
-    class="h-full w-0 bg-(--foreground) transition-all duration-500"
-  >
-  </div>
-</div>
+
 
 <script>
   let globalCleanups: Array<() => void> = [];
@@ -1036,11 +1036,25 @@ const messages = {
     const reduceMotion: boolean = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+    
+    const TOTAL_STEPS = 5;
+
+    const progress = document.getElementById("brief-progress");
     const progressBar = document.getElementById("brief-progress-bar");
+    const progressLabel = document.getElementById("brief-progress-label");
 
     const updateProgress = (): void => {
+      const isIntro = current === 0;
+      const step = Math.min(current, TOTAL_STEPS);
+
+      progress?.classList.toggle("hidden", isIntro);
+
       if (progressBar) {
-        progressBar.style.width = `${(current / screens.length) * 100}%`;
+        progressBar.style.width = `${(step / TOTAL_STEPS) * 100}%`;
+      }
+
+      if (progressLabel) {
+        progressLabel.textContent = `${step} / ${TOTAL_STEPS}`;
       }
     };
 

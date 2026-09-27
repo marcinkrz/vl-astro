@@ -69,7 +69,7 @@
   --border: var(--background-2);
   --border-dark: var(--background-3);
 
-  --focus: hsl(204, 90%, 45%);
+  --focus: var(--accent-1);
 }
 
 [data-theme="dark"] {
@@ -103,8 +103,6 @@
   --muted-1: hsl(0, 0%, 68%);
   --border: var(--background-2);
   --border-light: var(--foreground);
-
-  --info-border: hsl(204, 90%, 45%);
 }
 
 html {
@@ -132,15 +130,15 @@ html {
 }
 
 .display {
-  @apply text-5xl sm:text-6xl xl:text-7xl leading-none! tracking-tighter font-features-['liga'] text-balance;
+  @apply text-5xl sm:text-6xl xl:text-7xl leading-none! tracking-tighter font-features-['liga'];
 }
 
 .h1 {
-  @apply text-3xl sm:text-4xl xl:text-5xl leading-[1.1]! tracking-tight text-balance;
+  @apply text-3xl sm:text-4xl xl:text-5xl leading-[1.1]! tracking-tight;
 }
 
 .h2 {
-  @apply text-2xl xl:text-3xl leading-[1.1]! tracking-tight text-balance;
+  @apply text-2xl xl:text-3xl leading-[1.1]! tracking-tight;
 }
 
 .h3 {

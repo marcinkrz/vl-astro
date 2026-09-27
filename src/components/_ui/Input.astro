@@ -25,7 +25,7 @@ const inputClass = [`
   disabled:cursor-not-allowed disabled:opacity-50
   autofill:shadow-[inset_0_0_0_1000px_var(--background)]
   `,
-  as === "textarea" ? "min-h-[120px] resize-y" : "h-10",
+  as === "textarea" ? "resize-y" : "h-10",
   className,
 ]
   .filter(Boolean)
@@ -34,7 +34,7 @@ const inputClass = [`
 
 {
   as === "textarea" ? (
-    <textarea class={inputClass} {...props}></textarea>
+    <textarea rows="6" class={inputClass} {...props}></textarea>
   ) : (
     <input class={inputClass} {...props} />
   )
