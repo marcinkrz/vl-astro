@@ -132,12 +132,12 @@ const messages = {
     set:html={JSON.stringify(messages)}
   />
   <div
-    class="w-full min-h-[calc(100svh-6rem)] md:min-h-[calc(100svh-7rem)] mt-14 md:mt-16 lg:mt-56 flex flex-col gap-4 justify-start items-start"
+    class="w-full min-h-[calc(100svh-6rem)] md:min-h-[calc(100svh-7rem)] mt-14 sm:mt-16 md:mt-32 lg:mt-56 flex flex-col gap-4 justify-start items-start"
   >
-    <div class="max-w-140 lg:w-140 mx-auto px-3 md:px-4 lg:px-6">
+    <div class="w-full md:w-140 mx-auto px-3 md:px-4 lg:px-6">
       <div id="brief-progress" class="w-full">
         <div
-          class="w-full h-0.5 bg-(--background-1)"
+          class="w-full h-0.75 bg-(--background-1)"
           aria-hidden="true"
         >
           <div
@@ -156,7 +156,7 @@ const messages = {
           </span>
         </div>
       </div>
-      <section id="first" class="screen min-w-80 max-w-140 absolute top-1/2 left-1/2 -translate-1/2">
+      <section id="first" class="screen w-full max-w-140 absolute top-1/2 left-1/2 -translate-1/2 px-3 md:px-4 lg:px-6">
         <div class="flex flex-col items-start">
           <h2 class="h1 mb-6">{t("brief-form.[1].title")}</h2>
           <p class="text-sm text-(--muted)">{t("brief-form.[1].description")}</p>
@@ -643,7 +643,7 @@ const messages = {
               <span></span>
             </p>
           </div>
-          <div class="flex gap-4 mt-10">
+          <div class="grid grid-cols-3 gap-4 mt-10">
             <Button
               class="font-normal text-sm"
               href="#services"
@@ -652,7 +652,7 @@ const messages = {
             >
               {t("brief-form.prev")}
             </Button>
-            <Button href="#brief" data-go="brief" size="large" class="w-full">
+            <Button href="#brief" data-go="brief" size="large" class="col-span-2">
               {t("brief-form.next")}
             </Button>
           </div>
@@ -690,7 +690,7 @@ const messages = {
                 peer-not-placeholder-shown:text-sm
               `}
             >
-              {t("contact-form.message")}
+              {t("contact-form.message")}*
             </span>
           </label>
           <div class="relative m-0">
@@ -701,7 +701,7 @@ const messages = {
             >
             </p>
           </div>
-          <div class="flex gap-4 mt-10">
+          <div class="grid grid-cols-3 gap-4 mt-10">
             <Button
               class="font-normal text-sm"
               href="#budget"
@@ -710,7 +710,7 @@ const messages = {
             >
               {t("brief-form.prev")}
             </Button>
-            <Button href="#site" data-go="site" size="large" class="w-full">
+            <Button href="#site" data-go="site" size="large" class="col-span-2">
               {t("brief-form.next")}
             </Button>
           </div>
@@ -760,7 +760,7 @@ const messages = {
             >
             </p>
           </div>
-          <div class="flex gap-4 mt-10">
+          <div class="grid grid-cols-3 gap-4 mt-10">
             <Button
               class="font-normal text-sm"
               href="#brief"
@@ -769,7 +769,7 @@ const messages = {
             >
               {t("brief-form.prev")}
             </Button>
-            <Button href="#last" data-go="last" size="large" class="w-full">
+            <Button href="#last" data-go="last" size="large" class="col-span-2">
               {t("brief-form.next")}
             </Button>
           </div>
@@ -810,7 +810,7 @@ const messages = {
                   peer-not-placeholder-shown:text-sm
                 `}
                 >
-                  {t("contact-form.firstName")}
+                  {t("contact-form.firstName")}*
                 </span>
               </label>
               <p
@@ -849,7 +849,7 @@ const messages = {
                   peer-not-placeholder-shown:text-sm
                 `}
                 >
-                  {t("contact-form.phone")}
+                  {t("contact-form.phone")}*
                 </span>
               </label>
               <p
@@ -888,7 +888,7 @@ const messages = {
                   peer-not-placeholder-shown:text-sm
                 `}
                 >
-                  {t("contact-form.email")}
+                  {t("contact-form.email")}*
                 </span>
               </label>
               <p
@@ -938,7 +938,7 @@ const messages = {
               </p>
             </div>
           </div>
-          <div class="flex gap-4 mt-10">
+          <div class="grid grid-cols-3 gap-4 mt-10">
             <Button
               class="font-normal text-sm"
               href="#site"
@@ -947,7 +947,7 @@ const messages = {
             >
               {t("brief-form.prev")}
             </Button>
-            <Button type="submit" id="brief-submit" size="large" class="w-full">
+            <Button type="submit" id="brief-submit" size="large" class="col-span-2">
               {t("contact-form.submit")}
               <ArrowUpRight class="h-4" />
             </Button>

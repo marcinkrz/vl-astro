@@ -32,7 +32,7 @@
     "firstName": "First name",
     "email": "Email address",
     "phone": "Phone",
-    "nip": "VAT ID (optional)",
+    "nip": "VAT ID",
     "message": "Message",
     "submit": "Send"
   },
