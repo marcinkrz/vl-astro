@@ -43,7 +43,7 @@ import { getRoute } from "@/i18n/routes";
     stroke-miterlimit="2"
     clip-rule="evenodd"
     viewBox="0 0 68 30"
-    class="logo-full logomark hidden w-auto h-8 fill-(--foreground)"
+    class="logo-full group logomark hidden w-auto h-8 fill-(--foreground)"
   >
     <path
       class="logomark__t1 origin-[6px_7px]"
@@ -122,12 +122,26 @@ import { getRoute } from "@/i18n/routes";
     path:not(.logomark__t1, .logomark__t6, .logomark__b1, .logomark__b5) {
     opacity: 0;
   }
-  .logomark.anim-in > path {
-    transform: translateX(0px) !important;
-  }
-  .logomark.anim-in
+  .logomark.anim-in {
+    > path {
+      transform: translateX(0px) !important;
+
+      &.logomark__b2 {
+        transform: translateX(1px) !important;
+      }
+
+      &.logomark__b3 {
+        transform: translateX(2px) !important;
+      }
+
+      &.logomark__b4 {
+        transform: translateX(3px) !important;
+      }
+    }
+    
     > path:not(.logomark__t1, .logomark__t6, .logomark__b1, .logomark__b5) {
-    opacity: 1;
+      opacity: 1;
+    }
   }
 </style>
 

@@ -78,10 +78,6 @@
   --background-2: var(--gray-darker);
   --background-3: var(--gray-dark);
 
-  /* --foreground: var(--white);
-  --foreground-1: hsl(0, 0%, 80%);
-  --foreground-2: hsl(0, 0%, 75%); */
-
   --foreground: var(--white);
   --foreground-1: var(--gray-lightest);
   --foreground-2: var(--gray-lighter);
@@ -130,16 +126,13 @@ html {
 .display,
 .h1,
 .h2,
-.h3 {
-  @apply font-normal;
-}
-
+.h3,
 .h4 {
   @apply font-semibold;
 }
 
 .display {
-  @apply text-4xl sm:text-6xl xl:text-7xl leading-none! tracking-tighter font-features-['liga'] text-balance;
+  @apply text-5xl sm:text-6xl xl:text-7xl leading-none! tracking-tighter font-features-['liga'] text-balance;
 }
 
 .h1 {
