@@ -32,7 +32,7 @@
     "firstName": "First name",
     "email": "Email address",
     "phone": "Phone",
-    "nip": "VAT ID",
+    "nip": "VAT ID (optional)",
     "message": "Message",
     "submit": "Send"
   },
@@ -71,11 +71,13 @@
     },
     "[4]": {
       "title": "Describe your project",
-      "description": "Write a few words about the project you want to implement so that I can respond to you more precisely"
+      "description": "Write a few words about the project you want to implement so that I can respond to you more precisely",
+      "message": "Few words about the project"
     },
     "[5]": {
       "title": "Link to website or socials",
-      "description": "If you have a website, please provide its address. You can also provide a link to your company Instagram or Facebook"
+      "description": "If you have a website, please provide its address. You can also provide a link to your company Instagram or Facebook",
+      "label": "https:// (optional)"
     },
     "[last]": {
       "title": "Your details",
@@ -87,7 +89,7 @@
       "phone": "Enter a valid phone number.",
       "nip": "Enter a valid VAT ID (NIP) — 10 digits with a valid checksum.",
       "website": "Enter a valid website address, e.g. yourcompany.com.",
-      "message": "Tell us briefly about your project.",
+      "message": "This field is required.",
       "services": "Select at least one service.",
       "other-service": "You selected \"Other\" — please describe what you need.",
       "budget": "Select a budget range.",

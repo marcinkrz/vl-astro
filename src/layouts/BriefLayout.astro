@@ -121,42 +121,41 @@ const messages = {
     display: none;
   }
 
-  .brief-progress-step {
-    width: 1.5rem;
-    height: 1.5rem;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--border);
-    border-radius: 9999px;
-    background: var(--background);
-    color: var(--muted);
-    cursor: pointer;
-    transition:
-      border-color 150ms ease,
-      background-color 150ms ease,
-      color 150ms ease,
-      transform 150ms ease;
+  .brief-progress-step span {
+      width: 1.5rem;
+      height: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      background: var(--background);
+      color: var(--muted);
+      transition:
+        border-color 150ms ease,
+        background-color 150ms ease,
+        color 150ms ease,
+        transform 150ms ease;
   }
 
-  .brief-progress-step:hover {
-    border-color: var(--accent-2);
-    color: var(--accent-2);
+  .brief-progress-step:hover span {
+    border-color: var(--border-dark);
+    color: var(--foreground);
   }
 
-  .brief-progress-step:focus-visible {
+  .brief-progress-step:focus-visible span {
     outline: 2px solid var(--focus);
     outline-offset: 3px;
   }
 
-  .brief-progress-step.is-active {
+  .brief-progress-step.is-active span {
     border-color: var(--foreground);
     background: var(--foreground);
     color: var(--background);
   }
 
-  .brief-progress-step.is-completed {
+  .brief-progress-step.is-completed span {
     border-color: var(--foreground);
     background: var(--background);
     color: var(--foreground);
@@ -186,11 +185,11 @@ const messages = {
     set:html={JSON.stringify(messages)}
   />
   <div
-    class="w-full min-h-[calc(100svh-6rem)] md:min-h-[calc(100svh-7rem)] mt-14 sm:mt-16 md:mt-32 lg:mt-56 flex flex-col gap-4 justify-start items-start"
+    class="w-full min-h-[calc(100svh-7.5rem)] md:min-h-[calc(100svh-8rem)] mt-18 md:mt-20 flex flex-col gap-4 justify-start items-start"
   >
     <nav
       id="brief-progress"
-      class="brief-progress w-full max-w-140 mx-auto mt-8 mb-4 px-3 md:px-4 lg:px-6"
+      class="brief-progress w-full max-w-140 mx-auto mb-14 md:mb-16 px-3 md:px-4 lg:px-6"
       aria-label="Form progress"
     >
       <div class="relative flex items-center justify-between">
@@ -208,7 +207,7 @@ const messages = {
           type="button"
           data-progress-step="services"
           data-step-index="1"
-          class="brief-progress-step text-xs relative z-10"
+          class="brief-progress-step flex justify-center items-center w-10 h-10 text-xs relative z-10 cursor-pointer"
           aria-label="Step 1"
         >
           <span>1</span>
@@ -217,7 +216,7 @@ const messages = {
           type="button"
           data-progress-step="budget"
           data-step-index="2"
-          class="brief-progress-step text-xs relative z-10"
+          class="brief-progress-step flex justify-center items-center w-10 h-10 text-xs relative z-10 cursor-pointer"
           aria-label="Step 2"
         >
           <span>2</span>
@@ -226,7 +225,7 @@ const messages = {
           type="button"
           data-progress-step="brief"
           data-step-index="3"
-          class="brief-progress-step text-xs relative z-10"
+          class="brief-progress-step flex justify-center items-center w-10 h-10 text-xs relative z-10 cursor-pointer"
           aria-label="Step 3"
         >
           <span>3</span>
@@ -235,7 +234,7 @@ const messages = {
           type="button"
           data-progress-step="site"
           data-step-index="4"
-          class="brief-progress-step text-xs relative z-10"
+          class="brief-progress-step flex justify-center items-center w-10 h-10 text-xs relative z-10 cursor-pointer"
           aria-label="Step 4"
         >
           <span>4</span>
@@ -244,7 +243,7 @@ const messages = {
           type="button"
           data-progress-step="last"
           data-step-index="5"
-          class="brief-progress-step text-xs relative z-10"
+          class="brief-progress-step flex justify-center items-center w-10 h-10 text-xs relative z-10 cursor-pointer"
           aria-label="Step 5"
         >
           <span>5</span>
@@ -795,7 +794,7 @@ const messages = {
                 peer-not-placeholder-shown:text-sm
               `}
           >
-            {t("contact-form.message")}*
+            {t("brief-form.[4].message")}
           </span>
         </label>
         <div class="relative m-0">
@@ -856,7 +855,7 @@ const messages = {
                 peer-not-placeholder-shown:text-sm
               `}
           >
-            https://
+            {t("brief-form.[5].label")}
           </span>
         </label>
         <div class="relative m-0">
@@ -919,7 +918,7 @@ const messages = {
                   peer-not-placeholder-shown:text-sm
                 `}
               >
-                {t("contact-form.firstName")}*
+                {t("contact-form.firstName")}
               </span>
             </label>
             <p
@@ -958,7 +957,7 @@ const messages = {
                   peer-not-placeholder-shown:text-sm
                 `}
               >
-                {t("contact-form.phone")}*
+                {t("contact-form.phone")}
               </span>
             </label>
             <p
@@ -997,7 +996,7 @@ const messages = {
                   peer-not-placeholder-shown:text-sm
                 `}
               >
-                {t("contact-form.email")}*
+                {t("contact-form.email")}
               </span>
             </label>
             <p
