@@ -57,48 +57,24 @@ const messages = {
   }
   .screen.is-active {
     display: flex;
-    animation: screen-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: screen-in .6s cubic-bezier(0.1, 0.8, 0.2, 1) both;
   }
   @keyframes screen-in {
     from {
       opacity: 0;
-      transform: translateY(24px);
+      transform: translateY(3rem);
     }
     to {
       opacity: 1;
-      transform: none;
+      transform: translateY(0);
     }
   }
   .screen h2:focus {
     outline: none;
   }
 
-  /* Animacja ekranu wychodzącego — View Transitions API */
-  ::view-transition-old(root) {
-    animation: 0.25s cubic-bezier(0.4, 0, 0.2, 1) both vt-out;
-  }
-  ::view-transition-new(root) {
-    animation: 0.3s cubic-bezier(0.22, 1, 0.36, 1) both vt-in;
-  }
-  @keyframes vt-out {
-    to {
-      opacity: 0;
-      transform: translateY(-14px);
-    }
-  }
-  @keyframes vt-in {
-    from {
-      opacity: 0;
-      transform: translateY(14px);
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .screen.is-active {
-      animation: none;
-    }
-    ::view-transition-old(root),
-    ::view-transition-new(root) {
       animation: none;
     }
   }
@@ -169,7 +145,6 @@ const messages = {
   novalidate
   class="flex flex-col justify-center"
 >
-  <!-- Honeypot antyspamowy (niewidoczny dla ludzi) -->
   <input
     type="text"
     name="company"
@@ -185,7 +160,7 @@ const messages = {
     set:html={JSON.stringify(messages)}
   />
   <div
-    class="w-full min-h-[calc(100svh-7.5rem)] md:min-h-[calc(100svh-8rem)] mt-18 md:mt-20 flex flex-col gap-4 justify-start items-start"
+    class="w-full min-h-[calc(100svh-7.5rem)] md:min-h-[calc(100svh-8rem)] mt-18 md:mt-20 lg:pt-20 flex flex-col gap-4 justify-start items-start"
   >
     <nav
       id="brief-progress"
@@ -250,7 +225,6 @@ const messages = {
         </button>
       </div>
     </nav>
-
     <section
       id="first"
       class="screen w-full max-w-160 absolute top-1/2 left-1/2 -translate-1/2 px-3 md:px-4 lg:px-6"
@@ -262,7 +236,6 @@ const messages = {
           <Button
             href="#services"
             data-go="services"
-            size="large"
             class="mt-6 mb-2"
           >
             {t("brief-form.[1].button")}
@@ -537,14 +510,17 @@ const messages = {
             <span></span>
           </p>
         </div>
-        <Button
-          href="#budget"
-          data-go="budget"
-          size="large"
-          class="w-full mt-8"
-        >
-          {t("brief-form.next")}
-        </Button>
+        <div class="grid grid-cols-2 gap-4 mt-10">
+          <div></div>
+          <Button
+            href="#budget"
+            data-go="budget"
+            class="w-full"
+            size="large"
+          >
+            {t("brief-form.next")}
+          </Button>
+        </div>
       </div>
     </section>
     <section id="budget" class="screen w-full max-w-140 mx-auto px-3 md:px-4 lg:px-6">
@@ -745,16 +721,16 @@ const messages = {
             <span></span>
           </p>
         </div>
-        <div class="grid grid-cols-3 gap-4 mt-10">
+        <div class="grid grid-cols-2 gap-4 mt-10">
           <Button
-            class="font-normal text-sm"
+            class="ml-auto font-normal"
             href="#services"
             data-go="services"
             variant="ghost"
           >
             {t("brief-form.prev")}
           </Button>
-          <Button href="#brief" data-go="brief" size="large" class="col-span-2">
+          <Button href="#brief" data-go="brief" size="large">
             {t("brief-form.next")}
           </Button>
         </div>
@@ -805,16 +781,16 @@ const messages = {
           >
           </p>
         </div>
-        <div class="grid grid-cols-3 gap-4 mt-10">
+        <div class="grid grid-cols-2 gap-4 mt-10">
           <Button
-            class="font-normal text-sm"
+            class="ml-auto font-normal"
             href="#budget"
             data-go="budget"
             variant="ghost"
           >
             {t("brief-form.prev")}
           </Button>
-          <Button href="#site" data-go="site" size="large" class="col-span-2">
+          <Button href="#site" data-go="site" size="large">
             {t("brief-form.next")}
           </Button>
         </div>
@@ -866,16 +842,16 @@ const messages = {
           >
           </p>
         </div>
-        <div class="grid grid-cols-3 gap-4 mt-10">
+        <div class="grid grid-cols-2 gap-4 mt-10">
           <Button
-            class="font-normal text-sm"
+            class="ml-auto font-normal"
             href="#brief"
             data-go="brief"
             variant="ghost"
           >
             {t("brief-form.prev")}
           </Button>
-          <Button href="#last" data-go="last" size="large" class="col-span-2">
+          <Button href="#last" data-go="last" size="large">
             {t("brief-form.next")}
           </Button>
         </div>
@@ -1042,9 +1018,9 @@ const messages = {
             </p>
           </div>
         </div>
-        <div class="grid grid-cols-3 gap-4 mt-10">
+        <div class="grid grid-cols-2 gap-4 mt-10">
           <Button
-            class="font-normal text-sm"
+            class="ml-auto font-normal"
             href="#site"
             data-go="site"
             variant="ghost"
@@ -1055,7 +1031,6 @@ const messages = {
             type="submit"
             id="brief-submit"
             size="large"
-            class="col-span-2"
           >
             {t("contact-form.submit")}
             <ArrowUpRight class="h-4" />
