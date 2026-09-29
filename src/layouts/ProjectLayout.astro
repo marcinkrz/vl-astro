@@ -32,10 +32,16 @@ const {
 
 <BaseLayout title={metaTitle} description={metaDescription}>
   <main class="container mt-16">
-    <article class="space-y-24">
-      <header>
-        <div class="relative aspect-video overflow-hidden">
-          {
+    <article class="space-y-12 md:space-y-24 my-24">
+      <header class="mb-6">
+        <p class="mb-3 text-sm text-(--muted)">{client}</p>
+        <h1 class="h1 md:max-w-3/4 lg:max-w-1/2">{description}</h1>
+      </header>
+
+      <div class="mb-12 relative aspect-video overflow-hidden">
+        <div class="absolute w-full h-full object-cover bg-(--background-1)">
+        </div>
+        <!-- {
             cover && (
               <img
                 src={cover}
@@ -43,45 +49,38 @@ const {
                 class="absolute inset-0 w-full h-full object-cover"
               />
             )
-          }
-        </div>
-        <h1 class="display mt-6 mb-3">
-          {title}
-        </h1>
-        <p class="my-6 h2">{description}</p>
-        <ul class="text-sm">
-          <li class="grid grid-cols-[3rem_auto]">
-            <span>{t("projects.clientTitle")}:</span>
-            {client}
-          </li>
-          <li class="grid grid-cols-[3rem_auto]">
-            <span>{t("projects.yearTitle")}:</span>
-            {
-              pubDate
-                ? pubDate.toLocaleDateString(locale, {
-                    year: "numeric",
-                  })
-                : null
-            }
-          </li>
-          {
-            tags.length > 0 && (
-              <li class="grid grid-cols-[3rem_auto]">
-                {t("projects.tagsTitle")}:
-                <span>
-                  {tags.map((tag, index) => (
-                    <span class="">
-                      <span class="text-(--foreground)">{tag}</span>
-                      {index < tags.length - 1 ? ", " : ""}
-                    </span>
-                  ))}
-                </span>
-              </li>
-            )
-          }
-        </ul>
-      </header>
+          } -->
+      </div>
+
       <slot />
+
+      <div class="mb-3 flex justify-between text-sm text-(--muted)">
+        {
+          tags.length > 0 && (
+            <p class="text-(--muted)">
+              {t("projects.tagsTitle")}:&nbsp;
+              <span>
+                {tags.map((tag, index) => (
+                  <span class="">
+                    <span class="text-(--foreground)">{tag}</span>
+                    {index < tags.length - 1 ? ", " : ""}
+                  </span>
+                ))}
+              </span>
+            </p>
+          )
+        }
+        <p>
+          <span>{t("projects.yearTitle")}:&nbsp;</span>
+          {
+            pubDate
+              ? pubDate.toLocaleDateString(locale, {
+                  year: "numeric",
+                })
+              : null
+          }
+        </p>
+      </div>
     </article>
   </main>
 </BaseLayout>

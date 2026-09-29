@@ -27,7 +27,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
       </h1>
     </section>
     <section class="mb-24 -mx-3 md:-mx-4 lg:mx-auto border-t border-(--border)">
-      <header class="mt-1 mb-3 px-3 md:px-4 lg:px-6 flex justify-between">
+      <header class="mt-1 mb-3 px-3 md:px-4 lg:px-0 flex justify-between">
         <h2 class="text-(--muted)">Projekty</h2>
         <Button href={getRoute(locale, "projects")} variant="link" class="items-baseline">
           {t("projects.btnTitle")}
@@ -39,12 +39,15 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
             projects.map((project) => (
               <li class="max-md:w-[66vw] max-md:pr-2">
                 <a href={`/pl/projekty/${project.id}`}>
-                  <div class="relative pb-[75%] overflow-hidden">
-                    <img
+                  <div class="relative aspect-3/2 overflow-hidden">
+                    <div
+                      class="absolute w-full h-full object-cover bg-(--background-1)"
+                    ></div>
+                    {/* <img
                       src={project.data.cover}
                       alt={project.data.title}
-                      class="absolute w-full h-full object-cover"
-                    />
+                      class="absolute w-full h-full object-cover bg-(--background-1)"
+                    /> */}
                   </div>
                   <div>
                     <h2 class="h4 mt-2">{project.data.title}</h2>
