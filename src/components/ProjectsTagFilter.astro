@@ -1,0 +1,55 @@
+---
+interface Props {
+  tags: string[];
+  ariaLabel: string;
+}
+
+const { tags, ariaLabel } = Astro.props;
+---
+
+{
+  tags.length > 0 && (
+    <div class="mb-24">
+      <div class="grid max-w-md grid-cols-2 gap-x-4 gap-y-2" role="group" aria-label={ariaLabel}>
+        {tags.map((tag) => (
+          <button
+            type="button"
+            data-filter-tag={tag}
+            aria-pressed="false"
+            class="text-left text-(--muted) transition-colors hover:text-(--foreground) aria-pressed:text-(--foreground) aria-pressed:underline underline-offset-4"
+          >
+            {tag}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const buttons = [...document.querySelectorAll<HTMLButtonElement>("[data-filter-tag]")];
+    const items = [...document.querySelectorAll<HTMLElement>("[data-project-tags]")];
+    if (buttons.length === 0 || items.length === 0) return;
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const tag = button.dataset.filterTag;
+        const wasActive = button.getAttribute("aria-pressed") === "true";
+
+        buttons.forEach((b) => b.setAttribute("aria-pressed", "false"));
+        items.forEach((item) => {
+          item.hidden = false;
+        });
+
+        if (!wasActive && tag) {
+          button.setAttribute("aria-pressed", "true");
+          items.forEach((item) => {
+            const tags: string[] = JSON.parse(item.dataset.projectTags ?? "[]");
+            item.hidden = !tags.includes(tag);
+          });
+        }
+      });
+    });
+  });
+</script>

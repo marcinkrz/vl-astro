@@ -24,7 +24,9 @@
     "btnTitle": "All projects",
     "clientTitle": "Client",
     "tagsTitle": "Tags",
-    "yearTitle": "Year"
+    "yearTitle": "Year",
+    "prevProject": "Previous project",
+    "nextProject": "Next project"
   },
   "contact-form": {
     "title": "Contact form",
