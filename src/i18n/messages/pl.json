@@ -16,7 +16,8 @@
     "copy": "{year} Visual Label. Wszelkie prawa zastrzeżone.",
     "srDark": "Przełącz na ciemny motyw",
     "srLight": "Przełącz na jasny motyw",
-    "srLocale": "Zmień język na angielski"
+    "srLocale": "Zmień język na angielski",
+    "srStyleguide": "Wytyczne identyfikacji wizualnej"
   },
   "projects": {
     "title": "Projekty",

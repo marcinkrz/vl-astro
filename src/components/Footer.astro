@@ -1,10 +1,11 @@
 ---
-import { Cookie } from "@lucide/astro";
+import { Cookie, SwatchBook } from "@lucide/astro";
 
 import LangSwitch from "./LangSwitch.astro";
 import ThemeSwitch from "./ThemeSwitch.astro";
 import Button from "./_ui/Button.astro";
 import { getT, type Locale } from "@/i18n/messages";
+import { getRoute } from "@/i18n/routes";
 
 const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as Locale;
 const t = getT(locale);
@@ -20,6 +21,15 @@ const year = new Date().getFullYear();
       &copy; {t("footer.copy", { year })}
     </span>
     <div class="ml-2 flex items-start gap-2">
+      <Button
+        href={getRoute(locale, "styleguide")}
+        variant="ghost"
+        size="icon"
+        class="text-(--muted) hover:text-(--foreground) active:text-(--foreground)"
+        aria-label={t("footer.srStyleguide")}
+      >
+        <SwatchBook class="h-4" />
+      </Button>
       <LangSwitch />
       <ThemeSwitch />
       <Button

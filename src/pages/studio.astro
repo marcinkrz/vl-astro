@@ -1,12 +1,115 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import Button from "@/components/_ui/Button.astro";
+import { getRoute } from "@/i18n/routes";
+
+const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "en";
 ---
 
-<BaseLayout>
+<BaseLayout
+  title="Studio"
+  description="Visual Label is an independent design studio — brand identities and websites designed and built by one designer."
+>
   <div class="container">
     <h1 class="display mt-24 mb-4">Studio</h1>
-    <p class="mb-12 text-(--muted)">About our studio.</p>
+    <p class="mb-12 max-w-[65ch] text-(--muted)">
+      Visual Label is an independent design studio. I create brand identities
+      and build websites — work that looks good, works well and sells.
+    </p>
+
+    <div
+      class="mb-16 md:mb-24 w-full aspect-3/2 md:aspect-video overflow-hidden bg-(--background-1)"
+    >
+      <img
+        src="/images/studio-02.jpg"
+        alt="Visual Label — studio workspace"
+        loading="lazy"
+        class="w-full h-full object-cover"
+      />
+    </div>
+
+    <section class="grid gap-8 md:grid-cols-2 md:gap-x-4 lg:gap-x-6 items-start">
+      <div class="w-full aspect-3/4 overflow-hidden bg-(--background-1)">
+        <img
+          src="/images/studio-01.jpg"
+          alt="Marcin — founder of Visual Label"
+          loading="lazy"
+          class="w-full h-full object-cover"
+        />
+      </div>
+      <div>
+        <h2 class="h3">Marcin</h2>
+        <p class="mt-1 mb-6 text-sm text-(--muted)">Founder &amp; lead designer</p>
+        <p class="mb-4">
+          Visual Label is a one-person studio — no account managers, no
+          middlemen. From the first brief to the final production files you
+          work directly with the designer responsible for every part of the
+          project.
+        </p>
+        <p>
+          I design brand identities and websites — from logos and print
+          materials to online implementations. Combining graphic design with
+          code means what looks good on paper also works in the browser.
+        </p>
+      </div>
+    </section>
+
+    <section class="mt-16 md:mt-24 border-t border-(--border)">
+      <h2 class="h3 mt-1 mb-6">Services</h2>
+      <ul class="grid gap-x-2 md:gap-x-4 lg:gap-x-6 gap-y-8 md:grid-cols-2">
+        <li class="pt-4 border-t border-(--border)">
+          <p class="mb-2 text-xs font-mono uppercase text-(--muted)">01</p>
+          <h3 class="h4 mb-1">Logo &amp; brand identity</h3>
+          <p class="text-sm text-(--muted)">
+            Logos and visual identity systems that scale from a business card
+            to a billboard.
+          </p>
+        </li>
+        <li class="pt-4 border-t border-(--border)">
+          <p class="mb-2 text-xs font-mono uppercase text-(--muted)">02</p>
+          <h3 class="h4 mb-1">Websites</h3>
+          <p class="text-sm text-(--muted)">
+            Fast, accessible websites designed and built in-house — design and
+            code under one roof.
+          </p>
+        </li>
+        <li class="pt-4 border-t border-(--border)">
+          <p class="mb-2 text-xs font-mono uppercase text-(--muted)">03</p>
+          <h3 class="h4 mb-1">Online stores</h3>
+          <p class="text-sm text-(--muted)">
+            Conversion-focused e-commerce that stays true to your brand.
+          </p>
+        </li>
+        <li class="pt-4 border-t border-(--border)">
+          <p class="mb-2 text-xs font-mono uppercase text-(--muted)">04</p>
+          <h3 class="h4 mb-1">Print design</h3>
+          <p class="text-sm text-(--muted)">
+            Business cards, catalogs and posters that carry the identity into
+            the physical world.
+          </p>
+        </li>
+      </ul>
+    </section>
+
+    <div
+      class="mt-16 md:mt-24 w-full aspect-3/2 md:aspect-video overflow-hidden bg-(--background-1)"
+    >
+      <img
+        src="/images/studio-03.jpg"
+        alt="Printed brand identity materials on a desk"
+        loading="lazy"
+        class="w-full h-full object-cover"
+      />
+    </div>
+
+    <section class="mt-16 md:mt-24 mb-12">
+      <h2 class="h3 mb-2">Have a project in mind?</h2>
+      <p class="mb-6 text-(--muted)">
+        Tell me what you need — I'll reply within two business days.
+      </p>
+      <Button href={getRoute(locale, "contact")}>Start a project</Button>
+    </section>
+
     <a class="link" href="/style-guide">Visual Style Guide</a>
-    <div class="mt-12 w-full pb-[56%] flex bg-(--background-1)"></div>
   </div>
 </BaseLayout>
