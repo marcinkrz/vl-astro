@@ -1,10 +1,14 @@
 ---
+import { getTagTitles } from "@/i18n/messages";
+
 interface Props {
   tags: string[];
   ariaLabel: string;
 }
 
 const { tags, ariaLabel } = Astro.props;
+const locale = Astro.currentLocale === "pl" ? "pl" : "en";
+const titles = getTagTitles(locale);
 ---
 
 {
@@ -18,7 +22,7 @@ const { tags, ariaLabel } = Astro.props;
             aria-pressed="false"
             class="text-left text-(--muted) transition-colors hover:text-(--foreground) aria-pressed:text-(--foreground) aria-pressed:underline underline-offset-4"
           >
-            {tag}
+            {titles[tag] ?? tag}
           </button>
         ))}
       </div>
@@ -51,5 +55,11 @@ const { tags, ariaLabel } = Astro.props;
         }
       });
     });
+
+    /* Aktywuj filtr z parametru URL (?tag=klucz) — linki tagów ze strony projektu */
+    const param = new URLSearchParams(location.search).get("tag");
+    if (param) {
+      buttons.find((b) => b.dataset.filterTag === param)?.click();
+    }
   });
 </script>

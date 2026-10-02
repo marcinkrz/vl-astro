@@ -33,3 +33,8 @@ export function getT(locale: Locale) {
     return value;
   };
 }
+
+export function getTagTitles(locale: Locale): Record<string, string> {
+  const dict = dictionaries[locale] ?? dictionaries.en;
+  return (dict.projects as { tagTitles?: Record<string, string> }).tagTitles ?? {};
+}

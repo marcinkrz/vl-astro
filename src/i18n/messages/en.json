@@ -26,7 +26,15 @@
     "tagsTitle": "Tags",
     "yearTitle": "Year",
     "prevProject": "Previous project",
-    "nextProject": "Next project"
+    "nextProject": "Next project",
+    "tagTitles": {
+      "branding": "Branding",
+      "ui-ux": "UI/UX",
+      "webdesign": "Web design",
+      "logo": "Logo",
+      "print": "Print",
+      "motion": "Motion"
+    }
   },
   "contact-form": {
     "title": "Contact form",

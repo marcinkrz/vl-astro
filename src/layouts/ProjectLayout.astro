@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-import { getT } from "@/i18n/messages";
+import { getTagTitles, getT } from "@/i18n/messages";
+import { getRoute } from "@/i18n/routes";
 
 const locale = Astro.currentLocale === "pl" ? "pl" : "en";
 const t = getT(locale);
@@ -32,6 +33,9 @@ const {
   prevProject,
   nextProject,
 } = Astro.props as Props;
+
+const listRoute = getRoute(locale, "projects");
+const tagTitles = getTagTitles(locale);
 ---
 
 <BaseLayout title={metaTitle} description={metaDescription}>
@@ -66,7 +70,12 @@ const {
               <span>
                 {tags.map((tag, index) => (
                   <span class="">
-                    <span class="text-(--foreground)">{tag}</span>
+                    <a
+                      href={`${listRoute}?tag=${encodeURIComponent(tag)}`}
+                      class="text-(--foreground) hover:underline"
+                    >
+                      {tagTitles[tag] ?? tag}
+                    </a>
                     {index < tags.length - 1 ? ", " : ""}
                   </span>
                 ))}
