@@ -28,8 +28,8 @@ if (!project) {
 }
 projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 const index = projects.indexOf(project);
-const prevProject = projects[(index - 1 + projects.length) % projects.length];
-const nextProject = projects[(index + 1) % projects.length];
+const prevProject = projects[(index + 1) % projects.length];
+const nextProject = projects[(index - 1 + projects.length) % projects.length];
 const { Content } = await render(project);
 ---
 
