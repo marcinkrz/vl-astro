@@ -28,12 +28,11 @@
     "prevProject": "Previous project",
     "nextProject": "Next project",
     "tagTitles": {
-      "branding": "Branding",
-      "ui-ux": "UI/UX",
-      "webdesign": "Web design",
+      "webdesign": "Website",
+      "webstore": "Online store",
       "logo": "Logo",
-      "print": "Print",
-      "motion": "Motion"
+      "branding": "Identity",
+      "print": "Print design"
     }
   },
   "contact-form": {

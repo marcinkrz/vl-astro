@@ -43,8 +43,8 @@ const { Content } = await render(project);
   tags={project.data.tags}
   slug={project.data.slug}
   pubDate={project.data.pubDate}
-  prevProject={{ title: prevProject.data.title, href: `/pl/projekty/${prevProject.id}` }}
-  nextProject={{ title: nextProject.data.title, href: `/pl/projekty/${nextProject.id}` }}
+  prevProject={{ title: prevProject.data.title, href: `/pl/projekty/${prevProject.id}`, cover: prevProject.data.cover }}
+  nextProject={{ title: nextProject.data.title, href: `/pl/projekty/${nextProject.id}`, cover: nextProject.data.cover }}
 >
   <Content />
 </ProjectLayout>
