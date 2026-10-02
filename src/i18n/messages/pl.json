@@ -14,7 +14,8 @@
   },
   "login": {
     "showPassword": "Pokaż hasło",
-    "hidePassword": "Ukryj hasło"
+    "hidePassword": "Ukryj hasło",
+    "wrongPassword": "Nieprawidłowe hasło"
   },
   "footer": {
     "copy": "{year} Visual Label. Wszelkie prawa zastrzeżone.",
