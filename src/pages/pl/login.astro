@@ -54,27 +54,31 @@ if (Astro.request.method === "POST") {
               id="password"
               name="password"
               placeholder=" "
+              autocomplete="current-password"
               required
               class="peer"
-            />
-            <span
-              class={`
-              pointer-events-none
-              absolute left-2 top-5 -translate-y-1/2
-              px-[0.5ch]
-              bg-(--background)
-              text-(--muted)
-              transition-all duration-150
-              peer-focus:top-0
-              peer-focus:-translate-y-1/2
-              peer-focus:text-sm
-              peer-not-placeholder-shown:top-0
-              peer-not-placeholder-shown:-translate-y-1/2
-              peer-not-placeholder-shown:text-sm
-            `}
+              showPasswordLabel={t("login.showPassword")}
+              hidePasswordLabel={t("login.hidePassword")}
             >
-              Hasło
-            </span>
+              <span
+                class={`
+                pointer-events-none
+                absolute left-2 top-5 -translate-y-1/2
+                px-[0.5ch]
+                bg-(--background)
+                text-(--muted)
+                transition-all duration-150
+                peer-focus:top-0
+                peer-focus:-translate-y-1/2
+                peer-focus:text-sm
+                peer-not-placeholder-shown:top-0
+                peer-not-placeholder-shown:-translate-y-1/2
+                peer-not-placeholder-shown:text-sm
+              `}
+              >
+                Hasło
+              </span>
+            </Input>
           </label>
           <Button
             class="w-full"
@@ -87,5 +91,12 @@ if (Astro.request.method === "POST") {
     </main>
     <Footer />
     <CookieManager />
+    <script>
+      // Autofokus na polu hasła — także po nawigacji klientowej (ClientRouter).
+      const focusPassword = () =>
+        document.getElementById("password")?.focus({ preventScroll: true });
+      focusPassword();
+      document.addEventListener("astro:page-load", focusPassword);
+    </script>
   </body>
 </html>

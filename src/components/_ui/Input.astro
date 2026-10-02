@@ -1,32 +1,42 @@
 ---
+import { Eye, EyeOff } from "@lucide/astro";
+
 interface Props {
   as?: "input" | "textarea";
+  showPasswordLabel?: string;
+  hidePasswordLabel?: string;
   class?: string;
   [key: string]: any;
 }
 
 const {
   as = "input",
+  showPasswordLabel,
+  hidePasswordLabel,
   class: className,
   ...props
 } = Astro.props;
 
-const inputClass = [`
+const isPassword = props.type === "password";
+
+const inputClass = [
+  `
   flex w-full px-3 py-2
   border rounded-md border-(--border)
   file:border-0 file:bg-transparent file:font-medium
-  
+
   focus-visible:border-(--border-dark)
   focus-visible:outline-none
   focus-visible:ring-(--background-1) focus-visible:ring-3
-  
+
   active:border-(--border-dark)
-  
+
   disabled:cursor-not-allowed disabled:opacity-50
   autofill:shadow-[inset_0_0_0_1000px_var(--background)]
   autofill:[-webkit-text-fill-color:var(--foreground)]
   `,
   as === "textarea" ? "resize-y" : "h-10",
+  isPassword ? "pr-10" : "",
   className,
 ]
   .filter(Boolean)
@@ -34,9 +44,71 @@ const inputClass = [`
 ---
 
 {
-  as === "textarea" ? (
+  isPassword ? (
+    <span class="relative block">
+      <input class={inputClass} {...props} />
+      <slot />
+      <button
+        type="button"
+        class="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-(--muted) transition-colors hover:text-(--foreground) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--foreground)"
+        aria-label={showPasswordLabel}
+        data-hide-label={hidePasswordLabel}
+        data-password-toggle
+      >
+        <EyeOff class="h-4" data-icon="hidden" />
+        <Eye class="h-4 hidden" data-icon="visible" />
+      </button>
+    </span>
+  ) : as === "textarea" ? (
     <textarea rows="6" class={inputClass} {...props}></textarea>
   ) : (
     <input class={inputClass} {...props} />
   )
 }
+
+<style>
+  /* Klasa dodawana w runtime przez walidację (setError) */
+  .field-invalid {
+    border-color: var(--danger-text) !important;
+  }
+</style>
+
+<script>
+  // Toggle widoczności hasła. Inicjalizacja przy astro:page-load, bo
+  // ClientRouter podmienia DOM — nowe elementy dostają listener na każdym
+  // page-load, guard [data-initialized] zapobiega podwójnym listenerom.
+  function initPasswordToggles(): void {
+    document
+      .querySelectorAll<HTMLButtonElement>(
+        "[data-password-toggle]:not([data-initialized])",
+      )
+      .forEach((btn) => {
+        btn.dataset.initialized = "true";
+
+        const input = btn.parentElement?.querySelector<HTMLInputElement>(
+          'input[type="password"], input[type="text"]',
+        );
+        if (!input) return;
+
+        const iconHidden = btn.querySelector('[data-icon="hidden"]');
+        const iconVisible = btn.querySelector('[data-icon="visible"]');
+        const showLabel = btn.getAttribute("aria-label");
+        const hideLabel = btn.dataset.hideLabel ?? "";
+
+        btn.addEventListener("click", (e) => {
+          // preventDefault: klik w przycisk wewnątrz <label> nie może
+          // aktywować labelki (fokus ma zostać na przycisku).
+          e.preventDefault();
+
+          const show = input.type === "password";
+          input.type = show ? "text" : "password";
+          btn.setAttribute("aria-label", show ? hideLabel : showLabel ?? "");
+          iconHidden?.classList.toggle("hidden", show);
+          iconVisible?.classList.toggle("hidden", !show);
+        });
+      });
+  }
+
+  initPasswordToggles();
+  document.addEventListener("astro:page-load", initPasswordToggles);
+</script>
