@@ -1559,6 +1559,79 @@ const messages = {
       window.removeEventListener("hashchange", onHashchange),
     );
 
+    // ---------- Draft formularza (localStorage) ----------
+    // Zapis przy każdym input/change; odtworzenie przy inicie; usunięcie
+    // dopiero po POPRAWNEJ wysyłce. Pola checkbox trzymamy po id („Inny"
+    // mutuje value), tekstowe po name. Honeypot „company" wykluczony.
+    const DRAFT_KEY = "brief-form-draft";
+
+    type DraftData = { checks?: Record<string, boolean> } & { [key: string]: unknown };
+
+    function saveDraft(): void {
+      const data: DraftData = {};
+      data.checks = {};
+      form!
+        .querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+          "input[name], textarea[name]",
+        )
+        .forEach((el) => {
+          if (el.name === "company" || el.type === "hidden") return;
+          if (el.type === "checkbox" || el.type === "radio") {
+            if (el.id) data.checks![el.id] = (el as HTMLInputElement).checked;
+            return;
+          }
+          data[el.name] = el.value;
+        });
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+      } catch {
+        /* prywatny tryb przeglądarki — brak zapisu, formularz działa dalej */
+      }
+    }
+
+    function restoreDraft(): void {
+      let raw: string | null = null;
+      try {
+        raw = localStorage.getItem(DRAFT_KEY);
+      } catch {
+        return;
+      }
+      if (!raw) return;
+      let data: DraftData;
+      try {
+        data = JSON.parse(raw) as DraftData;
+      } catch {
+        localStorage.removeItem(DRAFT_KEY);
+        return;
+      }
+      form!
+        .querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+          "input[name], textarea[name]",
+        )
+        .forEach((el) => {
+          if (el.name === "company" || el.type === "hidden") return;
+          if (el.type === "checkbox" || el.type === "radio") {
+            const cb = el as HTMLInputElement;
+            cb.checked = !!data.checks?.[cb.id];
+            if (cb.id === "other-service" && cb.checked && otherInput && otherCheckbox && otherLabel) {
+              // pokaż pole „Inny" bez przenoszenia fokusu (syncOther fokusuje)
+              otherLabel.classList.add("hidden");
+              otherInput.classList.remove("hidden");
+              const text = typeof data["other-service"] === "string" ? data["other-service"] : "";
+              otherInput.value = text;
+              otherCheckbox.value = text.trim() || "other";
+            }
+            return;
+          }
+          const v = data[el.name];
+          if (typeof v === "string") el.value = v;
+        });
+    }
+
+    form.addEventListener("input", saveDraft);
+    form.addEventListener("change", saveDraft);
+    restoreDraft();
+
     // Wejście z hashem w URL / start od pierwszego ekranu
     if (location.hash) {
       show(location.hash.slice(1), { updateHash: false, focusHeading: false });
@@ -1658,6 +1731,7 @@ const messages = {
           form.reset();
           syncOther(false);
           resetErrors();
+          localStorage.removeItem(DRAFT_KEY);
         } else {
           const errors = data.errors ?? {};
           let jumped = false;
