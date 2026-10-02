@@ -63,7 +63,9 @@ const SR_DARK = t("footer.srDark");
     if (button && !button.dataset.bound) {
       button.dataset.bound = "true";
       button.addEventListener("click", () => {
-        const current = html.getAttribute("data-theme");
+        // Efektywny motyw (colorScheme ustawiany przez applyTheme), nie sam
+        // atrybut — w stanie mieszany attr/CS atrybut potrafi kłamać.
+        const current = html.style.colorScheme || html.getAttribute("data-theme");
         const next = current === "dark" ? "light" : "dark";
 
         localStorage.setItem("theme", next);
