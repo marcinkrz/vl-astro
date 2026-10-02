@@ -43,11 +43,14 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
                     <div
                       class="absolute w-full h-full object-cover bg-(--background-1)"
                     ></div>
-                    {/* <img
-                      src={project.data.cover}
-                      alt={project.data.title}
-                      class="absolute w-full h-full object-cover bg-(--background-1)"
-                    /> */}
+                    {project.data.cover && (
+                      <img
+                        src={project.data.cover}
+                        alt={project.data.title}
+                        loading="lazy"
+                        class="absolute inset-0 w-full h-full object-cover"
+                      />
+                    )}
                   </div>
                   <div>
                     <h2 class="h4 mt-2">{project.data.title}</h2>

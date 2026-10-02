@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-import { getT } from "@/i18n/messages";
+import { getTagTitles, getT } from "@/i18n/messages";
+import { getRoute } from "@/i18n/routes";
+import { MoveLeft, MoveRight } from "@lucide/astro";
 
 const locale = Astro.currentLocale === "pl" ? "pl" : "en";
 const t = getT(locale);
@@ -15,6 +17,8 @@ interface Props {
   tags?: string[];
   slug?: string;
   pubDate?: Date;
+  prevProject?: { title: string; href: string; cover?: string };
+  nextProject?: { title: string; href: string; cover?: string };
 }
 
 const {
@@ -27,7 +31,12 @@ const {
   tags = [],
   slug,
   pubDate,
+  prevProject,
+  nextProject,
 } = Astro.props as Props;
+
+const listRoute = getRoute(locale, "projects");
+const tagTitles = getTagTitles(locale);
 ---
 
 <BaseLayout title={metaTitle} description={metaDescription}>
@@ -41,15 +50,15 @@ const {
       <div class="mb-12 relative aspect-video overflow-hidden">
         <div class="absolute w-full h-full object-cover bg-(--background-1)">
         </div>
-        <!-- {
-            cover && (
-              <img
-                src={cover}
-                alt={title}
-                class="absolute inset-0 w-full h-full object-cover"
-              />
-            )
-          } -->
+        {
+          cover && (
+            <img
+              src={cover}
+              alt={title}
+              class="absolute inset-0 w-full h-full object-cover"
+            />
+          )
+        }
       </div>
 
       <slot />
@@ -62,7 +71,12 @@ const {
               <span>
                 {tags.map((tag, index) => (
                   <span class="">
-                    <span class="text-(--foreground)">{tag}</span>
+                    <a
+                      href={`${listRoute}?tag=${encodeURIComponent(tag)}`}
+                      class="text-(--foreground) hover:underline"
+                    >
+                      {tagTitles[tag] ?? tag}
+                    </a>
                     {index < tags.length - 1 ? ", " : ""}
                   </span>
                 ))}
@@ -81,6 +95,58 @@ const {
           }
         </p>
       </div>
+
+      {
+        (prevProject || nextProject) && (
+          <nav
+            class="grid grid-cols-2 gap-3 md:gap-4 lg:gap-6 border-t border-(--border) mt-3 pt-12"
+            aria-label={t("projects.title")}
+          >
+            {prevProject && (
+              <a href={prevProject.href} class="block group">
+                <span class="mb-2 flex items-center gap-1 text-xs text-(--muted)">
+                  <MoveLeft class="inline-flex w-4" />&nbsp;{t("projects.prevProject")}
+                </span>
+                <div class="relative aspect-3/2 overflow-hidden bg-(--background-1)">
+                  {prevProject.cover && (
+                    <img
+                      src={prevProject.cover}
+                      alt={prevProject.title}
+                      loading="lazy"
+                      class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  )}
+                  <div class="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-black/60 to-transparent"></div>
+                  <p class="absolute inset-x-3 bottom-3 text-(--white)">
+                    {prevProject.title}
+                  </p>
+                </div>
+              </a>
+            )}
+            {nextProject && (
+              <a href={nextProject.href} class="col-start-2 block group text-right">
+                <span class="mb-2 flex items-center justify-end gap-1 text-xs text-(--muted)">
+                  {t("projects.nextProject")}&nbsp;<MoveRight class="inline-flex w-4" />
+                </span>
+                <div class="relative aspect-3/2 overflow-hidden bg-(--background-1)">
+                  {nextProject.cover && (
+                    <img
+                      src={nextProject.cover}
+                      alt={nextProject.title}
+                      loading="lazy"
+                      class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  )}
+                  <div class="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-black/60 to-transparent"></div>
+                  <p class="absolute inset-x-3 bottom-3 text-(--white)">
+                    {nextProject.title}
+                  </p>
+                </div>
+              </a>
+            )}
+          </nav>
+        )
+      }
     </article>
   </main>
 </BaseLayout>

@@ -24,7 +24,16 @@
     "btnTitle": "Wszystkie projekty",
     "clientTitle": "Klient",
     "tagsTitle": "Tagi",
-    "yearTitle": "Rok"
+    "yearTitle": "Rok",
+    "prevProject": "Poprzedni projekt",
+    "nextProject": "Następny projekt",
+    "tagTitles": {
+      "webdesign": "Strona www",
+      "webstore": "Sklep internetowy",
+      "logo": "Logo",
+      "branding": "Identyfikacja",
+      "print": "Druk"
+    }
   },
   "contact-form": {
     "title": "Formularz kontaktowy",

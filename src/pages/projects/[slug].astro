@@ -21,12 +21,15 @@ const { Content } = await render(project);
 */
 
 /* OUTPUT: SERVER */
-const project = (
-  await getCollection("projects", (e) => e.data.slug === slug && e.data.locale === "en")
-)[0];
+const projects = await getCollection("projects", (e) => e.data.locale === "en");
+const project = projects.find((e) => e.data.slug === slug);
 if (!project) {
   return new Response(null, { status: 404 });
 }
+projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+const index = projects.indexOf(project);
+const prevProject = projects[(index + 1) % projects.length];
+const nextProject = projects[(index - 1 + projects.length) % projects.length];
 const { Content } = await render(project);
 ---
 
@@ -40,6 +43,8 @@ const { Content } = await render(project);
   tags={project.data.tags}
   slug={project.data.slug}
   pubDate={project.data.pubDate}
+  prevProject={{ title: prevProject.data.title, href: `/projects/${prevProject.id}`, cover: prevProject.data.cover }}
+  nextProject={{ title: nextProject.data.title, href: `/projects/${nextProject.id}`, cover: nextProject.data.cover }}
 >
   <Content />
 </ProjectLayout>

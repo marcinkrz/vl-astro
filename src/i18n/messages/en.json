@@ -24,7 +24,16 @@
     "btnTitle": "All projects",
     "clientTitle": "Client",
     "tagsTitle": "Tags",
-    "yearTitle": "Year"
+    "yearTitle": "Year",
+    "prevProject": "Previous project",
+    "nextProject": "Next project",
+    "tagTitles": {
+      "webdesign": "Website",
+      "webstore": "Online store",
+      "logo": "Logo",
+      "branding": "Identity",
+      "print": "Print design"
+    }
   },
   "contact-form": {
     "title": "Contact form",
