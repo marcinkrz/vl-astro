@@ -6,9 +6,22 @@ const t = getT(locale);
 import Button from "@/components/_ui/Button.astro";
 import Input from "@/components/_ui/Input.astro";
 import { ArrowUpRight } from "@lucide/astro";
+
+const messages = {
+  errors: {
+    required: t("contact-form.errors.required"),
+    email: t("contact-form.errors.email"),
+    network: t("contact-form.errors.network"),
+  },
+};
 ---
 
-<form id="contact-form" class="space-y-4">
+<form id="contact-form" class="space-y-4" novalidate>
+  <script
+    type="application/json"
+    id="contact-form-i18n"
+    set:html={JSON.stringify(messages)}
+  />
   <div id="response-message" class="group rounded-md bg-(--danger-bg) text-sm text-(--danger-text)">
     <p class="group-[.error]:px-3 group-[.error]:py-2"></p>
   </div>
@@ -21,6 +34,7 @@ import { ArrowUpRight } from "@lucide/astro";
       autocomplete="given-name"
       required
       class="peer"
+      aria-describedby="firstName-error"
     />
     <span
       class={`
@@ -41,6 +55,7 @@ import { ArrowUpRight } from "@lucide/astro";
     >
       {t("contact-form.firstName")}
     </span>
+    <p id="firstName-error" class="mt-1 text-sm text-(--danger-text)" hidden></p>
   </label>
   <label class="relative block">
     <Input
@@ -51,6 +66,7 @@ import { ArrowUpRight } from "@lucide/astro";
       autocomplete="email"
       required
       class="peer"
+      aria-describedby="email-error"
     />
     <span
       class={`
@@ -71,6 +87,7 @@ import { ArrowUpRight } from "@lucide/astro";
     >
       {t("contact-form.email")}
     </span>
+    <p id="email-error" class="mt-1 text-sm text-(--danger-text)" hidden></p>
   </label>
   <label class="relative block">
     <Input
@@ -80,6 +97,7 @@ import { ArrowUpRight } from "@lucide/astro";
       placeholder=" "
       required
       class="peer"
+      aria-describedby="message-error"
     />
     <span
       class={`
@@ -100,6 +118,7 @@ import { ArrowUpRight } from "@lucide/astro";
     >
       {t("contact-form.message")}
     </span>
+    <p id="message-error" class="mt-1 text-sm text-(--danger-text)" hidden></p>
   </label>
   <Button>
     {t("contact-form.submit")}
@@ -108,43 +127,149 @@ import { ArrowUpRight } from "@lucide/astro";
 </form>
 
 <script>
-  const form = document.querySelector<HTMLFormElement>("#contact-form");
-  const responseMessage =
-    document.querySelector<HTMLDivElement>("#response-message");
-  const responseMessageContent =
-    document.querySelector<HTMLParagraphElement>(
-      "#response-message > p"
+  // Init na astro:page-load: ClientRouter podmienia DOM przy nawigacji
+  // klientowej, a hoisted skrypt nie wykonuje się ponownie — guard
+  // [data-initialized] zapobiega podwójnym listenerom na tym samym formularzu.
+  function initContactForm(): void {
+    const form = document.querySelector<HTMLFormElement>(
+      "#contact-form:not([data-initialized])",
+    );
+    if (!form) return;
+    form.dataset.initialized = "true";
+
+    const responseMessage =
+      document.querySelector<HTMLDivElement>("#response-message");
+    const responseMessageContent = document.querySelector<HTMLParagraphElement>(
+      "#response-message > p",
     );
 
-  form?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(form);
-
-    try {
-      const response = await fetch("/api/contact-form", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (responseMessageContent) {
-        responseMessageContent.textContent = data.message ?? "";
-      }
-
-      if (response.ok) {
-        responseMessage?.classList.remove("error");
-        form.reset();
-      } else {
-        responseMessage?.classList.add("error");
-      }
-    } catch {
-      responseMessage?.classList.add("error");
-
-      if (responseMessageContent) {
-        responseMessageContent.textContent = "Wystąpił błąd.";
+    // ---------- i18n z <script type="application/json"> ----------
+    let i18n: { errors: Record<string, string> } = { errors: {} };
+    const i18nEl = document.getElementById("contact-form-i18n");
+    if (i18nEl?.textContent) {
+      try {
+        i18n = JSON.parse(i18nEl.textContent) as { errors: Record<string, string> };
+      } catch {
+        /* formularz działa, komunikaty mogą być puste */
       }
     }
-  });
+    const msg = i18n.errors;
+
+    // ---------- Walidacja (wzorzec z BriefLayout) ----------
+    function isValidEmail(value: string): boolean {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value) && value.length <= 254;
+    }
+
+    interface FieldDef {
+      name: string;
+      check: (v: string) => boolean;
+      error: string;
+    }
+
+    const fields: FieldDef[] = [
+      {
+        name: "firstName",
+        check: (v) => v.trim().length >= 2,
+        error: msg.required ?? "",
+      },
+      {
+        name: "email",
+        check: isValidEmail,
+        error: msg.email ?? "",
+      },
+      {
+        name: "message",
+        check: (v) => v.trim().length > 0,
+        error: msg.required ?? "",
+      },
+    ];
+
+    function fieldInput(name: string): HTMLInputElement | null {
+      return document.getElementById(name) as HTMLInputElement | null;
+    }
+
+    function setError(name: string, text: string | null): void {
+      const input = fieldInput(name);
+      const el = document.getElementById(`${name}-error`);
+      if (!input || !el) return;
+      if (text) {
+        el.textContent = text;
+        el.hidden = false;
+        input.classList.add("field-invalid");
+        input.setAttribute("aria-invalid", "true");
+      } else {
+        el.hidden = true;
+        input.classList.remove("field-invalid");
+        input.removeAttribute("aria-invalid");
+      }
+    }
+
+    function validateField(def: FieldDef): boolean {
+      const input = fieldInput(def.name);
+      if (!input) return true;
+      const valid = def.check(input.value || "");
+      setError(def.name, valid ? null : def.error);
+      return valid;
+    }
+
+    function resetErrors(): void {
+      fields.forEach((f) => setError(f.name, null));
+    }
+
+    for (const def of fields) {
+      const input = fieldInput(def.name);
+      if (!input) continue;
+      input.addEventListener("blur", () => validateField(def));
+      input.addEventListener("input", () => {
+        if (input.classList.contains("field-invalid")) validateField(def);
+      });
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      let firstInvalid: HTMLInputElement | null = null;
+      for (const def of fields) {
+        if (!validateField(def) && !firstInvalid) {
+          firstInvalid = fieldInput(def.name);
+        }
+      }
+      if (firstInvalid) {
+        firstInvalid.focus({ preventScroll: true });
+        return;
+      }
+
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch("/api/contact-form", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (responseMessageContent) {
+          responseMessageContent.textContent = data.message ?? "";
+        }
+
+        if (response.ok) {
+          responseMessage?.classList.remove("error");
+          resetErrors();
+          form.reset();
+        } else {
+          responseMessage?.classList.add("error");
+        }
+      } catch {
+        responseMessage?.classList.add("error");
+
+        if (responseMessageContent) {
+          responseMessageContent.textContent = msg.network ?? "";
+        }
+      }
+    });
+  }
+
+  initContactForm();
+  document.addEventListener("astro:page-load", initContactForm);
 </script>

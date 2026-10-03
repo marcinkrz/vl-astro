@@ -15,6 +15,8 @@ const pageTitle = "Login";
 
 export const prerender = false;
 
+let passwordError = false;
+
 if (Astro.request.method === "POST") {
   const data = await Astro.request.formData();
   const password = data.get("password");
@@ -28,6 +30,8 @@ if (Astro.request.method === "POST") {
     });
     return Astro.redirect("/");
   }
+
+  passwordError = true;
 }
 ---
 
@@ -54,28 +58,41 @@ if (Astro.request.method === "POST") {
               id="password"
               name="password"
               placeholder=" "
+              autocomplete="current-password"
               required
-              class="peer"
-            />
-            <span
-              class={`
-              pointer-events-none
-              absolute left-2 top-5 -translate-y-1/2
-              px-[0.5ch]
-              bg-(--background)
-              text-(--muted)
-              transition-all duration-150
-              peer-focus:top-0
-              peer-focus:-translate-y-1/2
-              peer-focus:text-sm
-              peer-not-placeholder-shown:top-0
-              peer-not-placeholder-shown:-translate-y-1/2
-              peer-not-placeholder-shown:text-sm
-            `}
+              class={passwordError ? "peer field-invalid" : "peer"}
+              aria-invalid={passwordError ? "true" : undefined}
+              aria-describedby={passwordError ? "password-error" : undefined}
+              showPasswordLabel={t("login.showPassword")}
+              hidePasswordLabel={t("login.hidePassword")}
             >
-              Hasło
-            </span>
+              <span
+                class={`
+                pointer-events-none
+                absolute left-2 top-5 -translate-y-1/2
+                px-[0.5ch]
+                bg-(--background)
+                text-(--muted)
+                transition-all duration-150
+                peer-focus:top-0
+                peer-focus:-translate-y-1/2
+                peer-focus:text-sm
+                peer-not-placeholder-shown:top-0
+                peer-not-placeholder-shown:-translate-y-1/2
+                peer-not-placeholder-shown:text-sm
+              `}
+              >
+                Hasło
+              </span>
+            </Input>
           </label>
+          {
+            passwordError && (
+              <p id="password-error" role="alert" class="text-sm text-(--danger-text)">
+                {t("login.wrongPassword")}
+              </p>
+            )
+          }
           <Button
             class="w-full"
             type="submit"
@@ -87,5 +104,17 @@ if (Astro.request.method === "POST") {
     </main>
     <Footer />
     <CookieManager />
+    <script>
+      // Autofokus na polu hasła — także po nawigacji klientowej (ClientRouter).
+      // iOS/Android: programowy focus nie otwiera klawiatury (Safari wymaga
+      // gestu użytkownika) — pomijamy focus zamiast zostawiać pole ze stanem
+      // „skupione bez klawiatury”; klawiatura pojawi się przy pierwszym tapnięciu.
+      const focusPassword = () => {
+        if (window.matchMedia("(pointer: coarse)").matches) return;
+        document.getElementById("password")?.focus({ preventScroll: true });
+      };
+      focusPassword();
+      document.addEventListener("astro:page-load", focusPassword);
+    </script>
   </body>
 </html>
