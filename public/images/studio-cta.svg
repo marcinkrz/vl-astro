@@ -1,66 +1,36 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="520" height="420" viewBox="0 0 520 420" class="w-full h-auto" fill="none">
-  <defs>
-    <style>
-      .vlf-float { animation: vlf-floaty 5.2s ease-in-out infinite; }
-      @keyframes vlf-floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-13px); } }
-      .vlf-d1 { animation-delay: -1.3s; }
-      .vlf-d2 { animation-delay: -2.2s; }
-      .vlf-d3 { animation-delay: -3.1s; }
-      .vlf-d4 { animation-delay: -4s; }
-      .vlf-spin { animation: vlf-spin 32s linear infinite; transform-box: fill-box; transform-origin: center; }
-      .vlf-spin-rev { animation: vlf-spin 44s linear infinite reverse; transform-box: fill-box; transform-origin: center; }
-      @keyframes vlf-spin { to { transform: rotate(360deg); } }
-      .vlf-halo { animation: vlf-halo 3.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-      @keyframes vlf-halo { 0%, 100% { transform: scale(1); opacity: .75; } 50% { transform: scale(1.09); opacity: 1; } }
-      .vlf-dashline { stroke-dasharray: 2 12; animation: vlf-dashmove 1.5s linear infinite; }
-      .vlf-dashline-soft { stroke-dasharray: 1 10; animation: vlf-dashmove 2.2s linear infinite; }
-      @keyframes vlf-dashmove { to { stroke-dashoffset: -34; } }
-      .vlf-blink { animation: vlf-blinky 2.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-      @keyframes vlf-blinky { 0%, 100% { opacity: 0; transform: scale(.35) rotate(-20deg); } 55% { opacity: 1; transform: scale(1) rotate(12deg); } }
-      .vlf-b1 { animation-delay: 0s; }
-      .vlf-b2 { animation-delay: -.9s; }
-      .vlf-b3 { animation-delay: -1.7s; }
-      .vlf-b4 { animation-delay: -2.3s; }
-      .vlf-spark { animation: vlf-sparky 1.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-      @keyframes vlf-sparky { 0%, 100% { opacity: 0; transform: scale(.3); } 45% { opacity: 1; transform: scale(1.15); } 70% { opacity: .55; transform: scale(.9); } }
-      @media (prefers-reduced-motion: reduce) {
-        .vlf-float, .vlf-spin, .vlf-spin-rev, .vlf-halo, .vlf-dashline, .vlf-dashline-soft, .vlf-blink, .vlf-spark { animation: none; }
-      }
-    </style>
-  </defs>
+  <!-- dashed orbit (DrawSVG entrance, then dash-drift loop); <path> bo MotionPathPlugin nie przyjmuje <circle> -->
+  <path class="vlf-orbit" d="M 450 210 A 170 170 0 1 1 449.99 210.001" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="2 12"></path>
 
-  <!-- dashed orbit -->
-  <circle cx="280" cy="210" r="170" stroke="var(--border)" stroke-width="1.5" class="vlf-dashline"></circle>
+  <!-- dashed inner ring, slow rotation loop -->
+  <circle class="vlf-ring" cx="280" cy="210" r="118" stroke="var(--muted)" stroke-width="1.5" opacity=".4" stroke-dasharray="70 40 120 60 90 50"></circle>
 
-  <!-- slow rotating ring -->
-  <circle cx="280" cy="210" r="118" stroke="var(--muted)" opacity=".4" class="vlf-spin"></circle>
+  <!-- dome, breathing loop -->
+  <path class="vlf-dome" d="M 200 330 A 80 80 0 0 1 360 330 Z" fill="var(--foreground)"></path>
 
-  <!-- dome -->
-  <path d="M 200 330 A 80 80 0 0 1 360 330 Z" fill="var(--foreground)" class="vlf-float vlf-d2"></path>
+  <!-- pulsing dot sitting on the ring -->
+  <circle class="vlf-halo" cx="280" cy="92" r="24" fill="var(--muted)"></circle>
 
-  <!-- pulsing dot on top of the ring -->
-  <circle cx="280" cy="92" r="24" fill="var(--muted)" class="vlf-halo"></circle>
+  <!-- square riding the orbit (MotionPath), authored at path start (450,210) -->
+  <rect class="vlf-square" x="428" y="188" width="44" height="44" fill="var(--foreground)"></rect>
 
-  <!-- rotating square right -->
-  <rect x="408" y="170" width="44" height="44" fill="var(--foreground)" class="vlf-spin-rev"></rect>
-
-  <!-- blinking asterisk left-top -->
-  <g stroke="var(--foreground)" stroke-width="2" stroke-linecap="round" class="vlf-blink vlf-b3">
+  <!-- blinking asterisk -->
+  <g class="vlf-asterisk" stroke="var(--foreground)" stroke-width="2" stroke-linecap="round">
     <path d="M 120 92 V 128"></path>
     <path d="M 102 110 H 138"></path>
     <path d="M 107 97 L 133 123"></path>
     <path d="M 133 97 L 107 123"></path>
   </g>
 
-  <!-- spark dot top-right -->
-  <circle cx="452" cy="96" r="8" fill="var(--foreground)" class="vlf-spark"></circle>
+  <!-- spark burst -->
+  <circle class="vlf-spark" cx="452" cy="96" r="8" fill="var(--foreground)"></circle>
 
   <!-- dashed arc bottom-left -->
-  <path d="M 60 340 q 60 40 140 36" stroke="var(--muted)" stroke-width="1.5" class="vlf-dashline-soft"></path>
+  <path class="vlf-arc" d="M 60 340 q 60 40 140 36" stroke="var(--muted)" stroke-width="1.5"></path>
 
   <!-- half-circle outline top-right -->
-  <path d="M 414 54 A 30 30 0 0 1 474 54" stroke="var(--muted)" stroke-width="1.5" class="vlf-float vlf-d4"></path>
+  <path class="vlf-halfcircle" d="M 414 54 A 30 30 0 0 1 474 54" stroke="var(--muted)" stroke-width="1.5"></path>
 
   <!-- small blinking dot -->
-  <circle cx="132" cy="300" r="5" fill="var(--foreground)" class="vlf-blink vlf-b2"></circle>
+  <circle class="vlf-dotsm" cx="132" cy="300" r="5" fill="var(--foreground)"></circle>
 </svg>
