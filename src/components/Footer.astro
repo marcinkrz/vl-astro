@@ -21,15 +21,6 @@ const year = new Date().getFullYear();
       &copy; {t("footer.copy", { year })}
     </span>
     <div class="ml-2 flex items-start gap-2">
-      <Button
-        href={getRoute(locale, "styleguide")}
-        variant="ghost"
-        size="icon"
-        class="text-(--muted) hover:text-(--foreground) active:text-(--foreground)"
-        aria-label={t("footer.srStyleguide")}
-      >
-        <SwatchBook class="h-4" />
-      </Button>
       <LangSwitch />
       <ThemeSwitch />
       <Button
@@ -40,6 +31,15 @@ const year = new Date().getFullYear();
         aria-label={t("cookie.settings")}
       >
         <Cookie class="h-4" />
+      </Button>
+      <Button
+        href={getRoute(locale, "styleguide")}
+        variant="ghost"
+        size="icon"
+        class="text-(--muted) hover:text-(--foreground) active:text-(--foreground)"
+        aria-label={t("footer.srStyleguide")}
+      >
+        <SwatchBook class="h-4" />
       </Button>
     </div>
   </div>
