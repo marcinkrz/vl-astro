@@ -1,0 +1,156 @@
+---
+import StudioCta from "@/../public/images/studio-cta.svg?raw";
+---
+
+<div class="w-full max-w-105 md:justify-self-end" data-studio-cta set:html={StudioCta} />
+
+<script>
+  import { animate, inView, stagger } from "motion";
+
+  // ClientRouter podmienia DOM — przed każdą inicjalizacją sprzątamy
+  // poprzednią (stop animacji + stop inView), bo skrypt jest hoistowany.
+  let cleanups: Array<() => void> = [];
+
+  function initStudioCta(): void {
+    cleanups.forEach((fn) => fn());
+    cleanups = [];
+
+    const root = document.querySelector<HTMLElement>("[data-studio-cta]");
+    const svg = root?.querySelector("svg");
+    if (!root || !svg) return;
+
+    // prefers-reduced-motion (i brak JS): pełna, statyczna grafika
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let dead = false;
+    let loopsStarted = false;
+    const stops: Array<{ stop: () => void }> = [];
+
+    cleanups.push(() => {
+      dead = true;
+      stops.forEach((c) => c.stop());
+    });
+
+    const withOrigin = (sel: string, o = "center") => {
+      const el = svg.querySelector<SVGElement>(sel);
+      if (!el) return null;
+      el.style.transformBox = "fill-box";
+      el.style.transformOrigin = o;
+      return el;
+    };
+
+    const orbit = svg.querySelector<SVGGeometryElement>(".vlf-orbit");
+    const ring = withOrigin(".vlf-ring");
+    const dome = withOrigin(".vlf-dome", "50% 100%");
+    const halo = withOrigin(".vlf-halo");
+    const square = withOrigin(".vlf-square");
+    const asterisk = withOrigin(".vlf-asterisk");
+    const spark = withOrigin(".vlf-spark");
+    const dotsm = withOrigin(".vlf-dotsm");
+
+    // Rysowanie konturu: solidna kreska o długości ścieżki, offset L→0.
+    // (Motion nie ma DrawSVG — ręczny odpowiednik przez stroke-dashoffset.)
+    const draw = (
+      el: SVGGeometryElement,
+      duration: number,
+      delay = 0,
+    ): { stop: () => void } => {
+      const L = el.getTotalLength();
+      el.style.strokeDasharray = `${L}`;
+      el.style.strokeDashoffset = `${L}`;
+      return animate(el, { strokeDashoffset: [L, 0] }, {
+        duration,
+        delay,
+        ease: [0.65, 0, 0.35, 1],
+      });
+    };
+
+    const startLoops = () => {
+      if (dead || loopsStarted) return;
+      if (!orbit || !ring || !dome || !halo || !square || !asterisk || !spark || !dotsm) return;
+      loopsStarted = true;
+
+      // orbita: dryf kreskowania; -280 = 20 pełnych okresów dasha (2+12) — pętla bez skoku
+      stops.push(animate(orbit, { strokeDashoffset: -280 }, { duration: 20, ease: "linear", repeat: Infinity }));
+
+      // wewnętrzny ring: wolny obrót
+      stops.push(animate(ring, { rotate: 360 }, { duration: 48, ease: "linear", repeat: Infinity }));
+
+      // kwadrat: rajd po orbicie (środek okręgu 280,210, r 170; a=0 → (450,210) = pozycja autorska,
+      // więc start jest bezskokowy; Motion nie ma MotionPath — jednowartościowy animate + onUpdate)
+      stops.push(animate(0, 1, {
+        duration: 26,
+        ease: "linear",
+        repeat: Infinity,
+        onUpdate: (p) => {
+          const a = p * Math.PI * 2;
+          square.style.transform = `translate(${170 * (Math.cos(a) - 1)}px, ${170 * Math.sin(a)}px)`;
+        },
+      }));
+
+      // kopuła: oddech
+      stops.push(animate(dome, { scaleY: [1, 0.955] }, { duration: 2.4, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }));
+
+      // halo: puls
+      stops.push(animate(halo, { scale: [1, 1.14] }, { duration: 1.8, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }));
+
+      // spark: wybuch co ~4 s
+      stops.push(animate(spark, { scale: [0, 1.25, 0.9, 0], opacity: [0, 1, 0.6, 0] }, { duration: 1.15, times: [0, 0.35, 0.6, 1], repeat: Infinity, repeatDelay: 2.8 }));
+
+      // asterisk: mrugnięcie z obrotem
+      stops.push(animate(asterisk, { scale: [0.5, 1, 1], opacity: [0, 1, 1], rotate: [-30, 12, 0] }, { duration: 0.7, times: [0, 0.7, 1], repeat: Infinity, repeatDelay: 3.4 }));
+    };
+
+    const fire = () => {
+      if (dead) return;
+
+      // orbita: rysowanie, potem powrót do autorskiego kreskowania
+      if (orbit) {
+        draw(orbit, 1.6);
+        setTimeout(() => {
+          if (!dead) {
+            orbit.style.strokeDasharray = "2 12";
+            orbit.style.strokeDashoffset = "0";
+          }
+        }, 1700);
+      }
+
+      // ring: wjazd z zewnątrz
+      if (ring) {
+        stops.push(animate(ring, { scale: [0.7, 1], opacity: [0, 0.4] }, { delay: 0.5, duration: 1, ease: "easeOut" }));
+      }
+
+      // kopuła: wzniesienie
+      if (dome) {
+        stops.push(animate(dome, { y: [46, 0], opacity: [0, 1] }, { delay: 0.7, duration: 0.9, ease: "easeOut" }));
+      }
+
+      // punkty i kształty: pops ze sprężynowym overshoote
+      const pops = [halo, square, asterisk, spark, dotsm].filter(
+        (el): el is SVGElement => el !== null,
+      );
+      if (pops.length) {
+        stops.push(animate(pops, { scale: [0, 1], opacity: [0, 1] }, { delay: stagger(0.12, { startDelay: 1.2 }), duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }));
+      }
+
+      // łuki: rysowanie
+      const arc = svg.querySelector<SVGGeometryElement>(".vlf-arc");
+      const half = svg.querySelector<SVGGeometryElement>(".vlf-halfcircle");
+      if (arc) stops.push(draw(arc, 0.8, 2.2));
+      if (half) stops.push(draw(half, 0.8, 2.35));
+
+      // pętle startują po zakończeniu wejścia (~3.2 s)
+      setTimeout(startLoops, 3200);
+    };
+
+    // jednorazowe odpalenie, gdy sekcja wjedzie w viewport
+    const stopIn = inView(root, () => {
+      stopIn();
+      fire();
+    }, { amount: 0.25 });
+    cleanups.push(() => stopIn());
+  }
+
+  initStudioCta();
+  document.addEventListener("astro:page-load", initStudioCta);
+</script>
