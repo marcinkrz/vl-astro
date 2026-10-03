@@ -2,8 +2,13 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Button from "@/components/_ui/Button.astro";
 import { getRoute } from "@/i18n/routes";
+import { getT } from "@/i18n/messages";
+import { Clock5 } from "@lucide/astro";
+
+import StudioCta from "@/../public/images/studio-cta.svg?raw";
 
 const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "pl";
+const t = getT(locale);
 ---
 
 <BaseLayout
@@ -98,15 +103,24 @@ const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "pl";
     </div>
 
     <section class="mb-12 border-t border-(--border)">
-      <h2 class="h3 mt-8 mb-2">Masz projekt?</h2>
-      <p class="mb-6 text-(--muted)">
-        Opisz, czego potrzebujesz — odpowiedź w ciągu dwóch dni roboczych.
-      </p>
-      <div class="flex flex-wrap gap-2">
-        <Button href={getRoute(locale, "contact")}>Rozpocznij projekt</Button>
-        <Button href={getRoute(locale, "projects")} variant="outline">
-          Wszystkie projekty
-        </Button>
+      <div class="grid gap-8 md:grid-cols-2 md:gap-x-4 lg:gap-x-6 items-center">
+        <div>
+          <h2 class="h3 mb-2">Masz projekt?</h2>
+          <p class="mb-6 max-w-[60ch] text-(--muted)">
+            Wypełnij krótki, niezobowiązujący brief — 6 krótkich pytań,
+            minutka. Odpowiedź w ciągu dwóch dni roboczych.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <Button href={getRoute(locale, "brief")}>Zacznij od briefu</Button>
+            <Button href={getRoute(locale, "projects")} variant="outline">
+              Wszystkie projekty
+            </Button>
+          </div>
+          <p class="mt-2 p-2 inline-flex text-xs leading-tight text-(--muted)">
+            <Clock5 class="h-4 mr-px" />{t("brief-form.[1].time")}
+          </p>
+        </div>
+        <div class="w-full max-w-105 md:justify-self-end" set:html={StudioCta} />
       </div>
     </section>
   </div>
