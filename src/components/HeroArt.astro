@@ -15,6 +15,6 @@ const { left = false, top = false } = Astro.props;
 ---
 
 <div
-  class={`absolute z-1 w-full lg:w-1/2 ${left ? "left-0" : "right-0"} ${top ? "max-md:static max-md:order-first max-md:mb-6 top-0 lg:top-auto lg:bottom-0" : "bottom-0"}`}
+  class={`absolute z-1 w-full lg:w-1/2 ${left ? "left-0" : "right-0"} ${top ? "max-md:static max-md:order-first max-md:mb-6 md:static md:col-start-1 md:row-start-1 md:self-center lg:absolute top-0 lg:top-auto lg:bottom-0" : "bottom-0"}`}
   set:html={Hero01}
 />
