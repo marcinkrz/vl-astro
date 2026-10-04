@@ -100,25 +100,19 @@ const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "en";
     <section class="mb-24">
       <div class="max-w-340 mx-auto grid bg-(--background-1)">
         <div
-          class="relative z-2 flex flex-col items-start justify-end aspect-auto p-4 pb-10 md:grid md:grid-cols-2 md:items-center md:gap-x-4 md:p-8 lg:flex lg:aspect-4/3 lg:items-end lg:justify-start lg:text-right lg:p-16 xl:aspect-video"
+          class="relative z-2 flex flex-col items-start aspect-auto p-4 pb-10 md:flex-row md:items-center md:gap-x-4 md:p-8 lg:aspect-4/3 lg:items-start lg:p-16 xl:aspect-video"
         >
-          <h2
-            class="display text-(--foreground) mb-4 text-balance md:col-start-2 lg:col-start-auto"
-          >
-            Have a project in mind?
-          </h2>
-          <p
-            class="mb-6 max-w-[48ch] text-(--muted) text-pretty md:col-start-2 lg:col-start-auto"
-          >
-            Fill out the short, non-binding brief — six quick questions, about
-            a minute. You'll get a reply within two business days.
-          </p>
-          <Button
-            class="md:col-start-2 lg:col-start-auto"
-            href={getRoute(locale, "brief")}
-            >Request a quote</Button
-          >
-          <HeroArt left top />
+          <div class="contents md:block md:flex-1">
+            <h2 class="display text-(--foreground) mb-4 text-balance">
+              Have a project in mind?
+            </h2>
+            <p class="mb-6 max-w-[48ch] text-(--muted) text-pretty">
+              Fill out the short, non-binding brief — six quick questions, about
+              a minute. You'll get a reply within two business days.
+            </p>
+            <Button href={getRoute(locale, "brief")}>Request a quote</Button>
+          </div>
+          <HeroArt top />
         </div>
       </div>
     </section>
