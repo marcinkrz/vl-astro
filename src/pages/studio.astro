@@ -1,12 +1,119 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import Button from "@/components/_ui/Button.astro";
+import HeroArt from "@/components/HeroArt.astro";
+import { getRoute } from "@/i18n/routes";
+
+const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "en";
 ---
 
-<BaseLayout>
+<BaseLayout
+  title="Design studio — websites & branding"
+  description="Independent design studio: brand identities, websites and online stores. No middlemen — design and code under one roof."
+>
   <div class="container">
-    <h1 class="display mt-24 mb-4">Studio</h1>
-    <p class="mb-12 text-(--muted)">About our studio.</p>
-    <a class="link" href="/style-guide">Visual Style Guide</a>
-    <div class="mt-12 w-full pb-[56%] flex bg-(--background-1)"></div>
+    <header class="mt-36 mb-16 md:mb-24">
+      <h1 class="display mb-5">Visual Label — Design studio</h1>
+      <p class="h3 max-w-[52ch] text-(--muted) text-pretty">
+        An independent, one-person design studio creating brand identities and
+        websites — work that looks good, works well and sells.
+      </p>
+    </header>
+
+    <div
+      class="mb-16 md:mb-24 w-full aspect-3/2 md:aspect-video overflow-hidden bg-(--background-1)"
+    >
+      <img
+        src="/images/studio-02.jpg"
+        alt="Visual Label — studio workspace"
+        loading="lazy"
+        class="w-full h-full object-cover"
+      />
+    </div>
+
+    <section class="mb-16 md:mb-24 border-t border-(--border)">
+      <h2 class="mt-1 mb-6 text-xs font-mono uppercase text-(--muted)">
+        About the studio
+      </h2>
+      <p class="h4 mb-5 max-w-[70ch] text-pretty">
+        No account managers, no middlemen — from the first brief to the final
+        production files, every project stays in the hands of one designer.
+      </p>
+      <p class="max-w-[70ch] text-(--muted) text-pretty">
+        Graphic design meets code under one roof: identities, websites and
+        print materials are designed and built together, so what looks good on
+        paper also works in the browser.
+      </p>
+    </section>
+
+    <div
+      class="mb-16 md:mb-24 w-full aspect-3/2 md:aspect-video overflow-hidden bg-(--background-1)"
+    >
+      <img
+        src="/images/studio-03.jpg"
+        alt="Printed brand identity materials on a desk"
+        loading="lazy"
+        class="w-full h-full object-cover"
+      />
+    </div>
+
+    <section class="mb-16 md:mb-24 border-t border-(--border)">
+      <h2 class="mt-1 mb-6 text-xs font-mono uppercase text-(--muted)">
+        Services
+      </h2>
+      <ul class="grid gap-x-2 md:gap-x-4 lg:gap-x-6 gap-y-10 md:grid-cols-2">
+        <li class="pt-5 border-t border-(--border)">
+          <p class="mb-2 text-xs font-mono uppercase text-(--muted)">01</p>
+          <h3 class="h4 mb-1">Logo &amp; brand identity</h3>
+          <p class="text-sm text-(--muted) text-pretty">
+            Logos and visual identity systems that scale from a business card
+            to a billboard.
+          </p>
+        </li>
+        <li class="pt-5 border-t border-(--border)">
+          <p class="mb-2 text-xs font-mono uppercase text-(--muted)">02</p>
+          <h3 class="h4 mb-1">Websites</h3>
+          <p class="text-sm text-(--muted) text-pretty">
+            Fast, accessible websites designed and built in-house — design and
+            code under one roof.
+          </p>
+        </li>
+        <li class="pt-5 border-t border-(--border)">
+          <p class="mb-2 text-xs font-mono uppercase text-(--muted)">03</p>
+          <h3 class="h4 mb-1">Online stores</h3>
+          <p class="text-sm text-(--muted) text-pretty">
+            Conversion-focused e-commerce that stays true to your brand.
+          </p>
+        </li>
+        <li class="pt-5 border-t border-(--border)">
+          <p class="mb-2 text-xs font-mono uppercase text-(--muted)">04</p>
+          <h3 class="h4 mb-1">Print design</h3>
+          <p class="text-sm text-(--muted) text-pretty">
+            Business cards, catalogs and posters that carry the identity into
+            the physical world.
+          </p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="mb-24">
+      <div class="max-w-340 mx-auto grid bg-(--background-1)">
+        <div
+          class="relative z-2 flex flex-col items-start aspect-auto p-4 pb-10 md:flex-row md:items-center md:gap-x-4 md:p-8 lg:aspect-4/3 lg:items-start lg:p-16 xl:aspect-video"
+        >
+          <div class="contents md:block md:flex-1">
+            <h2 class="display text-(--foreground) mb-4 text-balance">
+              Have a project in mind?
+            </h2>
+            <p class="mb-6 max-w-[48ch] text-(--muted) text-pretty">
+              Got an idea? Tell us about it — a quote and timeline within two
+              business days.
+            </p>
+            <Button href={getRoute(locale, "brief")}>Request a quote</Button>
+          </div>
+          <HeroArt top />
+        </div>
+      </div>
+    </section>
   </div>
 </BaseLayout>

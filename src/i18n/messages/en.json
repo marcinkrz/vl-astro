@@ -16,7 +16,8 @@
     "copy": "{year} Visual Label. All rights reserved.",
     "srDark": "Switch to dark theme",
     "srLight": "Switch to light theme",
-    "srLocale": "Change language to Polish"
+    "srLocale": "Change language to Polish",
+    "srStyleguide": "Visual identity guidelines"
   },
   "projects": {
     "title": "Projects",

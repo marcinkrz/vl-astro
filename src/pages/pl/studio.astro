@@ -1,14 +1,120 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import Button from "@/components/_ui/Button.astro";
+import HeroArt from "@/components/HeroArt.astro";
+import { getRoute } from "@/i18n/routes";
+
+const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "pl";
 ---
 
-<BaseLayout>
+<BaseLayout
+  title="Studio projektowe — strony i identyfikacje"
+  description="Niezależne studio projektowe: identyfikacje wizualne, strony internetowe i sklepy. Bez pośredników — projekt i kod pod jednym dachem."
+>
   <div class="container">
-    <h1 class="display mt-24 mb-4">Studio</h1>
-    <p class="mb-12 text-(--muted)">O naszym studio.</p>
-    <a class="link" href="/pl/wytyczne-identyfikacji"
-      >Wytyczne identyfikacji wizualnej</a
+    <header class="mt-36 mb-16 md:mb-24">
+      <h1 class="display mb-5">Visual Label — Studio projektowe</h1>
+      <p class="h3 max-w-[52ch] text-(--muted) text-pretty">
+        Niezależne, jednoosobowe studio projektowe tworzące identyfikacje
+        wizualne i strony internetowe — tak, żeby dobrze wyglądały i skutecznie
+        działały.
+      </p>
+    </header>
+
+    <div
+      class="mb-16 md:mb-24 w-full aspect-3/2 md:aspect-video overflow-hidden bg-(--background-1)"
     >
-    <div class="mt-12 w-full pb-[56%] flex bg-(--background-1)"></div>
+      <img
+        src="/images/studio-02.jpg"
+        alt="Visual Label — wnętrze studia"
+        loading="lazy"
+        class="w-full h-full object-cover"
+      />
+    </div>
+
+    <section class="mb-16 md:mb-24 border-t border-(--border)">
+      <h2 class="mt-1 mb-6 text-xs font-mono uppercase text-(--muted)">
+        O studiu
+      </h2>
+      <p class="h4 mb-5 max-w-[70ch] text-pretty">
+        Bez account managerów i pośredników — od pierwszego briefu po finalne
+        pliki produkcyjne każdy projekt pozostaje w rękach jednego projektanta.
+      </p>
+      <p class="max-w-[70ch] text-(--muted) text-pretty">
+        Grafika spotyka się tu z kodem: identyfikacje, strony i materiały
+        drukowane powstają pod jednym dachem, więc to, co dobrze wygląda na
+        papierze, działa też w przeglądarce.
+      </p>
+    </section>
+
+    <div
+      class="mb-16 md:mb-24 w-full aspect-3/2 md:aspect-video overflow-hidden bg-(--background-1)"
+    >
+      <img
+        src="/images/studio-03.jpg"
+        alt="Wydrukowane materiały identyfikacji wizualnej na biurku"
+        loading="lazy"
+        class="w-full h-full object-cover"
+      />
+    </div>
+
+    <section class="mb-16 md:mb-24 border-t border-(--border)">
+      <h2 class="mt-1 mb-6 text-xs font-mono uppercase text-(--muted)">
+        Usługi
+      </h2>
+      <ul class="grid gap-x-2 md:gap-x-4 lg:gap-x-6 gap-y-10 md:grid-cols-2">
+        <li class="pt-5 border-t border-(--border)">
+          <p class="mb-2 text-xs font-mono uppercase text-(--muted)">01</p>
+          <h3 class="h4 mb-1">Logo i identyfikacja</h3>
+          <p class="text-sm text-(--muted) text-pretty">
+            Logo i systemy identyfikacji wizualnej, które skalują się od
+            wizytówki do bilbordu.
+          </p>
+        </li>
+        <li class="pt-5 border-t border-(--border)">
+          <p class="mb-2 text-xs font-mono uppercase text-(--muted)">02</p>
+          <h3 class="h4 mb-1">Strony internetowe</h3>
+          <p class="text-sm text-(--muted) text-pretty">
+            Szybkie, dostępne strony projektowane i kodowane w jednym miejscu —
+            projekt i kod pod jednym dachem.
+          </p>
+        </li>
+        <li class="pt-5 border-t border-(--border)">
+          <p class="mb-2 text-xs font-mono uppercase text-(--muted)">03</p>
+          <h3 class="h4 mb-1">Sklepy internetowe</h3>
+          <p class="text-sm text-(--muted) text-pretty">
+            Sklepy nastawione na konwersję, spójne z marką klienta.
+          </p>
+        </li>
+        <li class="pt-5 border-t border-(--border)">
+          <p class="mb-2 text-xs font-mono uppercase text-(--muted)">04</p>
+          <h3 class="h4 mb-1">Projekt druku</h3>
+          <p class="text-sm text-(--muted) text-pretty">
+            Wizytówki, katalogi i plakaty, które przenoszą identyfikację do
+            świata fizycznego.
+          </p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="mb-24">
+      <div class="max-w-340 mx-auto grid bg-(--background-1)">
+        <div
+          class="relative z-2 flex flex-col items-start aspect-auto p-4 pb-10 md:flex-row md:items-center md:gap-x-4 md:p-8 lg:aspect-4/3 lg:items-start lg:p-16 xl:aspect-video"
+        >
+          <div class="contents md:block md:flex-1">
+            <h2 class="display text-(--foreground) mb-4 text-balance">
+              Masz projekt?
+            </h2>
+            <p class="mb-6 max-w-[48ch] text-(--muted) text-pretty">
+              Masz pomysł na projekt? Opowiedz o nim — wycena i termin wrócą w
+              ciągu dwóch dni roboczych.
+            </p>
+            <Button href={getRoute(locale, "brief")}>Wyceń projekt</Button>
+          </div>
+          <HeroArt top />
+        </div>
+      </div>
+    </section>
   </div>
 </BaseLayout>
