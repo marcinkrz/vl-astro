@@ -12,6 +12,11 @@
   "switcher": {
     "label": "Zmień język"
   },
+  "login": {
+    "showPassword": "Pokaż hasło",
+    "hidePassword": "Ukryj hasło",
+    "wrongPassword": "Nieprawidłowe hasło"
+  },
   "footer": {
     "copy": "{year} Visual Label. Wszelkie prawa zastrzeżone.",
     "srDark": "Przełącz na ciemny motyw",
@@ -44,7 +49,12 @@
     "phone": "Telefon",
     "nip": "NIP (opcjonalnie)",
     "message": "Wiadomość",
-    "submit": "Wyślij"
+    "submit": "Wyślij",
+    "errors": {
+      "required": "To pole jest wymagane.",
+      "email": "Podaj prawidłowy adres e-mail.",
+      "network": "Brak połączenia z serwerem. Sprawdź internet i spróbuj ponownie."
+    }
   },
   "brief-form": {
     "next": "Dalej",
