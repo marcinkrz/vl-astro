@@ -7,12 +7,14 @@ import Hero01 from "@/../public/images/hero-01.svg?raw";
 
 interface Props {
   left?: boolean;
+  /** Mobile: grafika u góry panelu (desktop bez zmian — na dole). */
+  top?: boolean;
 }
 
-const { left = false } = Astro.props;
+const { left = false, top = false } = Astro.props;
 ---
 
 <div
-  class={`absolute z-1 w-full lg:w-1/2 bottom-0 ${left ? "left-0" : "right-0"}`}
+  class={`absolute z-1 w-full lg:w-1/2 ${left ? "left-0" : "right-0"} ${top ? "top-0 lg:top-auto lg:bottom-0" : "bottom-0"}`}
   set:html={Hero01}
 />
