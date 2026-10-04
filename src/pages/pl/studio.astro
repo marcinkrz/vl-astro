@@ -8,13 +8,13 @@ const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "pl";
 ---
 
 <BaseLayout
-  title="Studio"
-  description="Visual Label to niezależne studio projektowe — identyfikacje wizualne i strony internetowe powstające pod jednym dachem."
+  title="Studio projektowe — strony i identyfikacje"
+  description="Niezależne studio projektowe: identyfikacje wizualne, strony internetowe i sklepy. Bez pośredników — projekt i kod pod jednym dachem."
 >
   <div class="container">
     <header class="mt-36 mb-16 md:mb-24">
-      <p class="mb-3 text-xs font-mono uppercase text-(--muted)">Studio projektowe</p>
-      <h1 class="display mb-5">Studio</h1>
+      <p class="mb-3 text-xs font-mono uppercase text-(--muted)">Visual Label</p>
+      <h1 class="display mb-5">Studio projektowe</h1>
       <p class="h3 max-w-[52ch] text-(--muted) text-pretty">
         Niezależne, jednoosobowe studio projektowe tworzące identyfikacje
         wizualne i strony internetowe — tak, żeby dobrze wyglądały i skutecznie
@@ -108,8 +108,8 @@ const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "pl";
               Masz projekt?
             </h2>
             <p class="mb-6 max-w-[48ch] text-(--muted) text-pretty">
-              Wypełnij krótki, niezobowiązujący brief — 6 krótkich pytań,
-              minutka. Odpowiedź w ciągu dwóch dni roboczych.
+              Masz pomysł na projekt? Opowiedz o nim — wycena i termin wrócą w
+              ciągu dwóch dni roboczych.
             </p>
             <Button href={getRoute(locale, "brief")}>Wyceń projekt</Button>
           </div>
