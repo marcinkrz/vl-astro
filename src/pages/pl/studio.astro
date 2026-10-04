@@ -3,11 +3,8 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import Button from "@/components/_ui/Button.astro";
 import HeroArt from "@/components/HeroArt.astro";
 import { getRoute } from "@/i18n/routes";
-import { getT } from "@/i18n/messages";
-import { Clock5 } from "@lucide/astro";
 
 const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "pl";
-const t = getT(locale);
 ---
 
 <BaseLayout
@@ -15,10 +12,10 @@ const t = getT(locale);
   description="Visual Label to niezależne studio projektowe — identyfikacje wizualne i strony internetowe powstające pod jednym dachem."
 >
   <div class="container">
-    <header class="mt-24 mb-16 md:mb-24">
-      <p class="mb-4 text-xs font-mono uppercase text-(--muted)">Studio projektowe</p>
-      <h1 class="display mb-6">Studio</h1>
-      <p class="max-w-[65ch] text-lg text-(--muted)">
+    <header class="mt-36 mb-16 md:mb-24">
+      <p class="mb-3 text-xs font-mono uppercase text-(--muted)">Studio projektowe</p>
+      <h1 class="display mb-5">Studio</h1>
+      <p class="h3 max-w-[52ch] text-(--muted) text-pretty">
         Niezależne, jednoosobowe studio projektowe tworzące identyfikacje
         wizualne i strony internetowe — tak, żeby dobrze wyglądały i skutecznie
         działały.
@@ -40,11 +37,11 @@ const t = getT(locale);
       <h2 class="mt-1 mb-6 text-xs font-mono uppercase text-(--muted)">
         O studiu
       </h2>
-      <p class="h4 mb-6 max-w-[70ch]">
+      <p class="h4 mb-5 max-w-[70ch] text-pretty">
         Bez account managerów i pośredników — od pierwszego briefu po finalne
         pliki produkcyjne każdy projekt pozostaje w rękach jednego projektanta.
       </p>
-      <p class="max-w-[70ch] text-(--muted)">
+      <p class="max-w-[70ch] text-(--muted) text-pretty">
         Grafika spotyka się tu z kodem: identyfikacje, strony i materiały
         drukowane powstają pod jednym dachem, więc to, co dobrze wygląda na
         papierze, działa też w przeglądarce.
@@ -55,34 +52,34 @@ const t = getT(locale);
       <h2 class="mt-1 mb-6 text-xs font-mono uppercase text-(--muted)">
         Usługi
       </h2>
-      <ul class="grid gap-x-2 md:gap-x-4 lg:gap-x-6 gap-y-8 md:grid-cols-2">
-        <li class="pt-4 border-t border-(--border)">
+      <ul class="grid gap-x-2 md:gap-x-4 lg:gap-x-6 gap-y-10 md:grid-cols-2">
+        <li class="pt-5 border-t border-(--border)">
           <p class="mb-2 text-xs font-mono uppercase text-(--muted)">01</p>
           <h3 class="h4 mb-1">Logo i identyfikacja</h3>
-          <p class="text-sm text-(--muted)">
+          <p class="text-sm text-(--muted) text-pretty">
             Logo i systemy identyfikacji wizualnej, które skalują się od
             wizytówki do bilbordu.
           </p>
         </li>
-        <li class="pt-4 border-t border-(--border)">
+        <li class="pt-5 border-t border-(--border)">
           <p class="mb-2 text-xs font-mono uppercase text-(--muted)">02</p>
           <h3 class="h4 mb-1">Strony internetowe</h3>
-          <p class="text-sm text-(--muted)">
+          <p class="text-sm text-(--muted) text-pretty">
             Szybkie, dostępne strony projektowane i kodowane w jednym miejscu —
             projekt i kod pod jednym dachem.
           </p>
         </li>
-        <li class="pt-4 border-t border-(--border)">
+        <li class="pt-5 border-t border-(--border)">
           <p class="mb-2 text-xs font-mono uppercase text-(--muted)">03</p>
           <h3 class="h4 mb-1">Sklepy internetowe</h3>
-          <p class="text-sm text-(--muted)">
+          <p class="text-sm text-(--muted) text-pretty">
             Sklepy nastawione na konwersję, spójne z marką klienta.
           </p>
         </li>
-        <li class="pt-4 border-t border-(--border)">
+        <li class="pt-5 border-t border-(--border)">
           <p class="mb-2 text-xs font-mono uppercase text-(--muted)">04</p>
           <h3 class="h4 mb-1">Projekt druku</h3>
-          <p class="text-sm text-(--muted)">
+          <p class="text-sm text-(--muted) text-pretty">
             Wizytówki, katalogi i plakaty, które przenoszą identyfikację do
             świata fizycznego.
           </p>
@@ -101,22 +98,19 @@ const t = getT(locale);
       />
     </div>
 
-    <section class="mb-12">
-      <div
-        class="max-w-340 mx-auto grid bg-linear-to-br from-(--background-1) to-(--background-2)"
-      >
+    <section class="mb-24">
+      <div class="max-w-340 mx-auto grid bg-(--background-1)">
         <div
           class="relative z-2 aspect-2/3 lg:aspect-4/3 xl:aspect-video flex flex-col items-start p-4 md:p-8 lg:p-16"
         >
-          <h2 class="display text-(--foreground) mb-4">Masz projekt?</h2>
-          <p class="mb-6 max-w-[60ch] text-(--muted)">
+          <h2 class="display text-(--foreground) mb-4 text-balance">
+            Masz projekt?
+          </h2>
+          <p class="mb-6 max-w-[48ch] text-(--muted) text-pretty">
             Wypełnij krótki, niezobowiązujący brief — 6 krótkich pytań,
             minutka. Odpowiedź w ciągu dwóch dni roboczych.
           </p>
           <Button href={getRoute(locale, "brief")}>Wyceń projekt</Button>
-          <p class="mt-2 p-2 inline-flex text-xs leading-tight text-(--muted)">
-            <Clock5 class="h-4 mr-px" />{t("brief-form.[1].time")}
-          </p>
           <HeroArt />
         </div>
       </div>
