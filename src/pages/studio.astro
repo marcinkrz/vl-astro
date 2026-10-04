@@ -100,7 +100,7 @@ const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "en";
     <section class="mb-24">
       <div class="max-w-340 mx-auto grid bg-(--background-1)">
         <div
-          class="relative z-2 aspect-2/3 lg:aspect-4/3 xl:aspect-video flex flex-col items-start p-4 md:p-8 lg:p-16"
+          class="relative z-2 aspect-2/3 lg:aspect-4/3 xl:aspect-video flex flex-col items-end text-right p-4 md:p-8 lg:p-16"
         >
           <h2 class="display text-(--foreground) mb-4 text-balance">
             Have a project in mind?
@@ -110,7 +110,7 @@ const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "en";
             a minute. You'll get a reply within two business days.
           </p>
           <Button href={getRoute(locale, "brief")}>Request a quote</Button>
-          <HeroArt />
+          <HeroArt left />
         </div>
       </div>
     </section>
