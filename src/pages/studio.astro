@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Button from "@/components/_ui/Button.astro";
-import StudioCtaArt from "@/components/StudioCtaArt.astro";
+import HeroArt from "@/components/HeroArt.astro";
 import { getRoute } from "@/i18n/routes";
 import { getT } from "@/i18n/messages";
 import { Clock5 } from "@lucide/astro";
@@ -100,25 +100,24 @@ const t = getT(locale);
       />
     </div>
 
-    <section class="mb-12 border-t border-(--border)">
-      <div class="grid gap-8 md:grid-cols-2 md:gap-x-4 lg:gap-x-6 items-center">
-        <div>
-          <h2 class="h3 mb-2">Have a project in mind?</h2>
+    <section class="mb-12">
+      <div
+        class="max-w-340 mx-auto grid bg-linear-to-br from-(--background-1) to-(--background-2)"
+      >
+        <div
+          class="relative z-2 aspect-2/3 lg:aspect-4/3 xl:aspect-video flex flex-col items-start p-4 md:p-8 lg:p-16"
+        >
+          <h2 class="display text-(--foreground) mb-4">Have a project in mind?</h2>
           <p class="mb-6 max-w-[60ch] text-(--muted)">
             Fill out the short, non-binding brief — six quick questions, about
             a minute. You'll get a reply within two business days.
           </p>
-          <div class="flex flex-wrap gap-2">
-            <Button href={getRoute(locale, "brief")}>Start with the brief</Button>
-            <Button href={getRoute(locale, "projects")} variant="outline">
-              All projects
-            </Button>
-          </div>
+          <Button href={getRoute(locale, "brief")}>Request a quote</Button>
           <p class="mt-2 p-2 inline-flex text-xs leading-tight text-(--muted)">
             <Clock5 class="h-4 mr-px" />{t("brief-form.[1].time")}
           </p>
+          <HeroArt />
         </div>
-        <StudioCtaArt />
       </div>
     </section>
   </div>

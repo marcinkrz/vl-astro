@@ -1,0 +1,9 @@
+---
+// Animowana ilustracja hero (źródło: sekcja „Applications → Hero" na /style-guide).
+// hero-01.svg animuje się własnym CSS-em (keyframes w <defs>); kolory przez
+// var(--…), więc dopasowuje się do motywu. Raw import działa tak samo jak
+// na /style-guide (styl przewodni repo dla tej grafiki).
+import Hero01 from "@/../public/images/hero-01.svg?raw";
+---
+
+<div class="absolute z-1 w-full lg:w-1/2 bottom-0 right-0" set:html={Hero01} />
