@@ -17,26 +17,19 @@ const { title, description } = Astro.props as Props;
 
 const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as Locale;
 
-const siteName = "Visual Label";
+const siteName = "VISUAL LABEL";
 
 const defaultTitle =
   locale === "pl"
-    ? "Visual Label — Studio kreatywne"
-    : "Visual Label — Creative Studio";
+    ? "VISUAL LABEL — Studio kreatywne"
+    : "VISUAL LABEL — Creative Studio";
 
 const defaultDescription =
   locale === "pl"
     ? "Studio projektowe tworzące nowoczesne strony internetowe."
     : "Creative studio building modern websites.";
 
-// Nie doklejamy brandu, gdy strona przekazuje go już w tytule
-// (np. metaTitle z MDX: "Atelier Nova | Visual Label", strona główna
-// "Visual Label — Creative Studio") — bez tego powstawało "X | Visual Label | Visual Label".
-const pageTitle = title
-  ? title.includes(siteName)
-    ? title
-    : `${title} | ${siteName}`
-  : defaultTitle;
+const pageTitle = title ? `${title} — ${siteName}` : defaultTitle;
 const pageDescription = description ?? defaultDescription;
 ---
 

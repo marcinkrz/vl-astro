@@ -16,10 +16,7 @@ const projects = await getCollection(
 projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 ---
 
-<BaseLayout
-  title="Visual Label — Creative Studio"
-  description="Creative studio building modern websites."
->
+<BaseLayout>
   <main class="container-full">
     <section class="pb-12 h-[50vh] flex items-end">
       <h1 class="h1 text-pretty md:max-w-[75%] lg:max-w-[66%]">

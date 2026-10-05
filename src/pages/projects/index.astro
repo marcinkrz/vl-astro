@@ -17,7 +17,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 const tags = [...new Set(projects.flatMap((project) => project.data.tags))].sort();
 ---
 
-<BaseLayout>
+<BaseLayout title="Projects" description="">
   <main class="container-full mt-36 mb-24">
     <h1 class="display mb-3">
       {t("projects.title")}
