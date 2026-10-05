@@ -12,6 +12,9 @@
   "switcher": {
     "label": "Zmień język"
   },
+  "styleguide": {
+    "overviewToggle": "Przełącz widok całości"
+  },
   "login": {
     "showPassword": "Pokaż hasło",
     "hidePassword": "Ukryj hasło",

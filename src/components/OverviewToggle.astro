@@ -1,5 +1,9 @@
 ---
 import Button from "./_ui/Button.astro";
+import { getT, type Locale } from "@/i18n/messages";
+
+const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as Locale;
+const t = getT(locale);
 ---
 
 <Button
@@ -7,6 +11,7 @@ import Button from "./_ui/Button.astro";
   variant="primary"
   size="icon"
   class="fixed bottom-[8px] left-[8px] z-[100] p-[6px]"
+  aria-label={t("styleguide.overviewToggle")}
 >
   <svg
     width="18px"

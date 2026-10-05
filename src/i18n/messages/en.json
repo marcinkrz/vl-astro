@@ -12,6 +12,9 @@
   "switcher": {
     "label": "Switch language"
   },
+  "styleguide": {
+    "overviewToggle": "Toggle overview mode"
+  },
   "login": {
     "showPassword": "Show password",
     "hidePassword": "Hide password",

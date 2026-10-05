@@ -2,7 +2,7 @@
 import "../styles/global.css";
 import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
-import { getT, type Locale } from "@/i18n/messages";
+import { type Locale } from "@/i18n/messages";
 import LangRedirect from "@/components/LangRedirect.astro";
 import CookieManager from "@/components/CookieManager/CookieManager.astro";
 import Header from "../components/Header.astro";
@@ -16,21 +16,20 @@ interface Props {
 const { title, description } = Astro.props as Props;
 
 const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as Locale;
-const t = getT(locale);
 
-const siteName = "Visual Label";
+const siteName = "VISUAL LABEL";
 
 const defaultTitle =
   locale === "pl"
-    ? "Visual Label — Studio kreatywne"
-    : "Visual Label — Creative Studio";
+    ? "VISUAL LABEL — Studio kreatywne"
+    : "VISUAL LABEL — Creative Studio";
 
 const defaultDescription =
   locale === "pl"
     ? "Studio projektowe tworzące nowoczesne strony internetowe."
     : "Creative studio building modern websites.";
 
-const pageTitle = title ? `${title} | ${siteName}` : defaultTitle;
+const pageTitle = title ? `${title} — ${siteName}` : defaultTitle;
 const pageDescription = description ?? defaultDescription;
 ---
 
