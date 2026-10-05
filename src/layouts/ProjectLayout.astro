@@ -42,11 +42,11 @@ const tagTitles = getTagTitles(locale);
   <main class="container mt-16">
     <article class="space-y-12 md:space-y-24 my-24">
       <header class="mb-6">
-        <p class="mb-3 h3 max-w-[52ch] text-(--muted) text-pretty">{client}</p>
-        <h1 class="display mb-24">{description}</h1>
+        <p class="mb-3 h3 max-w-[52ch] text-(--muted) text-pretty motion-opacity-in-0 motion-translate-y-in-[4rem]">{client}</p>
+        <h1 class="display mb-24 motion-opacity-in-0 motion-translate-y-in-[8rem]">{description}</h1>
       </header>
 
-      <div class="mb-12 relative aspect-video overflow-hidden">
+      <div class="mb-12 relative aspect-video overflow-hidden motion-opacity-in-0 motion-translate-y-in-[12rem]">
         <div class="absolute w-full h-full object-cover bg-(--background-1)">
         </div>
         {
@@ -59,7 +59,7 @@ const tagTitles = getTagTitles(locale);
           )
         }
       </div>
-
+      
       <slot />
 
       <div class="mb-3 flex justify-between text-sm text-(--muted)">
