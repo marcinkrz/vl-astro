@@ -19,12 +19,12 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 <BaseLayout>
   <main class="container-full">
     <section class="pb-12 h-[50vh] flex items-end">
-      <h1 class="h1 text-pretty md:max-w-[75%] lg:max-w-[66%]">
+      <h1 class="display text-pretty md:max-w-[75%] lg:max-w-[66%] motion-opacity-in-0 motion-translate-y-in-100">
         Budowanie pożądanego wizerunku marki, w sieci i poza nią.
       </h1>
     </section>
-    <section class="mb-24 -mx-3 md:-mx-4 lg:mx-auto border-t border-(--border)">
-      <header class="mt-1 mb-3 px-3 md:px-4 lg:px-0 flex justify-between">
+    <section class="mb-24 -mx-3 md:-mx-4 lg:mx-auto">
+      <header class="mt-1 mb-3 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) motion-opacity-in-0 motion-translate-y-in-100">
         <h2 class="text-(--muted)">Projekty</h2>
         <Button href={getRoute(locale, "projects")} variant="link" class="items-baseline">
           {t("projects.btnTitle")}
@@ -33,9 +33,12 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
       <div class="relative w-full max-md:overflow-x-auto max-md:pl-2">
         <ul class="inline-flex md:grid grid-cols-3 md:gap-4">
           {
-            projects.map((project) => (
-              <li class="max-md:w-[66vw] max-md:pr-2">
-                <a href={`/pl/projekty/${project.id}`}>
+            projects.map((project, index) => (
+              <li
+                style={`--delay: ${index * 50}ms`}
+                class="max-md:w-[66vw] max-md:pr-2 motion-opacity-in-0 motion-translate-y-in-100 motion-delay-(--delay)"
+              >
+                <a class="group" href={`/pl/projekty/${project.id}`}>
                   <div class="relative aspect-3/2 overflow-hidden">
                     <div
                       class="absolute w-full h-full object-cover bg-(--background-1)"
@@ -45,7 +48,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
                         src={project.data.cover}
                         alt={project.data.title}
                         loading="lazy"
-                        class="absolute inset-0 w-full h-full object-cover"
+                        class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 group-active:scale-105"
                       />
                     )}
                   </div>

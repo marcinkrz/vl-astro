@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "./color-palette";
 
+@plugin "tailwindcss-motion";
+
 :root {
   --primary: var(--pallette-primary);
   --accent-1: var(--triadic-1);

@@ -20,7 +20,7 @@ const titles = getTagTitles(locale);
             type="button"
             data-filter-tag={tag}
             aria-pressed="false"
-            class="text-left text-(--muted) transition-colors hover:text-(--foreground) aria-pressed:text-(--foreground) aria-pressed:underline underline-offset-4"
+            class="text-left text-(--muted) transition-colors hover:text-(--foreground) aria-pressed:text-(--foreground) aria-pressed:underline underline-offset-4 cursor-pointer"
           >
             {titles[tag] ?? tag}
           </button>

@@ -42,8 +42,8 @@ const tagTitles = getTagTitles(locale);
   <main class="container mt-16">
     <article class="space-y-12 md:space-y-24 my-24">
       <header class="mb-6">
-        <p class="mb-3 text-sm text-(--muted)">{client}</p>
-        <h1 class="h1 md:max-w-3/4 lg:max-w-1/2">{description}</h1>
+        <p class="mb-3 h3 max-w-[52ch] text-(--muted) text-pretty">{client}</p>
+        <h1 class="display mb-24">{description}</h1>
       </header>
 
       <div class="mb-12 relative aspect-video overflow-hidden">
@@ -133,7 +133,7 @@ const tagTitles = getTagTitles(locale);
                       src={nextProject.cover}
                       alt={nextProject.title}
                       loading="lazy"
-                      class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 group-active:scale-105"
                     />
                   )}
                   <div class="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-black/60 to-transparent"></div>
