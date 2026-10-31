@@ -20,10 +20,10 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 <BaseLayout>
   <main class="container-full space-y-24">
     <section class="mb-0 pt-48 min-h-[50vh] flex flex-col items-start">
-      <h1 class="xl:max-w-1/2 mb-6 display text-balance motion-opacity-in-0 motion-translate-y-in-[4rem]">
+      <h1 class="xl:max-w-1/2 mb-6 display text-pretty motion-opacity-in-0 motion-translate-y-in-[4rem]">
         Creative services for businesses
       </h1>
-      <p class="lead text-balance motion-opacity-in-0 motion-translate-y-in-[4rem]">At Visual Label, we create the desired brand image, online and beyond.</p>
+      <p class="lead text-balance text-(--muted) motion-opacity-in-0 motion-translate-y-in-[4rem]">At Visual Label, we create the desired brand image, online and beyond.</p>
       <Button
         href={getRoute(locale, "brief")}
         variant="primary"
@@ -145,7 +145,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
                     )}
                   </div>
                   <div>
-                    <h2 class="h4 mt-2">{project.data.title}</h2>
+                    <h3 class="mt-2">{project.data.title}</h3>
                     <p class="col-span-3 text-sm text-(--muted)">
                       {project.data.description}
                     </p>

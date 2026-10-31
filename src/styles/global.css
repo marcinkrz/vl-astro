@@ -123,7 +123,6 @@ html {
   @apply gap-4 md:gap-8 lg:gap-12 xl:gap-16;
 }
 
-.display,
 .h1,
 .h2,
 .h3,
@@ -132,23 +131,23 @@ html {
 }
 
 .display {
-  @apply text-6xl sm:text-7xl xl:text-8xl leading-none! font-features-['liga'];
+  @apply text-[3.25rem] sm:text-[3.75rem] md:text-[4.25rem] lg:text-[5rem] xl:text-[6rem] 2xl:text-[7rem] leading-none! font-features-['liga'] tracking-tighter;
 }
 
 .h1 {
-  @apply text-3xl sm:text-4xl xl:text-5xl leading-[1.1]!;
+  @apply text-4xl sm:text-5xl xl:text-6xl leading-[1.1]!;
 }
 
 .h2 {
-  @apply text-2xl xl:text-3xl leading-[1.1]!;
+  @apply text-3xl xl:text-4xl leading-[1.1]!;
 }
 
 .h3 {
-  @apply text-xl xl:text-2xl leading-tight!;
+  @apply text-2xl xl:text-3xl leading-tight!;
 }
 
 .h4 {
-  @apply text-lg xl:text-xl leading-tight!;
+  @apply text-xl xl:text-2xl leading-tight!;
 }
 
 .link {

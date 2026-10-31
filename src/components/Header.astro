@@ -135,7 +135,7 @@ const isActive = (href: string) =>
     `}
   >
     <nav class={`
-      relative z-2 bg-(--background)
+      relative z-2 bg-linear-to-b from-(--background) to-transparent
       transition-transition-all duration-300
       -translate-y-full group-[.is-active]:translate-y-0
       `}
@@ -152,7 +152,7 @@ const isActive = (href: string) =>
         }
       </ul>
     </nav>
-    <div id="mobile-nav-close" class="absolute inset-0 z-1 bg-(--background) opacity-10"></div>
+    <div id="mobile-nav-close" class="absolute inset-0 z-1 bg-(--background) opacity-60"></div>
   </div>
 
   <div class="absolute inset-0 bg-linear-to-b from-(--background) from-25% to-transparent"></div>
