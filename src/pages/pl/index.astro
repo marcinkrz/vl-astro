@@ -21,7 +21,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
   <main class="container-full space-y-24">
     <section class="mb-0 pt-48 min-h-[50vh] flex flex-col items-start">
       <h1
-        class="xl:max-w-1/2 mb-6 display text-pretty motion-opacity-in-0 motion-translate-y-in-[4rem]"
+        class="xl:max-w-1/2 mb-3 display text-pretty motion-opacity-in-0 motion-translate-y-in-[4rem]"
       >
         Kreatywne usługi dla biznesu
       </h1>
@@ -40,7 +40,9 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
       </Button>
     </section>
 
-    <section class="-mx-3 md:-mx-4 pb-8 lg:mx-auto max-md:border-b border-(--border)">
+    <section
+      class="-mx-3 md:-mx-4 pb-8 lg:mx-auto max-md:border-b border-(--border)"
+    >
       <header
         class="mt-1 mb-6 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) motion-opacity-in-0 motion-translate-y-in-[12rem]"
       >
@@ -51,78 +53,73 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
         <ul
           class="px-3 md:px-4 lg:px-0 grid grid-cols-2 lg:grid-cols-4 gap-3 max-lg:gap-y-6"
         >
-          <li class="pb-4 border-b border-(--border)">
-            <div class="w-full flex gap-4">
-              <p class="mb-3 font-mono uppercase text-(--muted)">01</p>
-              <h3 class="mb-3">
-                <Button
-                  variant="link"
-                  class="h-auto h3 font-normal text-left whitespace-normal"
-                >
-                  Logo i identyfikacja
-                </Button>
-              </h3>
-            </div>
+          <li class="pb-4 motion-opacity-in-0 motion-translate-y-in-[16rem]">
+            <div class="mb-4 aspect-square border border-(--border)"></div>
+            <h3 class="mb-1">
+              <Button
+                variant="link"
+                class="h-auto h4 font-normal text-left whitespace-normal"
+              >
+                Logo i identyfikacja
+              </Button>
+            </h3>
             <p class="text-sm text-(--muted) text-pretty">
               Logo i systemy identyfikacji wizualnej, które skalują się od
               wizytówki do bilbordu.
             </p>
           </li>
-          <li class="pb-4 border-b border-(--border)">
-            <div class="w-full flex gap-4">
-              <p class="mb-3 font-mono uppercase text-(--muted)">02</p>
-              <h3 class="mb-3">
-                <Button
-                  variant="link"
-                  class="h-auto h3 font-normal text-left whitespace-normal"
-                >
-                  Strony internetowe
-                </Button>
-              </h3>
-            </div>
+          <li class="pb-4 motion-opacity-in-0 motion-translate-y-in-[16rem]">
+            <div class="mb-4 aspect-square border border-(--border)"></div>
+            <h3 class="mb-1">
+              <Button
+                variant="link"
+                class="h-auto h4 font-normal text-left whitespace-normal"
+              >
+                Strony internetowe
+              </Button>
+            </h3>
             <p class="text-sm text-(--muted) text-pretty">
-              Szybkie, dostępne strony projektowane i kodowane w jednym miejscu, projekt i kod pod jednym dachem.
+              Szybkie, dostępne strony projektowane i kodowane w jednym miejscu,
+              projekt i kod pod jednym dachem.
             </p>
           </li>
-          <li class="pb-4 md:border-b border-(--border)">
-            <div class="w-full flex gap-4">
-              <p class="mb-3 font-mono uppercase text-(--muted)">03</p>
-              <h3 class="mb-3">
-                <Button
-                  variant="link"
-                  class="h-auto h3 font-normal text-left whitespace-normal"
-                >
-                  Projekt druku
-                </Button>
-              </h3>
-            </div>
+          <li class="pb-4 motion-opacity-in-0 motion-translate-y-in-[16rem]">
+            <div class="mb-4 aspect-square border border-(--border)"></div>
+            <h3 class="mb-1">
+              <Button
+                variant="link"
+                class="h-auto h4 font-normal text-left whitespace-normal"
+              >
+                Sklepy internetowe
+              </Button>
+            </h3>
+            <p class="text-sm text-(--muted) text-pretty">
+              Sklepy nastawione na konwersję, spójne z marką klienta.
+            </p>
+          </li>
+          <li class="pb-4 motion-opacity-in-0 motion-translate-y-in-[16rem]">
+            <div class="mb-4 aspect-square border border-(--border)"></div>
+            <h3 class="mb-1">
+              <Button
+                variant="link"
+                class="h-auto h4 font-normal text-left whitespace-normal"
+              >
+                Projekt druku
+              </Button>
+            </h3>
             <p class="text-sm text-(--muted) text-pretty">
               Wizytówki, katalogi i plakaty, które przenoszą identyfikację do
               świata fizycznego.
-            </p>
-          </li>
-          <li class="pb-4 md:border-b border-(--border)">
-            <div class="w-full flex gap-4">
-              <p class="mb-3 font-mono uppercase text-(--muted)">04</p>
-              <h3 class="mb-3">
-                <Button
-                  variant="link"
-                  class="h-auto h3 font-normal text-left whitespace-normal"
-                >
-                  Sklepy internetowe
-                </Button>
-              </h3>
-            </div>
-            <p class="text-sm text-(--muted) text-pretty">
-              Sklepy nastawione na konwersję, spójne z marką klienta.
             </p>
           </li>
         </ul>
       </div>
     </section>
 
-    <section class=" mb-24 -mx-3 md:-mx-4 lg:mx-auto">
-      <h2 class="display mb-4 px-3 md:px-4 lg:px-0">Sprawdź nasze realizacje</h2>
+    <section class="mb-24 -mx-3 md:-mx-4 lg:mx-auto">
+      <h2 class="display mb-4 px-3 md:px-4 lg:px-0">
+        Sprawdź nasze realizacje
+      </h2>
       <header
         class="mt-1 mb-6 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) motion-opacity-in-0 motion-translate-y-in-[12rem]"
       >

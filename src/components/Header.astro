@@ -129,18 +129,18 @@ const isActive = (href: string) =>
     class={`
       group
       fixed z-1 inset-0
-      flex flex-col
-      transition-transition-visible duration-300
+      flex flex-col items-center
+      will-change transition-transition-visible duration-400
       invisible [.is-active]:visible
     `}
   >
     <nav class={`
-      relative z-2 bg-linear-to-b from-(--background) to-transparent
-      transition-transition-all duration-300
-      -translate-y-full group-[.is-active]:translate-y-0
+      relative z-2
+      transition-transition-all duration-200
+      -translate-y-full group-[.is-active]:translate-y-1/2
       `}
     >
-      <ul class="relative z-2 container mt-24 md:mt-32 mb-12 md:mb-16 space-y-6">
+      <ul class="relative z-2 container mt-24 md:mt-32 mb-12 md:mb-16 space-y-12">
         {
           items.map((item) => (
             <li>
@@ -152,7 +152,7 @@ const isActive = (href: string) =>
         }
       </ul>
     </nav>
-    <div id="mobile-nav-close" class="absolute inset-0 z-1 bg-(--background) opacity-60"></div>
+    <div class="absolute inset-0 z-1 bg-(--background) opacity-80"></div>
   </div>
 
   <div class="absolute inset-0 bg-linear-to-b from-(--background) from-25% to-transparent"></div>
@@ -162,17 +162,9 @@ const isActive = (href: string) =>
     const footer = document.getElementById("main-footer");
     const main = document.querySelector("main");
     const mobileNav = document.getElementById("mobile-nav");
-    const mobileNavClose = document.getElementById("mobile-nav-close");
     const toggleButton = document.getElementById("menu-toggle");
 
     toggleButton?.addEventListener("click", () => {
-      toggleButton?.classList.toggle("is-active");
-      mobileNav?.classList.toggle("is-active");
-      main?.classList.toggle("blur-sm");
-      footer?.classList.toggle("blur-sm");
-    });
-
-    mobileNavClose?.addEventListener("click", () => {
       toggleButton?.classList.toggle("is-active");
       mobileNav?.classList.toggle("is-active");
       main?.classList.toggle("blur-sm");

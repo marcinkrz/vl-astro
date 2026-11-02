@@ -20,10 +20,16 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 <BaseLayout>
   <main class="container-full space-y-24">
     <section class="mb-0 pt-48 min-h-[50vh] flex flex-col items-start">
-      <h1 class="xl:max-w-1/2 mb-6 display text-pretty motion-opacity-in-0 motion-translate-y-in-[4rem]">
+      <h1
+        class="xl:max-w-1/2 mb-3 display text-pretty motion-opacity-in-0 motion-translate-y-in-[4rem]"
+      >
         Creative services for businesses
       </h1>
-      <p class="lead text-balance text-(--muted) motion-opacity-in-0 motion-translate-y-in-[4rem]">At Visual Label, we create the desired brand image, online and beyond.</p>
+      <p
+        class="lead text-balance text-(--muted) motion-opacity-in-0 motion-translate-y-in-[4rem]"
+      >
+        At Visual Label, we create the desired brand image, online and beyond.
+      </p>
       <Button
         href={getRoute(locale, "brief")}
         variant="primary"
@@ -34,9 +40,11 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
       </Button>
     </section>
 
-    <section class="-mx-3 md:-mx-4 pb-8 lg:mx-auto max-md:border-b border-(--border)">
+    <section
+      class="-mx-3 md:-mx-4 pb-8 lg:mx-auto max-md:border-b border-(--border)"
+    >
       <header
-        class="mt-1 mb-6 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) motion-opacity-in-0 motion-translate-y-in-[12rem]"
+        class="mt-1 mb-6 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) motion-opacity-in-0 motion-translate-y-in-[12rem] motion-opacity-in-0 motion-translate-y-in-[4rem]"
       >
         <h2 class="text-(--muted)">Services</h2>
       </header>
@@ -45,68 +53,63 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
         <ul
           class="px-3 md:px-4 lg:px-0 grid grid-cols-2 lg:grid-cols-4 gap-3 max-lg:gap-y-6"
         >
-          <li class="pb-4 border-b border-(--border)">
-            <div class="w-full flex gap-4">
-              <p class="mb-3 font-mono uppercase text-(--muted)">01</p>
-              <h3 class="mb-3">
-                <Button
-                  variant="link"
-                  class="h-auto h3 font-normal text-left whitespace-normal"
-                >
-                  Logo &amp; brand identity
-                </Button>
-              </h3>
-            </div>
+          <li class="pb-4 motion-opacity-in-0 motion-translate-y-in-[16rem]">
+            <div class="mb-4 aspect-square border border-(--border)"></div>
+            <h3 class="mb-1">
+              <Button
+                variant="link"
+                class="h-auto h4 font-normal text-left whitespace-normal"
+              >
+                Logo &amp; brand identity
+              </Button>
+            </h3>
             <p class="text-sm text-(--muted) text-pretty">
-              Logos and visual identity systems that scale from a business card to a billboard.
+              Logos and visual identity systems that scale from a business card
+              to a billboard.
             </p>
           </li>
-          <li class="pb-4 border-b border-(--border)">
-            <div class="w-full flex gap-4">
-              <p class="mb-3 font-mono uppercase text-(--muted)">02</p>
-              <h3 class="mb-3">
-                <Button
-                  variant="link"
-                  class="h-auto h3 font-normal text-left whitespace-normal"
-                >
-                  Websites
-                </Button>
-              </h3>
-            </div>
+          <li class="pb-4 motion-opacity-in-0 motion-translate-y-in-[16rem]">
+            <div class="mb-4 aspect-square border border-(--border)"></div>
+            <h3 class="mb-1">
+              <Button
+                variant="link"
+                class="h-auto h4 font-normal text-left whitespace-normal"
+              >
+                Websites
+              </Button>
+            </h3>
             <p class="text-sm text-(--muted) text-pretty">
-              Fast, accessible websites designed and built in-house, design and code under one roof.
+              Fast, accessible websites designed and built in-house, design and
+              code under one roof.
             </p>
           </li>
-          <li class="pb-4 md:border-b border-(--border)">
-            <div class="w-full flex gap-3">
-              <p class="mb-3 font-mono uppercase text-(--muted)">03</p>
-              <h3 class="mb-3">
-                <Button
-                  variant="link"
-                  class="h-auto h3 font-normal text-left whitespace-normal"
-                >
-                  Print design
-                </Button>
-              </h3>
-            </div>
-            <p class="text-sm text-(--muted) text-pretty">
-              Business cards, catalogs and posters that carry the identity into the physical world.
-            </p>
-          </li>
-          <li class="pb-4 md:border-b border-(--border)">
-            <div class="w-full flex gap-3">
-              <p class="mb-3 font-mono uppercase text-(--muted)">04</p>
-              <h3 class="mb-3">
-                <Button
-                  variant="link"
-                  class="h-auto h3 font-normal text-left whitespace-normal"
-                >
-                  Online stores
-                </Button>
-              </h3>
-            </div>
+          <li class="pb-4 motion-opacity-in-0 motion-translate-y-in-[16rem]">
+            <div class="mb-4 aspect-square border border-(--border)"></div>
+            <h3 class="mb-1">
+              <Button
+                variant="link"
+                class="h-auto h4 font-normal text-left whitespace-normal"
+              >
+                Online stores
+              </Button>
+            </h3>
             <p class="text-sm text-(--muted) text-pretty">
               Conversion-focused e-commerce that stays true to your brand.
+            </p>
+          </li>
+          <li class="pb-4 motion-opacity-in-0 motion-translate-y-in-[16rem]">
+            <div class="mb-4 aspect-square border border-(--border)"></div>
+            <h3 class="mb-1">
+              <Button
+                variant="link"
+                class="h-auto h4 font-normal text-left whitespace-normal"
+              >
+                Print design
+              </Button>
+            </h3>
+            <p class="text-sm text-(--muted) text-pretty">
+              Business cards, catalogs and posters that carry the identity into
+              the physical world.
             </p>
           </li>
         </ul>
@@ -115,9 +118,15 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
     <section class="mb-24 -mx-3 md:-mx-4 lg:mx-auto">
       <h2 class="display mb-4 px-3 md:px-4 lg:px-0">Check out our work</h2>
-      <header class="mt-1 mb-6 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) motion-opacity-in-0 motion-translate-y-in-[12rem]">
+      <header
+        class="mt-1 mb-6 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) motion-opacity-in-0 motion-translate-y-in-[12rem]"
+      >
         <h2 class="text-(--muted)">Projects</h2>
-        <Button href={getRoute(locale, "projects")} variant="link" class="h-auto">
+        <Button
+          href={getRoute(locale, "projects")}
+          variant="link"
+          class="h-auto"
+        >
           {t("projects.btnTitle")}
           <MoveRight class="w-4 stroke-2" />
         </Button>
@@ -132,9 +141,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
               >
                 <a class="group" href={`/projects/${project.id}`}>
                   <div class="relative aspect-3/2 overflow-hidden">
-                    <div
-                      class="absolute w-full h-full object-cover bg-(--background-1)"
-                    ></div>
+                    <div class="absolute w-full h-full object-cover bg-(--background-1)" />
                     {project.data.cover && (
                       <img
                         src={project.data.cover}

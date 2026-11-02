@@ -131,7 +131,7 @@ html {
 }
 
 .display {
-  @apply text-[3.25rem] sm:text-[3.75rem] md:text-[4.25rem] lg:text-[5rem] xl:text-[6rem] 2xl:text-[7rem] leading-none! font-features-['liga'] tracking-tighter;
+  @apply text-[3rem] sm:text-[4rem] md:text-[5rem] lg:text-[6rem] xl:text-[7rem] leading-none! font-features-['liga'] tracking-tighter;
 }
 
 .h1 {
