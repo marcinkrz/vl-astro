@@ -126,24 +126,28 @@ const isActive = (href: string) =>
 
   <div
     id="mobile-nav"
-    class={`
-      group
-      fixed z-1 inset-0
-      flex flex-col items-center
-      will-change transition-transition-visible duration-400
-      invisible [.is-active]:visible
-    `}
+    class="group fixed z-1 inset-0 invisible [.is-active]:visible"
   >
     <nav class={`
-      relative z-2
-      transition-transition-all duration-200
-      -translate-y-full group-[.is-active]:translate-y-1/2
+      relative z-2 top-1/2 -translate-y-1/2
       `}
     >
-      <ul class="relative z-2 container mt-24 md:mt-32 mb-12 md:mb-16 space-y-12">
+      <ul class="relative z-2 text-center space-y-12">
         {
-          items.map((item) => (
-            <li>
+          items.map((item, index) => (
+            <li
+              class={`
+                transition-all duration-300
+                top-0 translate-y-3/4 opacity-0
+                group-[.is-active]:opacity-100
+                group-[.is-active]:top-1/2
+                group-[.is-active]:-translate-y-1/2
+                [transition-delay:${index * 50}ms]
+              `}
+              style={{
+                transitionDelay: `${index * 50}ms`
+              }}
+            >
               <a href={item.href} class="display">
                 {item.label}
               </a>
@@ -152,9 +156,9 @@ const isActive = (href: string) =>
         }
       </ul>
     </nav>
-    <div class="absolute inset-0 z-1 bg-(--background) opacity-80"></div>
+    <div class="absolute inset-0 z-1 bg-(--background) opacity-30"></div>
+    <div class="absolute inset-0 bg-linear-to-b from-(--background) to-transparent"></div>
   </div>
-
   <div class="absolute inset-0 bg-linear-to-b from-(--background) from-25% to-transparent"></div>
 </header>
 <script>
