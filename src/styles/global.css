@@ -111,6 +111,16 @@ html {
   @apply bg-(--background) text-(--foreground) font-(family-name:--font-copy) text-pretty;
 }
 
+html.reveal-on-scroll .motion-opacity-in-0:not(.is-in-view) {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-opacity-in-0 {
+    animation: none !important;
+  }
+}
+
 .container {
   @apply mx-auto px-3 md:px-4 lg:px-6 max-w-7xl;
 }

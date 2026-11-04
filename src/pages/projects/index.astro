@@ -30,8 +30,8 @@ const tags = [...new Set(projects.flatMap((project) => project.data.tags))].sort
       {
         projects.map((project, index) => (
           <li
-            style={`--delay: ${index * 50}ms; view-transition-name: project-card-${project.id}; view-transition-class: project-card`}
-            class="motion-opacity-in-0 motion-delay-(--delay)"
+            style={`--delay: ${index * 90}ms; view-transition-name: project-card-${project.id}; view-transition-class: project-card`}
+            class="motion-opacity-in-0 motion-translate-y-in-100 motion-delay-(--delay)"
             data-project-tags={JSON.stringify(project.data.tags)}
           >
             <a class="group" href={`/projects/${project.id}`}>

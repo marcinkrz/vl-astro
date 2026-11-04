@@ -24,8 +24,8 @@ const t = getT(locale);
             data-filter-tag={tag}
             data-clear-label={`${t("projects.clearFilter")} ${titles[tag] ?? tag}`}
             aria-pressed="false"
-            style={`--delay: ${index * 50}ms; view-transition-name: project-filter-${index}; view-transition-class: project-filter`}
-            class="h2 inline-flex items-center gap-2 whitespace-nowrap text-left text-(--foreground) transition-colors hover:text-(--muted) active:text-(--muted) aria-pressed:text-(--muted) cursor-pointer motion-opacity-in-0 motion-delay-(--delay)"
+            style={`--delay: ${index * 90}ms; view-transition-name: project-filter-${index}; view-transition-class: project-filter`}
+            class="h2 inline-flex items-center gap-2 whitespace-nowrap text-left text-(--foreground) transition-colors hover:text-(--muted) active:text-(--muted) aria-pressed:text-(--muted) cursor-pointer motion-opacity-in-0 motion-translate-y-in-100 motion-delay-(--delay)"
           >
             <X data-filter-close class="hidden size-4 shrink-0 stroke-3" aria-hidden="true" />
             {titles[tag] ?? tag}
