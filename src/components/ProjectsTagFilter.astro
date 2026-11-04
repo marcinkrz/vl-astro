@@ -1,5 +1,6 @@
 ---
-import { getTagTitles } from "@/i18n/messages";
+import { X } from "@lucide/astro";
+import { getT, getTagTitles } from "@/i18n/messages";
 
 interface Props {
   tags: string[];
@@ -9,20 +10,24 @@ interface Props {
 const { tags, ariaLabel } = Astro.props;
 const locale = Astro.currentLocale === "pl" ? "pl" : "en";
 const titles = getTagTitles(locale);
+const t = getT(locale);
 ---
 
 {
   tags.length > 0 && (
     <div class="mb-24">
+      <p class="mb-2 text-(--muted)">{t("projects.filterLabel")}</p>
       <div class="grid max-w-md grid-cols-2 gap-x-4 gap-y-2" role="group" aria-label={ariaLabel}>
         {tags.map((tag, index) => (
           <button
             type="button"
             data-filter-tag={tag}
+            data-clear-label={`${t("projects.clearFilter")} ${titles[tag] ?? tag}`}
             aria-pressed="false"
             style={`--delay: ${index * 50}ms`}
-            class="text-left text-(--muted) transition-colors hover:text-(--foreground) aria-pressed:text-(--foreground) aria-pressed:underline underline-offset-4 cursor-pointer motion-opacity-in-0 motion-translate-y-in-[8rem] motion-delay-(--delay)"
+            class="h2 inline-flex items-center gap-2 text-left text-(--muted) transition-colors hover:text-(--foreground) aria-pressed:text-(--foreground) cursor-pointer motion-opacity-in-0 motion-translate-y-in-[8rem] motion-delay-(--delay)"
           >
+            <X data-filter-close class="hidden size-4 shrink-0 stroke-3" aria-hidden="true" />
             {titles[tag] ?? tag}
           </button>
         ))}
@@ -31,36 +36,65 @@ const titles = getTagTitles(locale);
   )
 }
 
+<style is:global>
+  [data-filter-tag][hidden] { display: none; }
+  [data-filter-tag][aria-pressed="true"] [data-filter-close] { display: block; }
+  ::view-transition-group(.project-card) {
+    animation-duration: 400ms;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  ::view-transition-old(.project-card):only-child {
+    animation: 200ms ease-in both project-card-exit;
+  }
+  ::view-transition-new(.project-card):only-child {
+    animation: 300ms ease-out both project-card-enter;
+  }
+  @keyframes project-card-exit {
+    to { opacity: 0; transform: translateY(-50px); }
+  }
+  @keyframes project-card-enter {
+    from { opacity: 0; transform: translateY(50px); }
+  }
+</style>
+
 <script>
   document.addEventListener("astro:page-load", () => {
     const buttons = [...document.querySelectorAll<HTMLButtonElement>("[data-filter-tag]")];
     const items = [...document.querySelectorAll<HTMLElement>("[data-project-tags]")];
     if (buttons.length === 0 || items.length === 0) return;
 
+    const apply = (tag: string | null) => {
+      buttons.forEach((button) => {
+        const active = button.dataset.filterTag === tag;
+        button.hidden = tag !== null && !active;
+        button.setAttribute("aria-pressed", String(active));
+        if (active) button.setAttribute("aria-label", button.dataset.clearLabel ?? "");
+        else button.removeAttribute("aria-label");
+      });
+      items.forEach((item) => {
+        const tags: string[] = JSON.parse(item.dataset.projectTags ?? "[]");
+        item.hidden = tag !== null && !tags.includes(tag);
+      });
+    };
+
     buttons.forEach((button) => {
       button.addEventListener("click", () => {
-        const tag = button.dataset.filterTag;
-        const wasActive = button.getAttribute("aria-pressed") === "true";
-
-        buttons.forEach((b) => b.setAttribute("aria-pressed", "false"));
-        items.forEach((item) => {
-          item.hidden = false;
-        });
-
-        if (!wasActive && tag) {
-          button.setAttribute("aria-pressed", "true");
-          items.forEach((item) => {
-            const tags: string[] = JSON.parse(item.dataset.projectTags ?? "[]");
-            item.hidden = !tags.includes(tag);
-          });
+        const tag = button.getAttribute("aria-pressed") === "true"
+          ? null
+          : button.dataset.filterTag ?? null;
+        if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          document.startViewTransition(() => apply(tag));
+        } else {
+          apply(tag);
         }
+        const url = new URL(location.href);
+        if (tag) url.searchParams.set("tag", tag);
+        else url.searchParams.delete("tag");
+        history.replaceState(history.state, "", url);
       });
     });
 
-    /* Aktywuj filtr z parametru URL (?tag=klucz) — linki tagów ze strony projektu */
     const param = new URLSearchParams(location.search).get("tag");
-    if (param) {
-      buttons.find((b) => b.dataset.filterTag === param)?.click();
-    }
+    if (buttons.some((button) => button.dataset.filterTag === param)) apply(param);
   });
 </script>

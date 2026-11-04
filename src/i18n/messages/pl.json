@@ -33,6 +33,8 @@
     "btnTitle": "Wszystkie projekty",
     "clientTitle": "Klient",
     "tagsTitle": "Tagi",
+    "filterLabel": "Filtruj:",
+    "clearFilter": "Wyczyść filtr:",
     "yearTitle": "Rok",
     "prevProject": "Poprzedni projekt",
     "nextProject": "Następny projekt",
