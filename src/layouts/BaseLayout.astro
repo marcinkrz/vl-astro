@@ -83,7 +83,7 @@ const pageDescription = description ?? defaultDescription;
         const init = () => {
           if (run !== revealRun) return;
           if (!document.documentElement.classList.contains("reveal-on-scroll")) return;
-          const elements = [...document.querySelectorAll<HTMLElement>(".reveal:not(.is-revealed)")];
+          const elements = [...document.querySelectorAll<HTMLElement>(".reveal:not(.is-revealed), [data-reveal-group] > :not(.is-revealed)")];
           if (elements.length === 0) return;
 
           const reveal = (element: HTMLElement, delay = 0) => {

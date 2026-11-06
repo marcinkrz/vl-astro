@@ -60,7 +60,9 @@ const tagTitles = getTagTitles(locale);
         }
       </div>
       
-      <slot />
+      <div class="space-y-12 md:space-y-24" data-reveal-group>
+        <slot />
+      </div>
 
       <div class="mb-3 flex justify-between text-sm text-(--muted)">
         {

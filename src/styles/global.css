@@ -109,10 +109,13 @@ html {
   @apply bg-(--background) text-(--foreground) font-(family-name:--font-copy) text-pretty;
 }
 
-html.reveal-on-scroll .reveal:not(.is-revealed) {
+html.reveal-on-scroll .reveal:not(.is-revealed),
+html.reveal-on-scroll [data-reveal-group] > :not(.is-revealed) {
   opacity: 0;
   transform: translateY(var(--reveal-y, 0px));
 }
+
+[data-reveal-group] > * { --reveal-y: 8rem; }
 
 .reveal { --reveal-y: 0px; }
 .reveal-y-4 { --reveal-y: 4rem; }
