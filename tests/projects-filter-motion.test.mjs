@@ -74,14 +74,14 @@ test("removes Tailwind motion classes and the fixed filter height", () => {
   assert.doesNotMatch(source, /grid-template-rows/);
 });
 
-test("animates each visible filter top-down with a subtle stagger", () => {
+test("animates each visible filter top-down in 300ms", () => {
   const app = setup();
   const intro = app.animations.filter(({ target }) => target === app.one || target === app.two);
   assert.equal(intro.length, 2);
   assert.equal(intro[0].keyframes.y[0], "1rem");
-  assert.equal(intro[0].options.duration, 0.9);
-  assert.equal(intro[0].options.delay, 0.2);
-  assert.equal(intro[1].options.delay, 0.28);
+  assert.equal(intro[0].options.duration, 0.3);
+  assert.equal(intro[0].options.delay, 0.1);
+  assert.equal(intro[1].options.delay, 0.14);
 });
 
 test("animates a card again when clearing a filter reveals it", () => {

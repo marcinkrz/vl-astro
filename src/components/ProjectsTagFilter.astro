@@ -65,25 +65,26 @@ const t = getT(locale);
 
     const scrollReveal = document.documentElement.classList.contains("reveal-on-scroll");
 
-    const reveal = (element: HTMLElement) => {
+    const reveal = (element: HTMLElement, duration = 0.9) => {
       if (element.hidden || element.classList.contains("is-revealed")) return;
       element.classList.add("is-revealed");
       if (!scrollReveal) return;
       const visibleIndex = items.filter((item) => !item.hidden).indexOf(element);
+      const stagger = duration < 0.9 ? 0.04 : 0.08;
       animate(
         element,
         { opacity: [0, 1], y: ["1rem", 0] },
-        { duration: 0.9, delay: Math.max(visibleIndex, 0) * 0.08, ease: "easeInOut" },
+        { duration, delay: Math.max(visibleIndex, 0) * stagger, ease: "easeInOut" },
       );
     };
 
-    const revealVisible = () => {
+    const revealVisible = (duration = 0.9) => {
       requestAnimationFrame(() => {
         items
           .filter((item) => !item.hidden && !item.classList.contains("is-revealed"))
           .forEach((item) => {
             const rect = item.getBoundingClientRect();
-            if (rect.bottom > 0 && rect.top < innerHeight) reveal(item);
+            if (rect.bottom > 0 && rect.top < innerHeight) reveal(item, duration);
             else if (scrollReveal) inView(item, () => reveal(item), { amount: 0.15 });
             else reveal(item);
           });
@@ -95,7 +96,7 @@ const t = getT(locale);
       if (label && !label.classList.contains("is-filter-revealed")) {
         label.classList.add("is-filter-revealed");
         if (scrollReveal) {
-          animate(label, { opacity: [0, 1], y: ["1rem", 0] }, { duration: 0.9, delay: 0.1, ease: "easeInOut" });
+          animate(label, { opacity: [0, 1], y: ["1rem", 0] }, { duration: 0.3, delay: 0.05, ease: "easeInOut" });
         }
       }
       buttons
@@ -106,7 +107,7 @@ const t = getT(locale);
             animate(
               button,
               { opacity: [0, 1], y: ["1rem", 0] },
-              { duration: 0.9, delay: 0.2 + index * 0.08, ease: "easeInOut" },
+              { duration: 0.3, delay: 0.1 + index * 0.04, ease: "easeInOut" },
             );
           }
         });
@@ -163,7 +164,7 @@ const t = getT(locale);
           }
         }
 
-        revealVisible();
+        revealVisible(0.45);
         const url = new URL(location.href);
         if (tag) url.searchParams.set("tag", tag);
         else url.searchParams.delete("tag");
