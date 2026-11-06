@@ -39,11 +39,12 @@ function setup() {
   secondCard.classList.add("is-revealed");
   const buttons = [one, two];
   const cards = [firstCard, secondCard];
+  const group = element();
   const listeners = new Map();
   const animations = [];
   const document = {
     documentElement: { classList: { contains: (name) => name === "reveal-on-scroll" } },
-    querySelector: () => null,
+    querySelector: (selector) => (selector === "[data-filter-group]" ? group : null),
     addEventListener: (name, callback) => listeners.set(name, callback),
     querySelectorAll(selector) {
       if (selector === "[data-filter-tag]") return buttons;

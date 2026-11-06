@@ -56,9 +56,19 @@ const t = getT(locale);
 <script>
   import { animate, inView } from "motion";
 
+  let pendingTransition: ViewTransition | undefined;
+  document.addEventListener("astro:before-swap", (event) => {
+    pendingTransition = event.viewTransition;
+  });
+
   const isReducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   document.addEventListener("astro:page-load", () => {
+    const group = document.querySelector<HTMLElement>("[data-filter-group]");
+    if (!group || group.dataset.filterReady === "true") return;
+    group.dataset.filterReady = "true";
+
+    const init = () => {
     const buttons = [...document.querySelectorAll<HTMLButtonElement>("[data-filter-tag]")];
     const items = [...document.querySelectorAll<HTMLElement>("[data-project-card]")];
     if (buttons.length === 0 || items.length === 0) return;
@@ -152,6 +162,9 @@ const t = getT(locale);
           : button.dataset.filterTag ?? null;
 
         apply(tag);
+        if (!isReducedMotion()) {
+          animate(button, { opacity: [0, 1] }, { duration: 0.3, delay: 0.05, ease: "easeInOut" });
+        }
         revealFilters();
         items.forEach((item) => flip(previousCards, item));
 
@@ -176,5 +189,11 @@ const t = getT(locale);
     if (buttons.some((button) => button.dataset.filterTag === param)) apply(param);
     revealFilters();
     revealVisible();
+    };
+
+    const transition = pendingTransition;
+    pendingTransition = undefined;
+    if (transition) transition.finished.then(init, init);
+    else init();
   });
 </script>
