@@ -72,47 +72,62 @@ const pageDescription = description ?? defaultDescription;
       import { animate, inView } from "motion";
 
       let stopObserving: (() => void) | undefined;
+      let pendingTransition: ViewTransition | undefined;
+      let revealRun = 0;
 
       document.addEventListener("astro:page-load", () => {
         stopObserving?.();
-        if (!document.documentElement.classList.contains("reveal-on-scroll")) return;
-        const elements = [...document.querySelectorAll<HTMLElement>(".reveal:not(.is-revealed)")];
-        if (elements.length === 0) return;
+        stopObserving = undefined;
+        const run = ++revealRun;
 
-        const reveal = (element: HTMLElement, delay = 0) => {
-          if (element.classList.contains("is-revealed")) return;
-          element.classList.add("is-revealed");
-          element.getAnimations().forEach((animation) => animation.cancel());
-          const styles = getComputedStyle(element);
-          const y = styles.getPropertyValue("--reveal-y").trim() || "0px";
-          animate(
+        const init = () => {
+          if (run !== revealRun) return;
+          if (!document.documentElement.classList.contains("reveal-on-scroll")) return;
+          const elements = [...document.querySelectorAll<HTMLElement>(".reveal:not(.is-revealed)")];
+          if (elements.length === 0) return;
+
+          const reveal = (element: HTMLElement, delay = 0) => {
+            if (element.classList.contains("is-revealed")) return;
+            element.classList.add("is-revealed");
+            element.getAnimations().forEach((animation) => animation.cancel());
+            const styles = getComputedStyle(element);
+            const y = styles.getPropertyValue("--reveal-y").trim() || "0px";
+            animate(
+              element,
+              { opacity: [0, 1], y: [y, 0] },
+              { duration: 0.6, delay, ease: "easeInOut" },
+            );
+          };
+
+          const measured = elements.map((element, index) => ({
             element,
-            { opacity: [0, 1], y: [y, 0] },
-            { duration: 0.6, delay, ease: "easeInOut" },
-          );
+            index,
+            top: element.getBoundingClientRect().top,
+          }));
+          const above = measured
+            .filter(({ top }) => top < innerHeight)
+            .sort((a, b) => a.top - b.top || a.index - b.index);
+          const below = measured.filter(({ top }) => top >= innerHeight);
+
+          above.forEach(({ element }, order) => reveal(element, order * 0.08));
+
+          if (below.length > 0) {
+            stopObserving = inView(below.map(({ element }) => element), (element) => {
+              const delay = Number.parseFloat(getComputedStyle(element).getPropertyValue("--reveal-delay")) || 0;
+              reveal(element as HTMLElement, delay / 1000);
+            });
+          }
         };
 
-        const measured = elements.map((element, index) => ({
-          element,
-          index,
-          top: element.getBoundingClientRect().top,
-        }));
-        const above = measured
-          .filter(({ top }) => top < innerHeight)
-          .sort((a, b) => a.top - b.top || a.index - b.index);
-        const below = measured.filter(({ top }) => top >= innerHeight);
-
-        above.forEach(({ element }, order) => reveal(element, order * 0.08));
-
-        if (below.length > 0) {
-          stopObserving = inView(below.map(({ element }) => element), (element) => {
-            const delay = Number.parseFloat(getComputedStyle(element).getPropertyValue("--reveal-delay")) || 0;
-            reveal(element as HTMLElement, delay / 1000);
-          });
-        }
+        const transition = pendingTransition;
+        pendingTransition = undefined;
+        if (transition) transition.finished.then(init, init);
+        else init();
       });
 
       document.addEventListener("astro:before-swap", (event) => {
+        revealRun++;
+        pendingTransition = event.viewTransition;
         stopObserving?.();
         stopObserving = undefined;
         event.newDocument.documentElement.classList.toggle(

@@ -108,6 +108,22 @@ test("replace the observer after navigation without duplicate subscriptions", ()
   assert.equal(app.observations.length, 2);
 });
 
+test("wait for the page transition before starting navigation reveals", async () => {
+  const app = setup();
+  let finish;
+  const finished = new Promise((resolve) => { finish = resolve; });
+  app.emit("astro:before-swap", {
+    newDocument: { documentElement: root() },
+    viewTransition: { finished },
+  });
+  app.emit("astro:page-load");
+  assert.equal(app.animations.length, 0, "must not animate under the transition snapshot");
+  finish();
+  await finished;
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(app.animations.length, 1);
+});
+
 for (const options of [{ reduced: true }, { supported: false }]) {
   test(`keep content unpaused without scroll reveals: ${JSON.stringify(options)}`, () => {
     const app = setup(options);
