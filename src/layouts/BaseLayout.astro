@@ -69,17 +69,26 @@ const pageDescription = description ?? defaultDescription;
     <Footer />
     <CookieManager />
     <script>
-      import { inView } from "motion";
+      import { animate, inView } from "motion";
 
       let stopObserving: (() => void) | undefined;
 
       document.addEventListener("astro:page-load", () => {
         stopObserving?.();
         if (!document.documentElement.classList.contains("reveal-on-scroll")) return;
-        const elements = [...document.querySelectorAll<HTMLElement>(".motion-opacity-in-0")];
+        const elements = [...document.querySelectorAll<HTMLElement>(".reveal")];
         if (elements.length === 0) return;
         stopObserving = inView(elements, (element) => {
-          element.classList.add("is-in-view");
+          if (element.classList.contains("is-revealed")) return;
+          element.classList.add("is-revealed");
+          const styles = getComputedStyle(element);
+          const y = styles.getPropertyValue("--reveal-y").trim() || "0px";
+          const delay = Number.parseFloat(styles.getPropertyValue("--reveal-delay")) || 0;
+          animate(
+            element,
+            { opacity: [0, 1], y: [y, 0] },
+            { duration: 0.6, delay: delay / 1000, ease: "easeInOut" },
+          );
         });
       });
 

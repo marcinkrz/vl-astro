@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "./color-palette";
 
-@plugin "tailwindcss-motion";
-
 :root {
   --primary: var(--pallette-primary);
   --accent-1: var(--triadic-1);
@@ -111,15 +109,17 @@ html {
   @apply bg-(--background) text-(--foreground) font-(family-name:--font-copy) text-pretty;
 }
 
-html.reveal-on-scroll .motion-opacity-in-0:not(.is-in-view) {
-  animation-play-state: paused;
+html.reveal-on-scroll .reveal:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(var(--reveal-y, 0px));
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .motion-opacity-in-0 {
-    animation: none !important;
-  }
-}
+.reveal { --reveal-y: 0px; }
+.reveal-y-4 { --reveal-y: 4rem; }
+.reveal-y-8 { --reveal-y: 8rem; }
+.reveal-y-12 { --reveal-y: 12rem; }
+.reveal-y-16 { --reveal-y: 16rem; }
+.reveal-y-100 { --reveal-y: 100%; }
 
 .container {
   @apply mx-auto px-3 md:px-4 lg:px-6 max-w-7xl;

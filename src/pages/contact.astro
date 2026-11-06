@@ -8,8 +8,8 @@ const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as Locale;
 
 <BaseLayout title="Contact" description="Get in touch with us.">
   <div class="container mt-36 mb-24">
-    <h1 class="display mb-4 motion-opacity-in-0 motion-translate-y-in-[4rem]">Contact</h1>
-    <div class="motion-opacity-in-0 motion-translate-y-in-[8rem]">
+    <h1 class="display mb-4 reveal reveal-y-4">Contact</h1>
+    <div class="reveal reveal-y-8">
       <ContactForm locale={locale} client:load />
     </div>
   </div>

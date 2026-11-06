@@ -27,6 +27,7 @@ function setup({ reduced = false, supported = true } = {}) {
   const listeners = new Map();
   const element = root();
   const observations = [];
+  const animations = [];
   let stopped = 0;
   const document = {
     documentElement: root(),
@@ -37,15 +38,21 @@ function setup({ reduced = false, supported = true } = {}) {
     document,
     window: supported ? { IntersectionObserver: class {} } : {},
     matchMedia: () => ({ matches: reduced }),
+    getComputedStyle: () => ({
+      getPropertyValue: (name) => (name === "--reveal-y" ? "4rem" : name === "--reveal-delay" ? "50ms" : ""),
+    }),
     inView(elements, callback) {
       observations.push({ elements, callback });
       return () => { stopped++; };
+    },
+    animate(target, keyframes, options) {
+      animations.push({ target, keyframes, options });
     },
   };
   runInNewContext(inline, context);
   runInNewContext(code, context);
   return {
-    document, element, observations,
+    document, element, observations, animations,
     emit: (name, event = {}) => listeners.get(name)?.(event),
     stopped: () => stopped,
   };
@@ -64,9 +71,16 @@ test("reveal only the element reported by the viewport observer", () => {
   const app = setup();
   app.emit("astro:page-load");
   assert.equal(app.document.documentElement.classList.contains("reveal-on-scroll"), true);
-  assert.equal(app.element.classList.contains("is-in-view"), false);
+  assert.equal(app.element.classList.contains("is-revealed"), false);
   app.observations[0].callback(app.element);
-  assert.equal(app.element.classList.contains("is-in-view"), true);
+  assert.equal(app.element.classList.contains("is-revealed"), true);
+  assert.equal(app.animations.length, 1);
+  const [{ keyframes, options }] = app.animations;
+  assert.equal(keyframes.opacity[0], 0);
+  assert.equal(keyframes.opacity[1], 1);
+  assert.equal(keyframes.y[0], "4rem");
+  assert.equal(keyframes.y[1], 0);
+  assert.equal(options.delay, 0.05);
 });
 
 test("replace the observer after navigation without duplicate subscriptions", () => {
