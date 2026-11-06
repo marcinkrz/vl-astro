@@ -20,23 +20,27 @@ function root() {
         else classes.delete(name);
       },
     },
+    getAnimations: () => [],
   };
 }
 
-function setup({ reduced = false, supported = true } = {}) {
+function setup({ reduced = false, supported = true, top = 0 } = {}) {
   const listeners = new Map();
   const element = root();
+  element.getBoundingClientRect = () => ({ top, bottom: top + 200, left: 0, right: 200 });
   const observations = [];
   const animations = [];
   let stopped = 0;
   const document = {
     documentElement: root(),
-    querySelectorAll: () => [element],
+    querySelectorAll: (selector) =>
+      selector.includes(":not(.is-revealed)") && element.classList.contains("is-revealed") ? [] : [element],
     addEventListener: (name, callback) => listeners.set(name, callback),
   };
   const context = {
     document,
     window: supported ? { IntersectionObserver: class {} } : {},
+    innerHeight: 800,
     matchMedia: () => ({ matches: reduced }),
     getComputedStyle: () => ({
       getPropertyValue: (name) => (name === "--reveal-y" ? "4rem" : name === "--reveal-delay" ? "50ms" : ""),
@@ -59,7 +63,7 @@ function setup({ reduced = false, supported = true } = {}) {
 }
 
 test("prepare the incoming root before an Astro page swap", () => {
-  const app = setup();
+  const app = setup({ top: 900 });
   app.emit("astro:page-load");
   const nextRoot = root();
   app.emit("astro:before-swap", { newDocument: { documentElement: nextRoot } });
@@ -67,24 +71,36 @@ test("prepare the incoming root before an Astro page swap", () => {
   assert.equal(app.stopped(), 1);
 });
 
-test("reveal only the element reported by the viewport observer", () => {
+test("animate an above-fold element once on page load", () => {
   const app = setup();
   app.emit("astro:page-load");
-  assert.equal(app.document.documentElement.classList.contains("reveal-on-scroll"), true);
-  assert.equal(app.element.classList.contains("is-revealed"), false);
-  app.observations[0].callback(app.element);
   assert.equal(app.element.classList.contains("is-revealed"), true);
+  assert.equal(app.observations.length, 0);
   assert.equal(app.animations.length, 1);
   const [{ keyframes, options }] = app.animations;
   assert.equal(keyframes.opacity[0], 0);
   assert.equal(keyframes.opacity[1], 1);
   assert.equal(keyframes.y[0], "4rem");
   assert.equal(keyframes.y[1], 0);
-  assert.equal(options.delay, 0.05);
+  assert.equal(options.delay, 0);
+
+  app.emit("astro:page-load");
+  assert.equal(app.animations.length, 1, "a repeated page-load must not restart the animation");
+});
+
+test("reveal a below-fold element only when it enters the viewport", () => {
+  const app = setup({ top: 900 });
+  app.emit("astro:page-load");
+  assert.equal(app.element.classList.contains("is-revealed"), false);
+  assert.equal(app.animations.length, 0);
+  assert.equal(app.observations.length, 1);
+  app.observations[0].callback(app.element);
+  assert.equal(app.element.classList.contains("is-revealed"), true);
+  assert.equal(app.animations.length, 1);
 });
 
 test("replace the observer after navigation without duplicate subscriptions", () => {
-  const app = setup();
+  const app = setup({ top: 900 });
   app.emit("astro:page-load");
   app.emit("astro:before-swap", { newDocument: { documentElement: root() } });
   app.emit("astro:page-load");
