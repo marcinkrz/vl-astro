@@ -57,16 +57,14 @@ const messages = {
   }
   .screen.is-active {
     display: flex;
-    animation: screen-in .6s cubic-bezier(0.1, 0.8, 0.2, 1) both;
+    animation: screen-in 0.9s cubic-bezier(0.1, 0.8, 0.2, 1) both;
   }
   @keyframes screen-in {
     from {
       opacity: 0;
-      transform: translateY(3rem);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
     }
   }
   .screen h2:focus {
@@ -1059,6 +1057,8 @@ const messages = {
 </form>
 
 <script>
+  import { animate } from "motion";
+
   let globalCleanups: Array<() => void> = [];
 
   type BriefI18n = {
@@ -1115,6 +1115,22 @@ const messages = {
     const reduceMotion: boolean = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+
+    function animateScreenContent(screen: HTMLElement): void {
+      if (reduceMotion) return;
+      const items = Array.from(
+        screen.querySelectorAll<HTMLElement>(
+          "h2, legend:not(.hidden), p:not(.hidden), a[data-go], #brief-submit",
+        ),
+      );
+      items.forEach((item, index) => {
+        animate(
+          item,
+          { opacity: [0, 1], y: ["1rem", 0] },
+          { duration: 0.9, delay: index * 0.08, ease: "easeInOut" },
+        );
+      });
+    }
 
     const TOTAL_STEPS = 5;
 
@@ -1184,9 +1200,14 @@ const messages = {
       };
 
       if (!reduceMotion && document.startViewTransition) {
-        document.startViewTransition(apply);
+        const transition = document.startViewTransition(apply);
+        transition.finished.then(
+          () => animateScreenContent(next),
+          () => animateScreenContent(next),
+        );
       } else {
         apply();
+        animateScreenContent(next);
       }
 
       window.scrollTo({ top: 0, behavior: "instant" });
@@ -1756,6 +1777,8 @@ const messages = {
         if (submitBtn) submitBtn.disabled = false;
       }
     });
+
+    animateScreenContent(screens[current]!);
   }
 
   // Pierwsze ładowanie…
