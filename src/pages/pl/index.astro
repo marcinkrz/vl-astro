@@ -21,12 +21,12 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
   <main class="container-full space-y-24">
     <section class="mb-0 pt-48 min-h-[50vh] flex flex-col items-start">
       <h1
-        class="xl:max-w-1/2 mb-3 display text-pretty reveal reveal-y-4"
+        class="xl:max-w-1/2 mb-3 display text-pretty reveal"
       >
         Kreatywne usługi dla biznesu
       </h1>
       <p
-        class="lead text-balance text-(--muted) reveal reveal-y-8"
+        class="lead text-balance text-(--muted) reveal"
       >
         W Visual Label tworzymy pożądany wizerunek marki, w sieci i poza nią.
       </p>
@@ -34,7 +34,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
         href={getRoute(locale, "brief")}
         variant="primary"
         size="large"
-        class="mt-8 mb-12 reveal reveal-y-8"
+        class="mt-8 mb-12 reveal"
       >
         Wyceń projekt
       </Button>
@@ -44,7 +44,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
       class="-mx-3 md:-mx-4 pb-8 lg:mx-auto max-md:border-b border-(--border)"
     >
       <header
-        class="mt-1 mb-6 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) reveal reveal-y-8"
+        class="mt-1 mb-6 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) reveal"
       >
         <h2 class="text-(--muted)">Usługi</h2>
       </header>
@@ -53,7 +53,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
         <ul
           class="px-3 md:px-4 lg:px-0 grid grid-cols-2 lg:grid-cols-4 gap-3 max-lg:gap-y-6"
         >
-          <li class="pb-4 reveal reveal-y-8">
+          <li class="pb-4 reveal">
             <div class="mb-4 aspect-square border border-(--border)"></div>
             <h3 class="mb-1">
               <Button
@@ -68,7 +68,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
               wizytówki do bilbordu.
             </p>
           </li>
-          <li class="pb-4 reveal reveal-y-8">
+          <li class="pb-4 reveal">
             <div class="mb-4 aspect-square border border-(--border)"></div>
             <h3 class="mb-1">
               <Button
@@ -83,7 +83,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
               projekt i kod pod jednym dachem.
             </p>
           </li>
-          <li class="pb-4 reveal reveal-y-8">
+          <li class="pb-4 reveal">
             <div class="mb-4 aspect-square border border-(--border)"></div>
             <h3 class="mb-1">
               <Button
@@ -97,7 +97,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
               Sklepy nastawione na konwersję, spójne z marką klienta.
             </p>
           </li>
-          <li class="pb-4 reveal reveal-y-8">
+          <li class="pb-4 reveal">
             <div class="mb-4 aspect-square border border-(--border)"></div>
             <h3 class="mb-1">
               <Button
@@ -121,7 +121,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
         Sprawdź nasze realizacje
       </h2>
       <header
-        class="mt-1 mb-6 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) reveal reveal-y-8"
+        class="mt-1 mb-6 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) reveal"
       >
         <h2 class="text-(--muted)">Projekty</h2>
         <Button
@@ -139,7 +139,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
             projects.map((project, index) => (
               <li
                 style={`--reveal-delay: ${index * 50}ms`}
-                class="max-md:w-[66vw] max-md:pr-2 reveal reveal-y-8"
+                class="max-md:w-[66vw] max-md:pr-2 reveal"
               >
                 <a class="group" href={`/pl/projekty/${project.id}`}>
                   <div class="relative aspect-3/2 overflow-hidden">

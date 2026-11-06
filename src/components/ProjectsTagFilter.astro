@@ -44,12 +44,12 @@ const t = getT(locale);
 
   html.reveal-on-scroll [data-project-card]:not(.is-revealed) {
     opacity: 0;
-    transform: translateY(50px);
+    transform: translateY(1rem);
   }
-  html.reveal-on-scroll [data-filter-label],
-  html.reveal-on-scroll [data-filter-group] {
+  html.reveal-on-scroll [data-filter-label]:not(.is-filter-revealed),
+  html.reveal-on-scroll [data-filter-tag]:not(.is-filter-revealed) {
     opacity: 0;
-    transform: translateY(25px);
+    transform: translateY(1rem);
   }
 </style>
 
@@ -72,8 +72,8 @@ const t = getT(locale);
       const visibleIndex = items.filter((item) => !item.hidden).indexOf(element);
       animate(
         element,
-        { opacity: [0, 1], y: [50, 0] },
-        { duration: 0.6, delay: Math.max(visibleIndex, 0) * 0.05, ease: "easeInOut" },
+        { opacity: [0, 1], y: ["1rem", 0] },
+        { duration: 0.9, delay: Math.max(visibleIndex, 0) * 0.08, ease: "easeInOut" },
       );
     };
 
@@ -90,17 +90,33 @@ const t = getT(locale);
       });
     };
 
-    if (scrollReveal) {
+    const revealFilters = () => {
       const label = document.querySelector<HTMLElement>("[data-filter-label]");
-      const group = document.querySelector<HTMLElement>("[data-filter-group]");
-      if (label) animate(label, { opacity: [0, 1], y: [25, 0] }, { duration: 0.6, ease: "easeInOut" });
-      if (group) animate(group, { opacity: [0, 1], y: [25, 0] }, { duration: 0.6, delay: 0.2, ease: "easeInOut" });
-    }
+      if (label && !label.classList.contains("is-filter-revealed")) {
+        label.classList.add("is-filter-revealed");
+        if (scrollReveal) {
+          animate(label, { opacity: [0, 1], y: ["1rem", 0] }, { duration: 0.9, delay: 0.1, ease: "easeInOut" });
+        }
+      }
+      buttons
+        .filter((button) => !button.hidden && !button.classList.contains("is-filter-revealed"))
+        .forEach((button, index) => {
+          button.classList.add("is-filter-revealed");
+          if (scrollReveal) {
+            animate(
+              button,
+              { opacity: [0, 1], y: ["1rem", 0] },
+              { duration: 0.9, delay: 0.2 + index * 0.08, ease: "easeInOut" },
+            );
+          }
+        });
+    };
 
     const apply = (tag: string | null) => {
       buttons.forEach((button) => {
         const active = button.dataset.filterTag === tag;
         button.hidden = tag !== null && !active;
+        if (button.hidden) button.classList.remove("is-filter-revealed");
         button.setAttribute("aria-pressed", String(active));
         if (active) button.setAttribute("aria-label", button.dataset.clearLabel ?? "");
         else button.removeAttribute("aria-label");
@@ -120,7 +136,7 @@ const t = getT(locale);
       const x = before.left - now.left;
       const y = before.top - now.top;
       if (x === 0 && y === 0) return;
-      animate(element, { x: [x, 0], y: [y, 0] }, { duration: 0.4, ease: "easeInOut" });
+      animate(element, { x: [x, 0], y: [y, 0] }, { duration: 0.6, ease: "easeInOut" });
     };
 
     buttons.forEach((button) => {
@@ -135,6 +151,7 @@ const t = getT(locale);
           : button.dataset.filterTag ?? null;
 
         apply(tag);
+        revealFilters();
         items.forEach((item) => flip(previousCards, item));
 
         if (activeRect && !button.hidden) {
@@ -142,7 +159,7 @@ const t = getT(locale);
           const x = activeRect.left - next.left;
           const y = activeRect.top - next.top;
           if (!isReducedMotion() && (x !== 0 || y !== 0)) {
-            animate(button, { x: [x, 0], y: [y, 0] }, { duration: 0.4, ease: "easeInOut" });
+            animate(button, { x: [x, 0], y: [y, 0] }, { duration: 0.6, ease: "easeInOut" });
           }
         }
 
@@ -156,6 +173,7 @@ const t = getT(locale);
 
     const param = new URLSearchParams(location.search).get("tag");
     if (buttons.some((button) => button.dataset.filterTag === param)) apply(param);
+    revealFilters();
     revealVisible();
   });
 </script>

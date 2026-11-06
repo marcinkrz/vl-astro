@@ -43,7 +43,7 @@ function setup({ reduced = false, supported = true, top = 0 } = {}) {
     innerHeight: 800,
     matchMedia: () => ({ matches: reduced }),
     getComputedStyle: () => ({
-      getPropertyValue: (name) => (name === "--reveal-y" ? "4rem" : name === "--reveal-delay" ? "50ms" : ""),
+      getPropertyValue: (name) => (name === "--reveal-y" ? "1rem" : name === "--reveal-delay" ? "50ms" : ""),
     }),
     inView(elements, callback) {
       observations.push({ elements, callback });
@@ -80,7 +80,7 @@ test("animate an above-fold element once on page load", () => {
   const [{ keyframes, options }] = app.animations;
   assert.equal(keyframes.opacity[0], 0);
   assert.equal(keyframes.opacity[1], 1);
-  assert.equal(keyframes.y[0], "4rem");
+  assert.equal(keyframes.y[0], "1rem");
   assert.equal(keyframes.y[1], 0);
   assert.equal(options.delay, 0);
 

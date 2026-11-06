@@ -95,7 +95,7 @@ const pageDescription = description ?? defaultDescription;
             animate(
               element,
               { opacity: [0, 1], y: [y, 0] },
-              { duration: 0.6, delay, ease: "easeInOut" },
+              { duration: 0.9, delay, ease: "easeInOut" },
             );
           };
 
@@ -109,7 +109,7 @@ const pageDescription = description ?? defaultDescription;
             .sort((a, b) => a.top - b.top || a.index - b.index);
           const below = measured.filter(({ top }) => top >= innerHeight);
 
-          above.forEach(({ element }, order) => reveal(element, order * 0.08));
+          above.forEach(({ element }, order) => reveal(element, order * 0.1));
 
           if (below.length > 0) {
             stopObserving = inView(below.map(({ element }) => element), (element) => {
