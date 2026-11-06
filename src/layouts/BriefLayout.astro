@@ -62,9 +62,11 @@ const messages = {
   @keyframes screen-in {
     from {
       opacity: 0;
+      transform: translateY(1rem);
     }
     to {
       opacity: 1;
+      transform: translateY(0);
     }
   }
   .screen h2:focus {
@@ -1057,8 +1059,6 @@ const messages = {
 </form>
 
 <script>
-  import { animate } from "motion";
-
   let globalCleanups: Array<() => void> = [];
 
   type BriefI18n = {
@@ -1115,22 +1115,6 @@ const messages = {
     const reduceMotion: boolean = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-
-    function animateScreenContent(screen: HTMLElement): void {
-      if (reduceMotion) return;
-      const items = Array.from(
-        screen.querySelectorAll<HTMLElement>(
-          "h2, legend:not(.hidden), p:not(.hidden), a[data-go], #brief-submit",
-        ),
-      );
-      items.forEach((item, index) => {
-        animate(
-          item,
-          { opacity: [0, 1], y: ["1rem", 0] },
-          { duration: 0.9, delay: index * 0.08, ease: "easeInOut" },
-        );
-      });
-    }
 
     const TOTAL_STEPS = 5;
 
@@ -1200,14 +1184,9 @@ const messages = {
       };
 
       if (!reduceMotion && document.startViewTransition) {
-        const transition = document.startViewTransition(apply);
-        transition.finished.then(
-          () => animateScreenContent(next),
-          () => animateScreenContent(next),
-        );
+        document.startViewTransition(apply);
       } else {
         apply();
-        animateScreenContent(next);
       }
 
       window.scrollTo({ top: 0, behavior: "instant" });
@@ -1777,8 +1756,6 @@ const messages = {
         if (submitBtn) submitBtn.disabled = false;
       }
     });
-
-    animateScreenContent(screens[current]!);
   }
 
   // Pierwsze ładowanie…
