@@ -1189,8 +1189,6 @@ const messages = {
       if (index < 0 || index >= screens.length) return;
       const next = screens[index]!;
       const prev = screens[current];
-      // FIX: current aktualizowany SYNCHRONICZNIE — callback View Transition jest
-      // odroczony, więc pasek postępu i walidacja muszą czytać stan już teraz.
       current = index;
 
       const apply = (): void => {
@@ -1199,13 +1197,10 @@ const messages = {
         if (opts.animate !== false) animateScreenContent(next);
       };
 
-      if (opts.animate === false) {
-        apply();
-      } else if (!reduceMotion && document.startViewTransition) {
-        document.startViewTransition(apply);
-      } else {
-        apply();
-      }
+      // Zmiana ekranu bez View Transition: animacja wierszy startuje od razu.
+      // Pod cross-fade'em snapshot nowego ekranu łapie treść przy opacity 0,
+      // więc wejście czyta się jako dwa starty tej samej animacji.
+      apply();
 
       window.scrollTo({ top: 0, behavior: "instant" });
       if (opts.updateHash !== false) {
