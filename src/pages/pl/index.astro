@@ -4,7 +4,7 @@ import { getRoute } from "@/i18n/routes";
 import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Button from "@/components/_ui/Button.astro";
-import { MoveRight } from "@lucide/astro";
+import { Galaxy, LaptopMinimal, MoveRight, Stamp, Store } from "@lucide/astro";
 
 const locale = Astro.currentLocale === "pl" ? "pl" : "en";
 const t = getT(locale);
@@ -18,8 +18,8 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 ---
 
 <BaseLayout>
-  <main class="container-full space-y-24">
-    <section class="mb-0 pt-48 min-h-[50vh] flex flex-col items-start">
+  <main class="container-full space-y-32">
+    <section class="mb-0 min-h-[70vh] flex flex-col items-start justify-end">
       <h1
         class="xl:max-w-1/2 mb-3 display text-pretty reveal"
       >
@@ -34,17 +34,17 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
         href={getRoute(locale, "brief")}
         variant="primary"
         size="large"
-        class="mt-8 mb-12 reveal"
+        class="my-8 reveal"
       >
         Wyceń projekt
       </Button>
     </section>
 
     <section
-      class="-mx-3 md:-mx-4 pb-8 lg:mx-auto max-md:border-b border-(--border)"
+      class="-mx-3 md:-mx-4 lg:mx-auto max-md:border-b border-(--border)"
     >
       <header
-        class="mt-1 mb-6 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) reveal"
+        class="mt-1 mb-8 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) reveal"
       >
         <h2 class="text-(--muted)">Usługi</h2>
       </header>
@@ -53,14 +53,14 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
         <ul
           class="px-3 md:px-4 lg:px-0 grid grid-cols-2 lg:grid-cols-4 gap-3 max-lg:gap-y-6"
         >
-          <li class="pb-4 reveal">
-            <div class="mb-4 aspect-square border border-(--border)"></div>
+          <li class="reveal">
+            <Galaxy class="w-10 lg:w-14 h-auto mb-4 stroke-[1.5]" />
             <h3 class="mb-1">
               <Button
                 variant="link"
-                class="h-auto h4 font-normal text-left whitespace-normal"
+                class="h-auto h2 text-left whitespace-normal"
               >
-                Logo i identyfikacja
+                Identyfikacja
               </Button>
             </h3>
             <p class="text-sm text-(--muted) text-pretty">
@@ -68,12 +68,12 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
               wizytówki do bilbordu.
             </p>
           </li>
-          <li class="pb-4 reveal">
-            <div class="mb-4 aspect-square border border-(--border)"></div>
+          <li class="reveal">
+            <LaptopMinimal class="w-10 lg:w-14 h-auto mb-4 stroke-[1.5]" />
             <h3 class="mb-1">
               <Button
                 variant="link"
-                class="h-auto h4 font-normal text-left whitespace-normal"
+                class="h-auto h2 text-left whitespace-normal"
               >
                 Strony internetowe
               </Button>
@@ -83,12 +83,12 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
               projekt i kod pod jednym dachem.
             </p>
           </li>
-          <li class="pb-4 reveal">
-            <div class="mb-4 aspect-square border border-(--border)"></div>
+          <li class="reveal">
+            <Store class="w-10 lg:w-14 h-auto mb-4 stroke-[1.5]" />
             <h3 class="mb-1">
               <Button
                 variant="link"
-                class="h-auto h4 font-normal text-left whitespace-normal"
+                class="h-auto h2 text-left whitespace-normal"
               >
                 Sklepy internetowe
               </Button>
@@ -97,12 +97,12 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
               Sklepy nastawione na konwersję, spójne z marką klienta.
             </p>
           </li>
-          <li class="pb-4 reveal">
-            <div class="mb-4 aspect-square border border-(--border)"></div>
+          <li class="reveal">
+            <Stamp class="w-10 lg:w-14 h-auto mb-4 stroke-[1.5]" />
             <h3 class="mb-1">
               <Button
                 variant="link"
-                class="h-auto h4 font-normal text-left whitespace-normal"
+                class="h-auto h2 text-left whitespace-normal"
               >
                 Projekt druku
               </Button>

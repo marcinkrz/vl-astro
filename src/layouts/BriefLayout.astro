@@ -704,7 +704,7 @@ const messages = {
             />
             <label
               for="budget-unknown"
-              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--accent-1)"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
               >{t("brief-form.[3].budget.5")}</label
             >
           </div>
@@ -1077,7 +1077,6 @@ const messages = {
     ) as HTMLFormElement | null;
 
     if (!form) {
-      // Wyszliśmy z /brief (np. /contact) — zdejmij globalne listenery.
       globalCleanups.forEach((fn) => fn());
       globalCleanups = [];
       return;
@@ -1088,13 +1087,10 @@ const messages = {
     globalCleanups.forEach((fn) => fn());
     globalCleanups = [];
 
-    // FIX: żaden przycisk poza właściwym submit-em nie wysyła formularza
-    // (klik w padding Buttona wokół kotwicy = niejawny submit → skok do brief).
     form.querySelectorAll("button").forEach((b) => {
       if (b.id !== "brief-submit") b.setAttribute("type", "button");
     });
 
-    // ---------- i18n z <script type="application/json"> ----------
     let i18n: BriefI18n = { locale: "en", errors: {} };
     const i18nEl = document.getElementById("brief-i18n");
     if (i18nEl?.textContent) {
@@ -1109,7 +1105,6 @@ const messages = {
     }
     const msg: Record<string, string> = i18n.errors;
 
-    // ---------- Nawigacja ekranowa ----------
     const screens: HTMLElement[] = Array.from(
       form.querySelectorAll<HTMLElement>("section.screen"),
     );
