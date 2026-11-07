@@ -1184,6 +1184,7 @@ const messages = {
     interface ShowOptions {
       updateHash?: boolean;
       focusHeading?: boolean;
+      animate?: boolean;
     }
 
     function show(target: string | number, opts: ShowOptions = {}): void {
@@ -1198,10 +1199,12 @@ const messages = {
       const apply = (): void => {
         if (prev && prev !== next) prev.classList.remove("is-active");
         next.classList.add("is-active");
-        animateScreenContent(next);
+        if (opts.animate !== false) animateScreenContent(next);
       };
 
-      if (!reduceMotion && document.startViewTransition) {
+      if (opts.animate === false) {
+        apply();
+      } else if (!reduceMotion && document.startViewTransition) {
         document.startViewTransition(apply);
       } else {
         apply();
@@ -1647,11 +1650,15 @@ const messages = {
     form.addEventListener("change", saveDraft);
     restoreDraft();
 
-    // Wejście z hashem w URL / start od pierwszego ekranu
+    // Wejście z hashem w URL — ustaw ekran bez animacji i bez View Transition.
+    // Animację pierwszego ekranu odpala animateScreenContent() na końcu initBrief(),
+    // dokładnie raz (na iOS callback View Transition startuje później i powtarzał wejście).
     if (location.hash) {
-      show(location.hash.slice(1), { updateHash: false, focusHeading: false });
-    } else {
-      show(0, { updateHash: false, focusHeading: false });
+      show(location.hash.slice(1), {
+        updateHash: false,
+        focusHeading: false,
+        animate: false,
+      });
     }
 
     // ---------- Wysyłka ----------
