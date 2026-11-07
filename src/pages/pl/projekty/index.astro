@@ -22,7 +22,7 @@ const tags = [...new Set(projects.flatMap((project) => project.data.tags))].sort
     <h1 class="display mb-3 reveal">
       {t("projects.title")}
     </h1>
-    <p class="h3 max-w-[52ch] text-(--muted) text-pretty mb-12 reveal">
+    <p class="lead text-(--muted) mb-12 reveal">
       {t("projects.description")}
     </p>
     <ProjectsTagFilter tags={tags} ariaLabel={t("projects.tagsTitle")} />

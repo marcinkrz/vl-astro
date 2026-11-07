@@ -19,7 +19,12 @@ const t = getT(locale);
       <p class="mb-2 text-(--muted)" data-filter-label>
         {t("projects.filterLabel")}
       </p>
-      <div class="grid max-w-md grid-cols-2 gap-x-4 gap-y-2" data-filter-group role="group" aria-label={ariaLabel}>
+      <div
+        class="grid max-w-md grid-cols-2 gap-x-4 gap-y-2"
+        data-filter-group
+        role="group"
+        aria-label={ariaLabel}
+      >
         {tags.map((tag) => (
           <button
             type="button"
@@ -28,7 +33,11 @@ const t = getT(locale);
             aria-pressed="false"
             class="h2 inline-flex items-center gap-2 whitespace-nowrap text-left text-(--foreground) transition-colors hover:text-(--muted) active:text-(--muted) aria-pressed:text-(--muted) cursor-pointer"
           >
-            <X data-filter-close class="hidden size-4 shrink-0 stroke-3" aria-hidden="true" />
+            <X
+              data-filter-close
+              class="hidden size-4 shrink-0 stroke-3"
+              aria-hidden="true"
+            />
             {titles[tag] ?? tag}
           </button>
         ))}
@@ -39,8 +48,12 @@ const t = getT(locale);
 
 <style is:global>
   [data-filter-tag][hidden],
-  [data-project-card][hidden] { display: none; }
-  [data-filter-tag][aria-pressed="true"] [data-filter-close] { display: block; }
+  [data-project-card][hidden] {
+    display: none;
+  }
+  [data-filter-tag][aria-pressed="true"] [data-filter-close] {
+    display: block;
+  }
 
   html.reveal-on-scroll [data-project-card]:not(.is-revealed) {
     opacity: 0;
@@ -61,7 +74,8 @@ const t = getT(locale);
     pendingTransition = event.viewTransition;
   });
 
-  const isReducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isReducedMotion = () =>
+    matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   document.addEventListener("astro:page-load", () => {
     const group = document.querySelector<HTMLElement>("[data-filter-group]");
@@ -69,126 +83,173 @@ const t = getT(locale);
     group.dataset.filterReady = "true";
 
     const init = () => {
-    const buttons = [...document.querySelectorAll<HTMLButtonElement>("[data-filter-tag]")];
-    const items = [...document.querySelectorAll<HTMLElement>("[data-project-card]")];
-    if (buttons.length === 0 || items.length === 0) return;
+      const buttons = [
+        ...document.querySelectorAll<HTMLButtonElement>("[data-filter-tag]"),
+      ];
+      const items = [
+        ...document.querySelectorAll<HTMLElement>("[data-project-card]"),
+      ];
+      if (buttons.length === 0 || items.length === 0) return;
 
-    const scrollReveal = document.documentElement.classList.contains("reveal-on-scroll");
+      const scrollReveal =
+        document.documentElement.classList.contains("reveal-on-scroll");
 
-    const reveal = (element: HTMLElement, duration = 0.9) => {
-      if (element.hidden || element.classList.contains("is-revealed")) return;
-      element.classList.add("is-revealed");
-      if (!scrollReveal) return;
-      const visibleIndex = items.filter((item) => !item.hidden).indexOf(element);
-      const stagger = duration < 0.9 ? 0.04 : 0.08;
-      animate(
-        element,
-        { opacity: [0, 1], y: ["1rem", 0] },
-        { duration, delay: Math.max(visibleIndex, 0) * stagger, ease: "easeInOut" },
-      );
-    };
+      const reveal = (element: HTMLElement, duration = 0.6) => {
+        if (element.hidden || element.classList.contains("is-revealed")) return;
+        element.classList.add("is-revealed");
+        if (!scrollReveal) return;
+        const visibleIndex = items
+          .filter((item) => !item.hidden)
+          .indexOf(element);
+        const stagger = duration < 0.6 ? 0.04 : 0.08;
+        animate(
+          element,
+          { opacity: [0, 1], y: ["1rem", 0] },
+          {
+            duration,
+            delay: Math.max(visibleIndex, 0) * stagger,
+            ease: "easeInOut",
+          },
+        );
+      };
 
-    const revealVisible = (duration = 0.9) => {
-      requestAnimationFrame(() => {
-        items
-          .filter((item) => !item.hidden && !item.classList.contains("is-revealed"))
-          .forEach((item) => {
-            const rect = item.getBoundingClientRect();
-            if (rect.bottom > 0 && rect.top < innerHeight) reveal(item, duration);
-            else if (scrollReveal) inView(item, () => reveal(item), { amount: 0.15 });
-            else reveal(item);
-          });
-      });
-    };
+      const revealVisible = (duration = 0.6) => {
+        requestAnimationFrame(() => {
+          items
+            .filter(
+              (item) => !item.hidden && !item.classList.contains("is-revealed"),
+            )
+            .forEach((item) => {
+              const rect = item.getBoundingClientRect();
+              if (rect.bottom > 0 && rect.top < innerHeight)
+                reveal(item, duration);
+              else if (scrollReveal)
+                inView(item, () => reveal(item), { amount: 0.15 });
+              else reveal(item);
+            });
+        });
+      };
 
-    const revealFilters = () => {
-      const label = document.querySelector<HTMLElement>("[data-filter-label]");
-      if (label && !label.classList.contains("is-filter-revealed")) {
-        label.classList.add("is-filter-revealed");
-        if (scrollReveal) {
-          animate(label, { opacity: [0, 1], y: ["1rem", 0] }, { duration: 0.3, delay: 0.05, ease: "easeInOut" });
-        }
-      }
-      buttons
-        .filter((button) => !button.hidden && !button.classList.contains("is-filter-revealed"))
-        .forEach((button, index) => {
-          button.classList.add("is-filter-revealed");
+      const revealFilters = () => {
+        const label = document.querySelector<HTMLElement>(
+          "[data-filter-label]",
+        );
+        if (label && !label.classList.contains("is-filter-revealed")) {
+          label.classList.add("is-filter-revealed");
           if (scrollReveal) {
             animate(
-              button,
+              label,
               { opacity: [0, 1], y: ["1rem", 0] },
-              { duration: 0.3, delay: 0.1 + index * 0.04, ease: "easeInOut" },
+              { duration: 0.3, delay: 0.3, ease: "easeInOut" },
             );
           }
+        }
+        buttons
+          .filter(
+            (button) =>
+              !button.hidden &&
+              !button.classList.contains("is-filter-revealed"),
+          )
+          .forEach((button, index) => {
+            button.classList.add("is-filter-revealed");
+            if (scrollReveal) {
+              animate(
+                button,
+                { opacity: [0, 1], y: ["1rem", 0] },
+                { duration: 0.3, delay: 0.6 + index * 0.1, ease: "easeInOut" },
+              );
+            }
+          });
+      };
+
+      const apply = (tag: string | null) => {
+        buttons.forEach((button) => {
+          const active = button.dataset.filterTag === tag;
+          button.hidden = tag !== null && !active;
+          if (button.hidden) button.classList.remove("is-filter-revealed");
+          button.setAttribute("aria-pressed", String(active));
+          if (active)
+            button.setAttribute("aria-label", button.dataset.clearLabel ?? "");
+          else button.removeAttribute("aria-label");
         });
-    };
+        items.forEach((item) => {
+          const tags: string[] = JSON.parse(item.dataset.projectTags ?? "[]");
+          const hidden = tag !== null && !tags.includes(tag);
+          item.hidden = hidden;
+          if (hidden) item.classList.remove("is-revealed");
+        });
+      };
 
-    const apply = (tag: string | null) => {
-      buttons.forEach((button) => {
-        const active = button.dataset.filterTag === tag;
-        button.hidden = tag !== null && !active;
-        if (button.hidden) button.classList.remove("is-filter-revealed");
-        button.setAttribute("aria-pressed", String(active));
-        if (active) button.setAttribute("aria-label", button.dataset.clearLabel ?? "");
-        else button.removeAttribute("aria-label");
-      });
-      items.forEach((item) => {
-        const tags: string[] = JSON.parse(item.dataset.projectTags ?? "[]");
-        const hidden = tag !== null && !tags.includes(tag);
-        item.hidden = hidden;
-        if (hidden) item.classList.remove("is-revealed");
-      });
-    };
-
-    const flip = (previous: Map<HTMLElement, DOMRect>, element: HTMLElement) => {
-      const before = previous.get(element);
-      if (!before || element.hidden || isReducedMotion()) return;
-      const now = element.getBoundingClientRect();
-      const x = before.left - now.left;
-      const y = before.top - now.top;
-      if (x === 0 && y === 0) return;
-      animate(element, { x: [x, 0], y: [y, 0] }, { duration: 0.6, ease: "easeInOut" });
-    };
-
-    buttons.forEach((button) => {
-      button.addEventListener("click", () => {
-        const previousCards = new Map(
-          items.filter((item) => !item.hidden).map((item) => [item, item.getBoundingClientRect()]),
+      const flip = (
+        previous: Map<HTMLElement, DOMRect>,
+        element: HTMLElement,
+      ) => {
+        const before = previous.get(element);
+        if (!before || element.hidden || isReducedMotion()) return;
+        const now = element.getBoundingClientRect();
+        const x = before.left - now.left;
+        const y = before.top - now.top;
+        if (x === 0 && y === 0) return;
+        animate(
+          element,
+          { x: [x, 0], y: [y, 0] },
+          { duration: 0.6, ease: "easeInOut" },
         );
-        const active = buttons.find((candidate) => candidate.getAttribute("aria-pressed") === "true");
-        const activeRect = active?.getBoundingClientRect();
-        const tag = button.getAttribute("aria-pressed") === "true"
-          ? null
-          : button.dataset.filterTag ?? null;
+      };
 
-        apply(tag);
-        if (!isReducedMotion()) {
-          animate(button, { opacity: [0, 1] }, { duration: 0.3, delay: 0.05, ease: "easeInOut" });
-        }
-        revealFilters();
-        items.forEach((item) => flip(previousCards, item));
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const previousCards = new Map(
+            items
+              .filter((item) => !item.hidden)
+              .map((item) => [item, item.getBoundingClientRect()]),
+          );
+          const active = buttons.find(
+            (candidate) => candidate.getAttribute("aria-pressed") === "true",
+          );
+          const activeRect = active?.getBoundingClientRect();
+          const tag =
+            button.getAttribute("aria-pressed") === "true"
+              ? null
+              : (button.dataset.filterTag ?? null);
 
-        if (activeRect && !button.hidden) {
-          const next = button.getBoundingClientRect();
-          const x = activeRect.left - next.left;
-          const y = activeRect.top - next.top;
-          if (!isReducedMotion() && (x !== 0 || y !== 0)) {
-            animate(button, { x: [x, 0], y: [y, 0] }, { duration: 0.6, ease: "easeInOut" });
+          apply(tag);
+          if (!isReducedMotion()) {
+            animate(
+              button,
+              { opacity: [0, 1] },
+              { duration: 0.3, delay: 0.05, ease: "easeInOut" },
+            );
           }
-        }
+          revealFilters();
+          items.forEach((item) => flip(previousCards, item));
 
-        revealVisible(0.45);
-        const url = new URL(location.href);
-        if (tag) url.searchParams.set("tag", tag);
-        else url.searchParams.delete("tag");
-        history.replaceState(history.state, "", url);
+          if (activeRect && !button.hidden) {
+            const next = button.getBoundingClientRect();
+            const x = activeRect.left - next.left;
+            const y = activeRect.top - next.top;
+            if (!isReducedMotion() && (x !== 0 || y !== 0)) {
+              animate(
+                button,
+                { x: [x, 0], y: [y, 0] },
+                { duration: 0.6, ease: "easeInOut" },
+              );
+            }
+          }
+
+          revealVisible(0.45);
+          const url = new URL(location.href);
+          if (tag) url.searchParams.set("tag", tag);
+          else url.searchParams.delete("tag");
+          history.replaceState(history.state, "", url);
+        });
       });
-    });
 
-    const param = new URLSearchParams(location.search).get("tag");
-    if (buttons.some((button) => button.dataset.filterTag === param)) apply(param);
-    revealFilters();
-    revealVisible();
+      const param = new URLSearchParams(location.search).get("tag");
+      if (buttons.some((button) => button.dataset.filterTag === param))
+        apply(param);
+      revealFilters();
+      revealVisible();
     };
 
     const transition = pendingTransition;

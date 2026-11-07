@@ -47,7 +47,7 @@ const messages = {
       flex-direction: column;
       justify-content: center;
     }
-    .screen h2,
+    #first h2,
     #first p,
     #first a {
       opacity: 1 !important;
@@ -64,10 +64,7 @@ const messages = {
   .screen.is-active {
     display: flex;
   }
-  .screen h2:focus {
-    outline: none;
-  }
-  html.reveal-on-scroll .screen.is-active h2,
+  html.reveal-on-scroll #first.is-active h2,
   html.reveal-on-scroll #first.is-active p:not(.hidden),
   html.reveal-on-scroll #first.is-active a[data-go] {
     opacity: 0;
@@ -1128,7 +1125,7 @@ const messages = {
         animate(
           item,
           { opacity: [0, 1], y: ["1rem", 0] },
-          { duration: 0.9, delay: index * 0.08, ease: "easeInOut" },
+          { duration: 0.6, delay: index * 0.08, ease: "easeInOut" },
         );
       });
     }
