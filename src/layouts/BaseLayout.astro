@@ -121,6 +121,7 @@ const pageDescription = description ?? defaultDescription;
 
         const transition = pendingTransition;
         pendingTransition = undefined;
+        (window as Window & { __vt?: ViewTransition }).__vt = undefined;
         if (transition) transition.finished.then(init, init);
         else init();
       });
@@ -128,6 +129,9 @@ const pageDescription = description ?? defaultDescription;
       document.addEventListener("astro:before-swap", (event) => {
         revealRun++;
         pendingTransition = event.viewTransition;
+        // Strony ładowane w tej nawigacji (np. BriefLayout) nie mają jeszcze
+        // własnego listenera before-swap — udostępniamy im trwające przejście.
+        (window as Window & { __vt?: ViewTransition }).__vt = event.viewTransition;
         stopObserving?.();
         stopObserving = undefined;
         event.newDocument.documentElement.classList.toggle(

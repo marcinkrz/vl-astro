@@ -1118,7 +1118,7 @@ const messages = {
       if (reduceMotion) return;
       const candidates = Array.from(
         screen.querySelectorAll<HTMLElement>(
-          "h2, p:not(.hidden), legend:not(.hidden), .group, li, .space-y-3 > div, .grid.grid-cols-2 > *, a[data-go], #brief-submit, input, textarea, select",
+          "h2, p:not(.hidden), legend:not(.hidden), label, .group, li, .space-y-3 > div, .grid.grid-cols-2 > *, a[data-go], #brief-submit, input, textarea, select",
         ),
       );
       const items = candidates.filter(
@@ -1782,7 +1782,13 @@ const messages = {
       }
     });
 
-    animateScreenContent(screens[current]!);
+    const entryTransition = (window as Window & { __vt?: ViewTransition }).__vt;
+    const playEntry = (): void => animateScreenContent(screens[current]!);
+
+    // Wejście przez ClientRouter: poczekaj na koniec View Transition, inaczej
+    // animacja gra pod snapshotem przejścia i wygląda jak druga.
+    if (entryTransition) entryTransition.finished.then(playEntry, playEntry);
+    else playEntry();
   }
 
   // Pierwsze ładowanie…
