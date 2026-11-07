@@ -47,6 +47,12 @@ const messages = {
       flex-direction: column;
       justify-content: center;
     }
+    .screen h2,
+    #first p,
+    #first a {
+      opacity: 1 !important;
+      transform: none !important;
+    }
   </style>
 </noscript>
 
@@ -57,20 +63,15 @@ const messages = {
   }
   .screen.is-active {
     display: flex;
-    animation: screen-in .6s cubic-bezier(0.1, 0.8, 0.2, 1) both;
-  }
-  @keyframes screen-in {
-    from {
-      opacity: 0;
-      transform: translateY(3rem);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
   .screen h2:focus {
     outline: none;
+  }
+  html.reveal-on-scroll .screen.is-active h2,
+  html.reveal-on-scroll #first.is-active p:not(.hidden),
+  html.reveal-on-scroll #first.is-active a[data-go] {
+    opacity: 0;
+    transform: translateY(1rem);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -703,7 +704,7 @@ const messages = {
             />
             <label
               for="budget-unknown"
-              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--accent-1)"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
               >{t("brief-form.[3].budget.5")}</label
             >
           </div>
@@ -1059,6 +1060,8 @@ const messages = {
 </form>
 
 <script>
+  import { animate } from "motion";
+
   let globalCleanups: Array<() => void> = [];
 
   type BriefI18n = {
@@ -1074,7 +1077,6 @@ const messages = {
     ) as HTMLFormElement | null;
 
     if (!form) {
-      // Wyszliśmy z /brief (np. /contact) — zdejmij globalne listenery.
       globalCleanups.forEach((fn) => fn());
       globalCleanups = [];
       return;
@@ -1085,13 +1087,10 @@ const messages = {
     globalCleanups.forEach((fn) => fn());
     globalCleanups = [];
 
-    // FIX: żaden przycisk poza właściwym submit-em nie wysyła formularza
-    // (klik w padding Buttona wokół kotwicy = niejawny submit → skok do brief).
     form.querySelectorAll("button").forEach((b) => {
       if (b.id !== "brief-submit") b.setAttribute("type", "button");
     });
 
-    // ---------- i18n z <script type="application/json"> ----------
     let i18n: BriefI18n = { locale: "en", errors: {} };
     const i18nEl = document.getElementById("brief-i18n");
     if (i18nEl?.textContent) {
@@ -1106,7 +1105,6 @@ const messages = {
     }
     const msg: Record<string, string> = i18n.errors;
 
-    // ---------- Nawigacja ekranowa ----------
     const screens: HTMLElement[] = Array.from(
       form.querySelectorAll<HTMLElement>("section.screen"),
     );
@@ -1115,6 +1113,25 @@ const messages = {
     const reduceMotion: boolean = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+
+    function animateScreenContent(screen: HTMLElement): void {
+      if (reduceMotion) return;
+      const candidates = Array.from(
+        screen.querySelectorAll<HTMLElement>(
+          "h2, p:not(.hidden), legend:not(.hidden), .group, li, .space-y-3 > div, .grid.grid-cols-2 > *, a[data-go], #brief-submit, input, textarea, select",
+        ),
+      );
+      const items = candidates.filter(
+        (item) => !candidates.some((other) => other !== item && other.contains(item)),
+      );
+      items.forEach((item, index) => {
+        animate(
+          item,
+          { opacity: [0, 1], y: ["1rem", 0] },
+          { duration: 0.9, delay: index * 0.08, ease: "easeInOut" },
+        );
+      });
+    }
 
     const TOTAL_STEPS = 5;
 
@@ -1167,6 +1184,7 @@ const messages = {
     interface ShowOptions {
       updateHash?: boolean;
       focusHeading?: boolean;
+      animate?: boolean;
     }
 
     function show(target: string | number, opts: ShowOptions = {}): void {
@@ -1181,9 +1199,12 @@ const messages = {
       const apply = (): void => {
         if (prev && prev !== next) prev.classList.remove("is-active");
         next.classList.add("is-active");
+        if (opts.animate !== false) animateScreenContent(next);
       };
 
-      if (!reduceMotion && document.startViewTransition) {
+      if (opts.animate === false) {
+        apply();
+      } else if (!reduceMotion && document.startViewTransition) {
         document.startViewTransition(apply);
       } else {
         apply();
@@ -1629,11 +1650,15 @@ const messages = {
     form.addEventListener("change", saveDraft);
     restoreDraft();
 
-    // Wejście z hashem w URL / start od pierwszego ekranu
+    // Wejście z hashem w URL — ustaw ekran bez animacji i bez View Transition.
+    // Animację pierwszego ekranu odpala animateScreenContent() na końcu initBrief(),
+    // dokładnie raz (na iOS callback View Transition startuje później i powtarzał wejście).
     if (location.hash) {
-      show(location.hash.slice(1), { updateHash: false, focusHeading: false });
-    } else {
-      show(0, { updateHash: false, focusHeading: false });
+      show(location.hash.slice(1), {
+        updateHash: false,
+        focusHeading: false,
+        animate: false,
+      });
     }
 
     // ---------- Wysyłka ----------
@@ -1756,6 +1781,8 @@ const messages = {
         if (submitBtn) submitBtn.disabled = false;
       }
     });
+
+    animateScreenContent(screens[current]!);
   }
 
   // Pierwsze ładowanie…
