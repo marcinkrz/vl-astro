@@ -1,16 +1,43 @@
 ---
 import { type Locale } from "@/i18n/messages";
+import { getRoute } from "@/i18n/routes";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import Button from "@/components/_ui/Button.astro";
 import ContactForm from "@/components/ContactForm.astro";
 
 const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as Locale;
 ---
 
 <BaseLayout title="Kontakt" description="Skontaktuj się z nami.">
-  <div class="container mt-36 mb-24">
-    <h1 class="display mb-4 reveal">Kontakt</h1>
-    <div class="reveal">
-      <ContactForm locale={locale} client:load />
+  <div class="container mt-36 mb-24 md:grid md:grid-cols-3 lg:grid-cols-4">
+    <div class="col-span-2">
+      <h1 class="display mb-4 reveal">Kontakt</h1>
+      <p class="lead mb-12 text-(--muted-1) reveal">Zapraszamy do kontaktu.</p>
+      <Button
+        variant="outline"
+        size="large"
+        class="mb-6 flex reveal"
+        href={getRoute(locale, "brief")}
+      >
+        Wyceń projekt
+      </Button>
+      <p class="text-(--muted-1) reveal">
+        Wyślij&nbsp;
+        <Button
+          id="modal-contact-form"
+          variant="link"
+          class="h-auto leading-inherit">
+          formularz
+        </Button> lub napisz bezpośrednio na&nbsp;
+        <Button
+          variant="link"
+          href="mailto:info@visuallabel.com"
+          class="h-auto leading-inherit">info@visuallabel.com</Button
+        >.
+      </p>
+      <div class="reveal">
+        <ContactForm locale={locale} client:load />
+      </div>
     </div>
   </div>
 </BaseLayout>
