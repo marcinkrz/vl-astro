@@ -29,19 +29,19 @@ const isActive = (href: string) =>
 
 <header id="main-head" class="fixed z-101 top-0 inset-x-0">
   <div
-    class="relative z-2 container-full py-3 md:py-4 flex justify-between items-center"
+    class="relative z-2 container-full py-3 md:py-4 flex justify-between items-start"
   >
     <Logo />
     <div class="flex gap-x-4">
       <nav class="text-sm">
-        <ul class="flex h-full items-center gap-x-3 md:gap-x-6 font-semibold">
+        <ul class="flex items-center leading-none gap-x-3 lg:gap-x-6">
           {
             items.map((item) => (
               <li>
                 <a
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
-                  class="md:text-lg leading-none font-semibold"
+                  class="sm:text-lg font-semibold leading-none"
                   class:list={{
                     "text-(--muted)": isActive(item.href),
                     "text-(--foreground) hover:text-(--muted) active:text-(--muted)":
@@ -53,13 +53,6 @@ const isActive = (href: string) =>
               </li>
             ))
           }
-          <li>
-            <Button
-              variant="outline"
-              size="small"
-              href={getRoute(locale, "brief")}>Brief</Button
-            >
-          </li>
         </ul>
       </nav>
     </div>
