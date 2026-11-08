@@ -4,6 +4,7 @@ import { getRoute } from "@/i18n/routes";
 import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Button from "@/components/_ui/Button.astro";
+import Picture from "@/components/Picture.astro";
 import { Galaxy, LaptopMinimal, MoveRight, Stamp, Store } from "@lucide/astro";
 
 const locale = Astro.currentLocale === "pl" ? "pl" : "en";
@@ -138,17 +139,15 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
                 class="max-md:w-[66vw] max-md:pr-2 reveal"
               >
                 <a class="group" href={`/pl/projekty/${project.id}`}>
-                  <div class="relative aspect-3/2 overflow-hidden">
-                    <div class="absolute w-full h-full object-cover bg-(--background-1)" />
-                    {project.data.cover && (
-                      <img
-                        src={project.data.cover}
-                        alt={project.data.title}
-                        loading="lazy"
-                        class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 group-active:scale-105"
-                      />
-                    )}
-                  </div>
+                  {project.data.cover && (
+                    <Picture
+                      src={project.data.cover}
+                      alt={project.data.title}
+                      aspect="3/2"
+                      sizes="(min-width: 768px) 33vw, 66vw"
+                      imgClass="transition-transform duration-300 group-hover:scale-105 group-active:scale-105"
+                    />
+                  )}
                   <div>
                     <h3 class="mt-2">{project.data.title}</h3>
                     <p class="col-span-3 text-sm text-(--muted)">

@@ -1,5 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+import Picture from "@/components/Picture.astro";
+import type { ImageMetadata } from "astro";
 import { getTagTitles, getT } from "@/i18n/messages";
 import { getRoute } from "@/i18n/routes";
 import { MoveLeft, MoveRight } from "@lucide/astro";
@@ -13,12 +15,12 @@ interface Props {
   title: string;
   description: string;
   client: string;
-  cover?: string;
+  cover?: ImageMetadata;
   tags?: string[];
   slug?: string;
   pubDate?: Date;
-  prevProject?: { title: string; href: string; cover?: string };
-  nextProject?: { title: string; href: string; cover?: string };
+  prevProject?: { title: string; href: string; cover?: ImageMetadata };
+  nextProject?: { title: string; href: string; cover?: ImageMetadata };
 }
 
 const {
@@ -46,19 +48,18 @@ const tagTitles = getTagTitles(locale);
         <h1 class="display mb-24 reveal">{description}</h1>
       </header>
 
-      <div class="mb-12 relative aspect-video overflow-hidden reveal">
-        <div class="absolute w-full h-full object-cover bg-(--background-1)">
-        </div>
-        {
-          cover && (
-            <img
-              src={cover}
-              alt={title}
-              class="absolute inset-0 w-full h-full object-cover"
-            />
-          )
-        }
-      </div>
+      {cover ? (
+        <Picture
+          src={cover}
+          alt={title}
+          aspect="video"
+          class="mb-12"
+          sizes="100vw"
+          loading="eager"
+        />
+      ) : (
+        <div class="mb-12 aspect-video bg-(--background-1)"></div>
+      )}
       
       <div class="space-y-12 md:space-y-24" data-reveal-group>
         <slot />
@@ -110,11 +111,14 @@ const tagTitles = getTagTitles(locale);
                 </span>
                 <div class="relative aspect-3/2 overflow-hidden bg-(--background-1)">
                   {prevProject.cover && (
-                    <img
+                    <Picture
                       src={prevProject.cover}
                       alt={prevProject.title}
+                      aspect="3/2"
+                      class="absolute inset-0"
+                      sizes="50vw"
                       loading="lazy"
-                      class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      imgClass="group-hover:scale-105 group-active:scale-105"
                     />
                   )}
                   <div class="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-black/60 to-transparent"></div>
@@ -131,11 +135,14 @@ const tagTitles = getTagTitles(locale);
                 </span>
                 <div class="relative aspect-3/2 overflow-hidden bg-(--background-1)">
                   {nextProject.cover && (
-                    <img
+                    <Picture
                       src={nextProject.cover}
                       alt={nextProject.title}
+                      aspect="3/2"
+                      class="absolute inset-0"
+                      sizes="50vw"
                       loading="lazy"
-                      class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 group-active:scale-105"
+                      imgClass="group-hover:scale-105 group-active:scale-105"
                     />
                   )}
                   <div class="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-black/60 to-transparent"></div>

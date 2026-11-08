@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Button from "@/components/_ui/Button.astro";
+import Picture from "@/components/Picture.astro";
+import studio02 from "@/assets/images/studio-02.jpg";
+import studio03 from "@/assets/images/studio-03.jpg";
 import { getRoute } from "@/i18n/routes";
 
 const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "en";
@@ -19,16 +22,14 @@ const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "en";
       </p>
     </header>
 
-    <div
-      class="mb-16 md:mb-24 w-full aspect-3/2 md:aspect-video overflow-hidden bg-(--background-1) reveal"
-    >
-      <img
-        src="/images/studio-02.jpg"
-        alt="Visual Label — studio workspace"
-        loading="lazy"
-        class="w-full h-full object-cover"
-      />
-    </div>
+    <Picture
+      src={studio02}
+      alt="Visual Label — studio workspace"
+      aspect="3/2"
+      class="mb-16 md:mb-24 md:aspect-video reveal"
+      sizes="100vw"
+      loading="lazy"
+    />
 
     <section class="mb-16 md:mb-24 border-t border-(--border)">
       <h2 class="mt-1 mb-6 text-xs font-mono uppercase text-(--muted) reveal">
@@ -45,16 +46,14 @@ const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "en";
       </p>
     </section>
 
-    <div
-      class="mb-16 md:mb-24 w-full aspect-3/2 md:aspect-video overflow-hidden bg-(--background-1) reveal"
-    >
-      <img
-        src="/images/studio-03.jpg"
-        alt="Printed brand identity materials on a desk"
-        loading="lazy"
-        class="w-full h-full object-cover"
-      />
-    </div>
+    <Picture
+      src={studio03}
+      alt="Printed brand identity materials on a desk"
+      aspect="3/2"
+      class="mb-16 md:mb-24 md:aspect-video reveal"
+      sizes="100vw"
+      loading="lazy"
+    />
 
     <section class="mb-16 md:mb-24 border-t border-(--border)">
       <h2 class="mt-1 mb-6 text-xs font-mono uppercase text-(--muted) reveal">
