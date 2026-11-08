@@ -41,6 +41,7 @@ const isActive = (href: string) =>
                 <a
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
+                  class="md:text-lg leading-none font-semibold"
                   class:list={{
                     "text-(--muted)": isActive(item.href),
                     "text-(--foreground) hover:text-(--muted) active:text-(--muted)":
