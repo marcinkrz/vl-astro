@@ -1,5 +1,6 @@
 ---
-import { getTagTitles } from "@/i18n/messages";
+import { X } from "@lucide/astro";
+import { getT, getTagTitles } from "@/i18n/messages";
 
 interface Props {
   tags: string[];
@@ -9,20 +10,34 @@ interface Props {
 const { tags, ariaLabel } = Astro.props;
 const locale = Astro.currentLocale === "pl" ? "pl" : "en";
 const titles = getTagTitles(locale);
+const t = getT(locale);
 ---
 
 {
   tags.length > 0 && (
     <div class="mb-24">
-      <div class="grid max-w-md grid-cols-2 gap-x-4 gap-y-2" role="group" aria-label={ariaLabel}>
-        {tags.map((tag, index) => (
+      <p class="mb-2 text-(--muted)" data-filter-label>
+        {t("projects.filterLabel")}
+      </p>
+      <div
+        class="grid max-w-md grid-cols-2 gap-x-4 gap-y-2"
+        data-filter-group
+        role="group"
+        aria-label={ariaLabel}
+      >
+        {tags.map((tag) => (
           <button
             type="button"
             data-filter-tag={tag}
+            data-clear-label={`${t("projects.clearFilter")} ${titles[tag] ?? tag}`}
             aria-pressed="false"
-            style={`--delay: ${index * 50}ms`}
-            class="text-left text-(--muted) transition-colors hover:text-(--foreground) aria-pressed:text-(--foreground) aria-pressed:underline underline-offset-4 cursor-pointer motion-opacity-in-0 motion-translate-y-in-[8rem] motion-delay-(--delay)"
+            class="h2 inline-flex items-center gap-2 whitespace-nowrap text-left text-(--foreground) transition-colors hover:text-(--muted) active:text-(--muted) aria-pressed:text-(--muted) cursor-pointer"
           >
+            <X
+              data-filter-close
+              class="hidden size-4 shrink-0 stroke-3"
+              aria-hidden="true"
+            />
             {titles[tag] ?? tag}
           </button>
         ))}
@@ -31,36 +46,215 @@ const titles = getTagTitles(locale);
   )
 }
 
+<style is:global>
+  [data-filter-tag][hidden],
+  [data-project-card][hidden] {
+    display: none;
+  }
+  [data-filter-tag][aria-pressed="true"] [data-filter-close] {
+    display: block;
+  }
+
+  html.reveal-on-scroll [data-project-card]:not(.is-revealed) {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  html.reveal-on-scroll [data-filter-label]:not(.is-filter-revealed),
+  html.reveal-on-scroll [data-filter-tag]:not(.is-filter-revealed) {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+</style>
+
 <script>
+  import { animate, inView } from "motion";
+
+  let pendingTransition: ViewTransition | undefined;
+  document.addEventListener("astro:before-swap", (event) => {
+    pendingTransition = event.viewTransition;
+  });
+
+  const isReducedMotion = () =>
+    matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   document.addEventListener("astro:page-load", () => {
-    const buttons = [...document.querySelectorAll<HTMLButtonElement>("[data-filter-tag]")];
-    const items = [...document.querySelectorAll<HTMLElement>("[data-project-tags]")];
-    if (buttons.length === 0 || items.length === 0) return;
+    const group = document.querySelector<HTMLElement>("[data-filter-group]");
+    if (!group || group.dataset.filterReady === "true") return;
+    group.dataset.filterReady = "true";
 
-    buttons.forEach((button) => {
-      button.addEventListener("click", () => {
-        const tag = button.dataset.filterTag;
-        const wasActive = button.getAttribute("aria-pressed") === "true";
+    const init = () => {
+      const buttons = [
+        ...document.querySelectorAll<HTMLButtonElement>("[data-filter-tag]"),
+      ];
+      const items = [
+        ...document.querySelectorAll<HTMLElement>("[data-project-card]"),
+      ];
+      if (buttons.length === 0 || items.length === 0) return;
 
-        buttons.forEach((b) => b.setAttribute("aria-pressed", "false"));
-        items.forEach((item) => {
-          item.hidden = false;
+      const scrollReveal =
+        document.documentElement.classList.contains("reveal-on-scroll");
+
+      const reveal = (element: HTMLElement, duration = 0.6) => {
+        if (element.hidden || element.classList.contains("is-revealed")) return;
+        element.classList.add("is-revealed");
+        if (!scrollReveal) return;
+        const visibleIndex = items
+          .filter((item) => !item.hidden)
+          .indexOf(element);
+        const stagger = duration < 0.6 ? 0.04 : 0.08;
+        animate(
+          element,
+          { opacity: [0, 1], y: ["1rem", 0] },
+          {
+            duration,
+            delay: Math.max(visibleIndex, 0) * stagger,
+            ease: "easeInOut",
+          },
+        );
+      };
+
+      const revealVisible = (duration = 0.6) => {
+        requestAnimationFrame(() => {
+          items
+            .filter(
+              (item) => !item.hidden && !item.classList.contains("is-revealed"),
+            )
+            .forEach((item) => {
+              const rect = item.getBoundingClientRect();
+              if (rect.bottom > 0 && rect.top < innerHeight)
+                reveal(item, duration);
+              else if (scrollReveal)
+                inView(item, () => reveal(item), { amount: 0.15 });
+              else reveal(item);
+            });
         });
+      };
 
-        if (!wasActive && tag) {
-          button.setAttribute("aria-pressed", "true");
-          items.forEach((item) => {
-            const tags: string[] = JSON.parse(item.dataset.projectTags ?? "[]");
-            item.hidden = !tags.includes(tag);
-          });
+      const revealFilters = () => {
+        const label = document.querySelector<HTMLElement>(
+          "[data-filter-label]",
+        );
+        if (label && !label.classList.contains("is-filter-revealed")) {
+          label.classList.add("is-filter-revealed");
+          if (scrollReveal) {
+            animate(
+              label,
+              { opacity: [0, 1], y: ["1rem", 0] },
+              { duration: 0.3, delay: 0.3, ease: "easeInOut" },
+            );
+          }
         }
-      });
-    });
+        buttons
+          .filter(
+            (button) =>
+              !button.hidden &&
+              !button.classList.contains("is-filter-revealed"),
+          )
+          .forEach((button, index) => {
+            button.classList.add("is-filter-revealed");
+            if (scrollReveal) {
+              animate(
+                button,
+                { opacity: [0, 1], y: ["1rem", 0] },
+                { duration: 0.3, delay: 0.6 + index * 0.1, ease: "easeInOut" },
+              );
+            }
+          });
+      };
 
-    /* Aktywuj filtr z parametru URL (?tag=klucz) — linki tagów ze strony projektu */
-    const param = new URLSearchParams(location.search).get("tag");
-    if (param) {
-      buttons.find((b) => b.dataset.filterTag === param)?.click();
-    }
+      const apply = (tag: string | null) => {
+        buttons.forEach((button) => {
+          const active = button.dataset.filterTag === tag;
+          button.hidden = tag !== null && !active;
+          if (button.hidden) button.classList.remove("is-filter-revealed");
+          button.setAttribute("aria-pressed", String(active));
+          if (active)
+            button.setAttribute("aria-label", button.dataset.clearLabel ?? "");
+          else button.removeAttribute("aria-label");
+        });
+        items.forEach((item) => {
+          const tags: string[] = JSON.parse(item.dataset.projectTags ?? "[]");
+          const hidden = tag !== null && !tags.includes(tag);
+          item.hidden = hidden;
+          if (hidden) item.classList.remove("is-revealed");
+        });
+      };
+
+      const flip = (
+        previous: Map<HTMLElement, DOMRect>,
+        element: HTMLElement,
+      ) => {
+        const before = previous.get(element);
+        if (!before || element.hidden || isReducedMotion()) return;
+        const now = element.getBoundingClientRect();
+        const x = before.left - now.left;
+        const y = before.top - now.top;
+        if (x === 0 && y === 0) return;
+        animate(
+          element,
+          { x: [x, 0], y: [y, 0] },
+          { duration: 0.6, ease: "easeInOut" },
+        );
+      };
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const previousCards = new Map(
+            items
+              .filter((item) => !item.hidden)
+              .map((item) => [item, item.getBoundingClientRect()]),
+          );
+          const active = buttons.find(
+            (candidate) => candidate.getAttribute("aria-pressed") === "true",
+          );
+          const activeRect = active?.getBoundingClientRect();
+          const tag =
+            button.getAttribute("aria-pressed") === "true"
+              ? null
+              : (button.dataset.filterTag ?? null);
+
+          apply(tag);
+          if (!isReducedMotion()) {
+            animate(
+              button,
+              { opacity: [0, 1] },
+              { duration: 0.3, delay: 0.05, ease: "easeInOut" },
+            );
+          }
+          revealFilters();
+          items.forEach((item) => flip(previousCards, item));
+
+          if (activeRect && !button.hidden) {
+            const next = button.getBoundingClientRect();
+            const x = activeRect.left - next.left;
+            const y = activeRect.top - next.top;
+            if (!isReducedMotion() && (x !== 0 || y !== 0)) {
+              animate(
+                button,
+                { x: [x, 0], y: [y, 0] },
+                { duration: 0.6, ease: "easeInOut" },
+              );
+            }
+          }
+
+          revealVisible(0.45);
+          const url = new URL(location.href);
+          if (tag) url.searchParams.set("tag", tag);
+          else url.searchParams.delete("tag");
+          history.replaceState(history.state, "", url);
+        });
+      });
+
+      const param = new URLSearchParams(location.search).get("tag");
+      if (buttons.some((button) => button.dataset.filterTag === param))
+        apply(param);
+      revealFilters();
+      revealVisible();
+    };
+
+    const transition = pendingTransition;
+    pendingTransition = undefined;
+    if (transition) transition.finished.then(init, init);
+    else init();
   });
 </script>

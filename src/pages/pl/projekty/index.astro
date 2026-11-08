@@ -19,10 +19,10 @@ const tags = [...new Set(projects.flatMap((project) => project.data.tags))].sort
 
 <BaseLayout title="Projekty" description="">
   <main class="container-full mt-36 mb-24">
-    <h1 class="display mb-3 motion-opacity-in-0 motion-translate-y-in-[4rem]">
+    <h1 class="display mb-3 reveal">
       {t("projects.title")}
     </h1>
-    <p class="h3 max-w-[52ch] text-(--muted) text-pretty mb-12 motion-opacity-in-0 motion-translate-y-in-[8rem]">
+    <p class="lead text-(--muted) mb-12 reveal">
       {t("projects.description")}
     </p>
     <ProjectsTagFilter tags={tags} ariaLabel={t("projects.tagsTitle")} />
@@ -30,8 +30,8 @@ const tags = [...new Set(projects.flatMap((project) => project.data.tags))].sort
       {
         projects.map((project, index) => (
           <li
-            style={`--delay: ${index * 50}ms`}
-            class="motion-opacity-in-0 motion-translate-y-in-100 motion-delay-(--delay)"
+            class="will-change-transform"
+            data-project-card
             data-project-tags={JSON.stringify(project.data.tags)}
           >
             <a class="group" href={`/pl/projekty/${project.id}`}>
@@ -41,7 +41,7 @@ const tags = [...new Set(projects.flatMap((project) => project.data.tags))].sort
                     <img
                       src={project.data.cover}
                       alt={project.data.title}
-                      loading="lazy"
+                      loading={index < 3 ? "eager" : "lazy"}
                       class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 group-active:scale-105"
                     />
                   )}

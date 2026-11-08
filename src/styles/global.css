@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "./color-palette";
 
-@plugin "tailwindcss-motion";
-
 :root {
   --primary: var(--pallette-primary);
   --accent-1: var(--triadic-1);
@@ -66,10 +64,10 @@
   --info-border: hsl(204, 90%, 45%);
   --info-bg: hsl(204, 94%, 92%);
 
-  --muted: hsl(0, 0%, 48%);
-  --muted-1: hsl(0, 0%, 44%);
+  --muted: hsl(0, 0%, 55%);
+  --muted-1: hsl(0, 0%, 35%);
   --border: var(--background-2);
-  --border-dark: var(--background-3);
+  --border-1: var(--gray);
 
   --focus: var(--accent-1);
 }
@@ -101,15 +99,25 @@
   --info-border: hsl(204, 90%, 45%);
   --info-bg: hsl(204, 94%, 12%);
 
-  --muted: hsl(0, 0%, 64%);
-  --muted-1: hsl(0, 0%, 68%);
+  --muted: hsl(0, 0%, 45%);
+  --muted-1: hsl(0, 0%, 65%);
   --border: var(--background-2);
-  --border-light: var(--foreground);
+  --border-1: var(--gray);
 }
 
 html {
   @apply bg-(--background) text-(--foreground) font-(family-name:--font-copy) text-pretty;
 }
+
+html.reveal-on-scroll .reveal:not(.is-revealed),
+html.reveal-on-scroll [data-reveal-group] > :not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(var(--reveal-y, 0px));
+}
+
+[data-reveal-group] > * { --reveal-y: 1rem; }
+
+.reveal { --reveal-y: 1rem; }
 
 .container {
   @apply mx-auto px-3 md:px-4 lg:px-6 max-w-7xl;
@@ -123,15 +131,21 @@ html {
   @apply gap-4 md:gap-8 lg:gap-12 xl:gap-16;
 }
 
+.display,
+.display-sm,
 .h1,
 .h2,
 .h3,
 .h4 {
-  @apply font-semibold tracking-tight;
+  @apply font-semibold;
 }
 
 .display {
-  @apply text-[3rem] sm:text-[4rem] md:text-[5rem] lg:text-[6rem] xl:text-[7rem] leading-none! font-features-['liga'] tracking-tighter;
+  @apply text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-none! font-features-['liga'] tracking-tighter;
+}
+
+.display-sm {
+  @apply text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-none! font-features-['liga'] tracking-tighter;
 }
 
 .h1 {
@@ -151,7 +165,7 @@ html {
 }
 
 .lead {
-  @apply text-xl xl:text-2xl leading-tight! tracking-tight;
+  @apply max-w-[52ch] text-lg xl:text-xl font-semibold leading-tight! text-pretty;
 }
 
 .joint {

@@ -4,7 +4,7 @@ import { getRoute } from "@/i18n/routes";
 import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Button from "@/components/_ui/Button.astro";
-import { MoveRight } from "@lucide/astro";
+import { Galaxy, LaptopMinimal, MoveRight, Stamp, Store } from "@lucide/astro";
 
 const locale = Astro.currentLocale === "pl" ? "pl" : "en";
 const t = getT(locale);
@@ -18,49 +18,47 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 ---
 
 <BaseLayout>
-  <main class="container-full space-y-24">
-    <section class="mb-0 pt-48 min-h-[50vh] flex flex-col items-start">
-      <h1
-        class="xl:max-w-1/2 mb-3 display text-pretty motion-opacity-in-0 motion-translate-y-in-[4rem]"
-      >
+  <main class="container-full space-y-32">
+    <section class="mb-0 min-h-[70vh] flex flex-col items-start justify-end">
+      <h1 class="xl:max-w-1/2 mb-3 display text-pretty reveal">
         Creative services for businesses
       </h1>
-      <p
-        class="lead text-balance text-(--muted) motion-opacity-in-0 motion-translate-y-in-[4rem]"
-      >
+      <p class="lead text-(--muted) reveal">
         At Visual Label, we create the desired brand image, online and beyond.
       </p>
       <Button
         href={getRoute(locale, "brief")}
         variant="primary"
         size="large"
-        class="mt-8 mb-12 motion-opacity-in-0 motion-translate-y-in-[8rem]"
+        class="my-8 reveal"
       >
         Request a quote
       </Button>
     </section>
 
     <section
-      class="-mx-3 md:-mx-4 pb-8 lg:mx-auto max-md:border-b border-(--border)"
+      class="-mx-3 md:-mx-4 lg:mx-auto max-md:border-b border-(--border)"
     >
       <header
-        class="mt-1 mb-6 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) motion-opacity-in-0 motion-translate-y-in-[12rem] motion-opacity-in-0 motion-translate-y-in-[4rem]"
+        class="mt-1 mb-8 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) reveal"
       >
         <h2 class="text-(--muted)">Services</h2>
       </header>
 
-      <div class="relative w-full max-md:overflow-x-auto">
+      <div class="relative w-full">
         <ul
           class="px-3 md:px-4 lg:px-0 grid grid-cols-2 lg:grid-cols-4 gap-3 max-lg:gap-y-6"
         >
-          <li class="pb-4 motion-opacity-in-0 motion-translate-y-in-[16rem]">
-            <div class="mb-4 aspect-square border border-(--border)"></div>
+          <li class="mb-12 reveal">
+            <Galaxy
+              class="w-20 lg:w-28 xl:w-36 h-auto mb-4 stroke-[1.25] lg:stroke-[1]"
+            />
             <h3 class="mb-1">
               <Button
                 variant="link"
-                class="h-auto h4 font-normal text-left whitespace-normal"
+                class="h-auto h2 text-left whitespace-normal"
               >
-                Logo &amp; brand identity
+                Branding
               </Button>
             </h3>
             <p class="text-sm text-(--muted) text-pretty">
@@ -68,12 +66,14 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
               to a billboard.
             </p>
           </li>
-          <li class="pb-4 motion-opacity-in-0 motion-translate-y-in-[16rem]">
-            <div class="mb-4 aspect-square border border-(--border)"></div>
+          <li class="mb-12 reveal">
+            <LaptopMinimal
+              class="w-20 lg:w-28 xl:w-36 h-auto mb-4 stroke-[1.25] lg:stroke-[1]"
+            />
             <h3 class="mb-1">
               <Button
                 variant="link"
-                class="h-auto h4 font-normal text-left whitespace-normal"
+                class="h-auto h2 text-left whitespace-normal"
               >
                 Websites
               </Button>
@@ -83,12 +83,14 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
               code under one roof.
             </p>
           </li>
-          <li class="pb-4 motion-opacity-in-0 motion-translate-y-in-[16rem]">
-            <div class="mb-4 aspect-square border border-(--border)"></div>
+          <li class="mb-12 reveal">
+            <Store
+              class="w-20 lg:w-28 xl:w-36 h-auto mb-4 stroke-[1.25] lg:stroke-[1]"
+            />
             <h3 class="mb-1">
               <Button
                 variant="link"
-                class="h-auto h4 font-normal text-left whitespace-normal"
+                class="h-auto h2 text-left whitespace-normal"
               >
                 Online stores
               </Button>
@@ -97,12 +99,14 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
               Conversion-focused e-commerce that stays true to your brand.
             </p>
           </li>
-          <li class="pb-4 motion-opacity-in-0 motion-translate-y-in-[16rem]">
-            <div class="mb-4 aspect-square border border-(--border)"></div>
+          <li class="mb-12 reveal">
+            <Stamp
+              class="w-20 lg:w-28 xl:w-36 h-auto mb-4 stroke-[1.25] lg:stroke-[1]"
+            />
             <h3 class="mb-1">
               <Button
                 variant="link"
-                class="h-auto h4 font-normal text-left whitespace-normal"
+                class="h-auto h2 text-left whitespace-normal"
               >
                 Print design
               </Button>
@@ -117,9 +121,11 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
     </section>
 
     <section class="mb-24 -mx-3 md:-mx-4 lg:mx-auto">
-      <h2 class="display mb-4 px-3 md:px-4 lg:px-0">Check out our work</h2>
+      <h2 class="display mb-4 px-3 md:px-4 lg:px-0 reveal">
+        Check out our work
+      </h2>
       <header
-        class="mt-1 mb-6 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) motion-opacity-in-0 motion-translate-y-in-[12rem]"
+        class="mt-1 mb-6 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) reveal"
       >
         <h2 class="text-(--muted)">Projects</h2>
         <Button
@@ -136,8 +142,8 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
           {
             projects.map((project, index) => (
               <li
-                style={`--delay: ${index * 50}ms`}
-                class="max-md:w-[66vw] max-md:pr-2 motion-opacity-in-0 motion-translate-y-in-100 motion-delay-(--delay)"
+                style={`--reveal-delay: ${index * 50}ms`}
+                class="max-md:w-[66vw] max-md:pr-2 reveal"
               >
                 <a class="group" href={`/projects/${project.id}`}>
                   <div class="relative aspect-3/2 overflow-hidden">

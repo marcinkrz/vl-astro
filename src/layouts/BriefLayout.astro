@@ -47,6 +47,12 @@ const messages = {
       flex-direction: column;
       justify-content: center;
     }
+    #first h2,
+    #first p,
+    #first a {
+      opacity: 1 !important;
+      transform: none !important;
+    }
   </style>
 </noscript>
 
@@ -57,20 +63,12 @@ const messages = {
   }
   .screen.is-active {
     display: flex;
-    animation: screen-in .6s cubic-bezier(0.1, 0.8, 0.2, 1) both;
   }
-  @keyframes screen-in {
-    from {
-      opacity: 0;
-      transform: translateY(3rem);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  .screen h2:focus {
-    outline: none;
+  html.reveal-on-scroll #first.is-active h2,
+  html.reveal-on-scroll #first.is-active p:not(.hidden),
+  html.reveal-on-scroll #first.is-active a[data-go] {
+    opacity: 0;
+    transform: translateY(1rem);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -105,7 +103,7 @@ const messages = {
       justify-content: center;
       font-weight: 600;
       border: 1px solid var(--border);
-      border-radius: 9999px;
+      border-radius: 50%;
       background: var(--background);
       color: var(--muted);
       transition:
@@ -115,8 +113,9 @@ const messages = {
         transform 150ms ease;
   }
 
+  .brief-progress-step:active span,
   .brief-progress-step:hover span {
-    border-color: var(--border-dark);
+    border-color: var(--foreground);
     color: var(--foreground);
   }
 
@@ -127,13 +126,19 @@ const messages = {
 
   .brief-progress-step.is-active span {
     border-color: var(--foreground);
-    background: var(--foreground);
-    color: var(--background);
+    background: var(--background);
+    color: var(--foreground);
   }
 
   .brief-progress-step.is-completed span {
-    border-color: var(--foreground);
+    border-color: var(--border-1);
     background: var(--background);
+    color: var(--muted-1);
+  }
+
+  .brief-progress-step.is-completed:active span,
+  .brief-progress-step.is-completed:hover span {
+    border-color: var(--foreground);
     color: var(--foreground);
   }
 </style>
@@ -169,12 +174,12 @@ const messages = {
     >
       <div class="relative flex items-center justify-between">
         <div
-          class="absolute left-4 right-4 top-1/2 h-px -translate-y-1/2 bg-(--border)"
+          class="absolute left-4 right-4 top-1/2 h-px -translate-y-[1/2-0.5px] bg-(--border)"
           aria-hidden="true"
         >
           <div
             id="brief-progress-line"
-            class="h-full w-0 bg-(--foreground) transition-all duration-500"
+            class="h-full w-0 bg-(--border-1) transition-all duration-500"
           >
           </div>
         </div>
@@ -230,7 +235,7 @@ const messages = {
       class="screen is-active w-full max-w-160 absolute top-1/2 left-1/2 -translate-1/2 px-3 md:px-4 lg:px-6"
     >
       <div class="flex flex-col items-start">
-        <h2 class="display mb-6 text-balance">{t("brief-form.[1].title")}</h2>
+        <h2 class="display-sm mb-6 text-balance">{t("brief-form.[1].title")}</h2>
         <p class="text-sm text-(--muted)">{t("brief-form.[1].description")}</p>
         <div class="flex flex-col items-center">
           <Button
@@ -248,7 +253,7 @@ const messages = {
     </section>
     <section id="services" class="screen w-full max-w-140 mx-auto px-3 md:px-4 lg:px-6">
       <div class="w-full space-y-4">
-        <h2 class="display mb-8">{t("brief-form.[2].title")}</h2>
+        <h2 class="display-sm mb-8">{t("brief-form.[2].title")}</h2>
         <fieldset class="mb-0 space-y-2">
           <legend class="mb-6 text-sm text-(--muted) hidden"
             >{t("brief-form.[2].description")}</legend
@@ -285,7 +290,7 @@ const messages = {
             />
             <label
               for="web-page"
-              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-1) group-has-[input:checked]:border-(--foreground)"
               >{t("brief-form.[2].services.1")}</label
             >
           </div>
@@ -321,7 +326,7 @@ const messages = {
             />
             <label
               for="commerce"
-              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-1) group-has-[input:checked]:border-(--foreground)"
               >{t("brief-form.[2].services.2")}</label
             >
           </div>
@@ -357,7 +362,7 @@ const messages = {
             />
             <label
               for="logo"
-              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-1) group-has-[input:checked]:border-(--foreground)"
               >{t("brief-form.[2].services.3")}</label
             >
           </div>
@@ -393,7 +398,7 @@ const messages = {
             />
             <label
               for="branding"
-              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-1) group-has-[input:checked]:border-(--foreground)"
               >{t("brief-form.[2].services.4")}</label
             >
           </div>
@@ -429,7 +434,7 @@ const messages = {
             />
             <label
               for="print"
-              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-1) group-has-[input:checked]:border-(--foreground)"
               >{t("brief-form.[2].services.5")}</label
             >
           </div>
@@ -465,7 +470,7 @@ const messages = {
             />
             <label
               for="other-service"
-              class="col-start-1 row-start-1 h-full flex items-center gap-2 pl-10 pr-12 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              class="col-start-1 row-start-1 h-full flex items-center gap-2 pl-10 pr-12 border border-(--border) rounded-full cursor-pointer hover:border-(--border-1) group-has-[input:checked]:border-(--foreground)"
             >
               <span id="other-service-label" class="shrink-0"
                 >{t("brief-form.[2].services.6")}</span
@@ -522,7 +527,7 @@ const messages = {
     </section>
     <section id="budget" class="screen w-full max-w-140 mx-auto px-3 md:px-4 lg:px-6">
       <div class="w-full space-y-4">
-        <h2 class="display mb-8">{t("brief-form.[3].title")}</h2>
+        <h2 class="display-sm mb-8">{t("brief-form.[3].title")}</h2>
         <fieldset class="mb-0 space-y-2">
           <legend class="mb-6 text-sm text-(--muted) hidden"
             >{t("brief-form.[3].description")}</legend
@@ -559,7 +564,7 @@ const messages = {
             />
             <label
               for="budget-tier-1"
-              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-1) group-has-[input:checked]:border-(--foreground)"
               >{t("brief-form.[3].budget.1")}</label
             >
           </div>
@@ -595,7 +600,7 @@ const messages = {
             />
             <label
               for="budget-tier-2"
-              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-1) group-has-[input:checked]:border-(--foreground)"
               >{t("brief-form.[3].budget.2")}</label
             >
           </div>
@@ -631,7 +636,7 @@ const messages = {
             />
             <label
               for="budget-tier-3"
-              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-1) group-has-[input:checked]:border-(--foreground)"
               >{t("brief-form.[3].budget.3")}</label
             >
           </div>
@@ -667,7 +672,7 @@ const messages = {
             />
             <label
               for="budget-tier-4"
-              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--foreground)"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-1) group-has-[input:checked]:border-(--foreground)"
               >{t("brief-form.[3].budget.4")}</label
             >
           </div>
@@ -703,7 +708,7 @@ const messages = {
             />
             <label
               for="budget-unknown"
-              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-dark) group-has-[input:checked]:border-(--accent-1)"
+              class="col-start-1 row-start-1 h-full flex items-center pl-10 pr-3 border border-(--border) rounded-full cursor-pointer hover:border-(--border-1) group-has-[input:checked]:border-(--foreground)"
               >{t("brief-form.[3].budget.5")}</label
             >
           </div>
@@ -735,7 +740,7 @@ const messages = {
     </section>
     <section id="brief" class="screen w-full max-w-140 mx-auto px-3 md:px-4 lg:px-6">
       <div class="w-full space-y-4">
-        <h2 class="display mb-8">{t("brief-form.[4].title")}</h2>
+        <h2 class="display-sm mb-8">{t("brief-form.[4].title")}</h2>
         <p class="mb-6 text-sm text-(--muted) hidden">
           {t("brief-form.[4].description")}
         </p>
@@ -795,7 +800,7 @@ const messages = {
     </section>
     <section id="site" class="screen w-full max-w-140 mx-auto px-3 md:px-4 lg:px-6">
       <div class="w-full space-y-4">
-        <h2 class="display mb-8">{t("brief-form.[5].title")}</h2>
+        <h2 class="display-sm mb-8">{t("brief-form.[5].title")}</h2>
         <p class="mb-6 text-sm text-(--muted) hidden">
           {t("brief-form.[5].description")}
         </p>
@@ -856,7 +861,7 @@ const messages = {
     </section>
     <section id="last" class="screen w-full max-w-140 mx-auto px-3 md:px-4 lg:px-6">
       <div class="w-full space-y-4">
-        <h2 class="display mb-8">{t("brief-form.[last].title")}</h2>
+        <h2 class="display-sm mb-8">{t("brief-form.[last].title")}</h2>
         <p class="mb-6 text-sm text-(--muted) hidden">
           {t("brief-form.[last].description")}
         </p>
@@ -1059,6 +1064,8 @@ const messages = {
 </form>
 
 <script>
+  import { animate } from "motion";
+
   let globalCleanups: Array<() => void> = [];
 
   type BriefI18n = {
@@ -1074,7 +1081,6 @@ const messages = {
     ) as HTMLFormElement | null;
 
     if (!form) {
-      // Wyszliśmy z /brief (np. /contact) — zdejmij globalne listenery.
       globalCleanups.forEach((fn) => fn());
       globalCleanups = [];
       return;
@@ -1085,13 +1091,10 @@ const messages = {
     globalCleanups.forEach((fn) => fn());
     globalCleanups = [];
 
-    // FIX: żaden przycisk poza właściwym submit-em nie wysyła formularza
-    // (klik w padding Buttona wokół kotwicy = niejawny submit → skok do brief).
     form.querySelectorAll("button").forEach((b) => {
       if (b.id !== "brief-submit") b.setAttribute("type", "button");
     });
 
-    // ---------- i18n z <script type="application/json"> ----------
     let i18n: BriefI18n = { locale: "en", errors: {} };
     const i18nEl = document.getElementById("brief-i18n");
     if (i18nEl?.textContent) {
@@ -1106,7 +1109,6 @@ const messages = {
     }
     const msg: Record<string, string> = i18n.errors;
 
-    // ---------- Nawigacja ekranowa ----------
     const screens: HTMLElement[] = Array.from(
       form.querySelectorAll<HTMLElement>("section.screen"),
     );
@@ -1115,6 +1117,25 @@ const messages = {
     const reduceMotion: boolean = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+
+    function animateScreenContent(screen: HTMLElement): void {
+      if (reduceMotion) return;
+      const candidates = Array.from(
+        screen.querySelectorAll<HTMLElement>(
+          "h2, p:not(.hidden), legend:not(.hidden), label, .group, li, .space-y-3 > div, .grid.grid-cols-2 > *, a[data-go], #brief-submit, input, textarea, select",
+        ),
+      );
+      const items = candidates.filter(
+        (item) => !candidates.some((other) => other !== item && other.contains(item)),
+      );
+      items.forEach((item, index) => {
+        animate(
+          item,
+          { opacity: [0, 1], y: ["1rem", 0] },
+          { duration: 0.6, delay: index * 0.08, ease: "easeInOut" },
+        );
+      });
+    }
 
     const TOTAL_STEPS = 5;
 
@@ -1167,6 +1188,7 @@ const messages = {
     interface ShowOptions {
       updateHash?: boolean;
       focusHeading?: boolean;
+      animate?: boolean;
     }
 
     function show(target: string | number, opts: ShowOptions = {}): void {
@@ -1174,20 +1196,18 @@ const messages = {
       if (index < 0 || index >= screens.length) return;
       const next = screens[index]!;
       const prev = screens[current];
-      // FIX: current aktualizowany SYNCHRONICZNIE — callback View Transition jest
-      // odroczony, więc pasek postępu i walidacja muszą czytać stan już teraz.
       current = index;
 
       const apply = (): void => {
         if (prev && prev !== next) prev.classList.remove("is-active");
         next.classList.add("is-active");
+        if (opts.animate !== false) animateScreenContent(next);
       };
 
-      if (!reduceMotion && document.startViewTransition) {
-        document.startViewTransition(apply);
-      } else {
-        apply();
-      }
+      // Zmiana ekranu bez View Transition: animacja wierszy startuje od razu.
+      // Pod cross-fade'em snapshot nowego ekranu łapie treść przy opacity 0,
+      // więc wejście czyta się jako dwa starty tej samej animacji.
+      apply();
 
       window.scrollTo({ top: 0, behavior: "instant" });
       if (opts.updateHash !== false) {
@@ -1629,11 +1649,15 @@ const messages = {
     form.addEventListener("change", saveDraft);
     restoreDraft();
 
-    // Wejście z hashem w URL / start od pierwszego ekranu
+    // Wejście z hashem w URL — ustaw ekran bez animacji i bez View Transition.
+    // Animację pierwszego ekranu odpala animateScreenContent() na końcu initBrief(),
+    // dokładnie raz (na iOS callback View Transition startuje później i powtarzał wejście).
     if (location.hash) {
-      show(location.hash.slice(1), { updateHash: false, focusHeading: false });
-    } else {
-      show(0, { updateHash: false, focusHeading: false });
+      show(location.hash.slice(1), {
+        updateHash: false,
+        focusHeading: false,
+        animate: false,
+      });
     }
 
     // ---------- Wysyłka ----------
@@ -1756,6 +1780,14 @@ const messages = {
         if (submitBtn) submitBtn.disabled = false;
       }
     });
+
+    const entryTransition = (window as Window & { __vt?: ViewTransition }).__vt;
+    const playEntry = (): void => animateScreenContent(screens[current]!);
+
+    // Wejście przez ClientRouter: poczekaj na koniec View Transition, inaczej
+    // animacja gra pod snapshotem przejścia i wygląda jak druga.
+    if (entryTransition) entryTransition.finished.then(playEntry, playEntry);
+    else playEntry();
   }
 
   // Pierwsze ładowanie…
