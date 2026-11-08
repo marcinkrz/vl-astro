@@ -29,72 +29,12 @@ const isActive = (href: string) =>
 
 <header id="main-head" class="fixed z-101 top-0 inset-x-0">
   <div
-    class="relative z-2 container-full py-3 md:py-4 flex justify-between items-start"
+    class="relative z-2 container-full py-3 md:py-4 flex justify-between items-center"
   >
-    <div class="w-full flex justify-between">
-      <Logo />
-      <div class="flex gap-4">
-        <Button
-          variant="outline"
-          size="small"
-          class="md:hidden"
-          href={getRoute(locale, "brief")}>Brief</Button
-        >
-        <Button
-          id="menu-toggle"
-          variant="ghost"
-          size="icon"
-          aria-label="Menu"
-          class={`md:hidden relative p-0 w-8 h-7 bg-transparent! focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white group
-        `}
-        >
-          <span
-            class={`
-            block
-            absolute
-            top-[calc(50%-1px)]
-            right-0
-            w-full h-0.75
-            bg-(--foreground)
-            transition-all duration-400 ease-in-out
-
-            group-[.is-active]:rotate-90
-            group-[.is-active]:bg-transparent
-
-            before:-top-2.5
-            before:origin-[50%_50%]
-            before:block
-            before:absolute
-            before:w-full
-            before:h-0.75
-            before:bg-(--foreground)
-            before:transition-all
-            before:duration-400
-            before:ease-in-out
-
-            group-[.is-active]:before:top-0
-            group-[.is-active]:before:rotate-135
-
-            after:top-2.5
-            after:origin-[50%_50%]
-            after:block
-            after:absolute
-            after:w-full
-            after:h-0.75
-            after:bg-(--foreground)
-            after:transition-all
-            after:duration-400
-            after:ease-in-out
-            
-            group-[.is-active]:after:top-0
-            group-[.is-active]:after:rotate-45
-          `}></span>
-        </Button>
-      </div>
-    </div>
-    <div class="hidden md:flex gap-x-4">
+    <Logo />
+    <div class="flex gap-x-4">
       <nav class="text-sm">
-        <ul class="flex h-full items-center gap-6 font-semibold">
+        <ul class="flex h-full items-center gap-x-3 md:gap-x-6 font-semibold">
           {
             items.map((item) => (
               <li>
@@ -123,56 +63,5 @@ const isActive = (href: string) =>
       </nav>
     </div>
   </div>
-
-  <div
-    id="mobile-nav"
-    class="group fixed z-1 inset-0 invisible [.is-active]:visible"
-  >
-    <nav class={`
-      relative z-2 top-1/2 -translate-y-1/2
-      `}
-    >
-      <ul class="relative z-2 text-center space-y-12">
-        {
-          items.map((item, index) => (
-            <li
-              class={`
-                transition-all duration-300
-                top-0 translate-y-3/4 opacity-0
-                group-[.is-active]:opacity-100
-                group-[.is-active]:top-1/2
-                group-[.is-active]:-translate-y-1/2
-                [transition-delay:${index * 50}ms]
-              `}
-              style={{
-                transitionDelay: `${index * 50}ms`
-              }}
-            >
-              <a href={item.href} class="display">
-                {item.label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
-    <div class="absolute inset-0 z-1 bg-(--background) opacity-30"></div>
-    <div class="absolute inset-0 bg-linear-to-b from-(--background) to-transparent"></div>
-  </div>
-  <div class="absolute inset-0 bg-linear-to-b from-(--background) from-25% to-transparent"></div>
+  <div class="absolute inset-0 bg-linear-to-b from-(--background) from-25% to-transparent" />
 </header>
-<script>
-  document.addEventListener("astro:page-load", () => {
-    const footer = document.getElementById("main-footer");
-    const main = document.querySelector("main");
-    const mobileNav = document.getElementById("mobile-nav");
-    const toggleButton = document.getElementById("menu-toggle");
-
-    toggleButton?.addEventListener("click", () => {
-      toggleButton?.classList.toggle("is-active");
-      mobileNav?.classList.toggle("is-active");
-      main?.classList.toggle("blur-sm");
-      footer?.classList.toggle("blur-sm");
-    });
-  });
-</script>
