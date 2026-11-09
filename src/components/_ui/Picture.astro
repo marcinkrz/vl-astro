@@ -75,7 +75,7 @@ const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
   data-picture
 >
   <span
-    class="absolute inset-0 bg-cover bg-center bg-no-repeat [image-rendering:pixelated]"
+    class="picture__placeholder absolute inset-0 bg-cover bg-center bg-no-repeat [image-rendering:pixelated] transition-opacity duration-300 ease-out"
     style={{ backgroundImage: `url("${placeholder.src}")` }}
     aria-hidden="true"></span>
 
@@ -183,6 +183,9 @@ const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
 
     canvas.classList.remove("opacity-0");
     canvas.classList.add("opacity-100");
+
+    const placeholder = root.querySelector<HTMLElement>(".picture__placeholder");
+    placeholder?.classList.add("opacity-0");
 
     let stage = 0;
     const runStage = () => {
