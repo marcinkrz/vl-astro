@@ -2,25 +2,16 @@
 import { getImage, Picture as AstroPicture } from "astro:assets";
 import type { ImageMetadata } from "astro";
 
-type PictureAspect = "video" | "3/2" | "4/3" | "square" | "2/3" | "3/4";
+const ASPECTS = {
+  video: { className: "aspect-video", ratio: [16, 9] },
+  "3/2": { className: "aspect-3/2", ratio: [3, 2] },
+  "4/3": { className: "aspect-4/3", ratio: [4, 3] },
+  square: { className: "aspect-square", ratio: [1, 1] },
+  "2/3": { className: "aspect-2/3", ratio: [2, 3] },
+  "3/4": { className: "aspect-3/4", ratio: [3, 4] },
+} as const;
 
-const ASPECT_CLASS: Record<PictureAspect, string> = {
-  video: "aspect-video",
-  "3/2": "aspect-3/2",
-  "4/3": "aspect-4/3",
-  square: "aspect-square",
-  "2/3": "aspect-2/3",
-  "3/4": "aspect-3/4",
-};
-
-const ASPECT_SIZE: Record<PictureAspect, [number, number]> = {
-  video: [16, 9],
-  "3/2": [3, 2],
-  "4/3": [4, 3],
-  square: [1, 1],
-  "2/3": [2, 3],
-  "3/4": [3, 4],
-};
+type PictureAspect = keyof typeof ASPECTS;
 
 interface Props {
   src: ImageMetadata;
@@ -61,7 +52,7 @@ const imageClass = [
   .filter(Boolean)
   .join(" ");
 
-const [aspectWidth, aspectHeight] = ASPECT_SIZE[aspect];
+const [aspectWidth, aspectHeight] = ASPECTS[aspect].ratio;
 const canvasWidth = 300;
 const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
 ---
@@ -69,7 +60,7 @@ const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
 <div
   class:list={[
     "relative w-full overflow-hidden bg-(--background-1)",
-    ASPECT_CLASS[aspect],
+    ASPECTS[aspect].className,
     className,
   ]}
   data-picture
@@ -103,11 +94,15 @@ const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
   const STAGES = [0.02, 0.04, 0.08, 0.12, 0.24];
   const STAGE_MS = 200;
 
-  const revealImage = (img: HTMLImageElement, canvas: HTMLCanvasElement) => {
-    img.classList.remove("opacity-0");
-    img.classList.add("opacity-100");
+  const hideCanvas = (canvas: HTMLCanvasElement) => {
     canvas.classList.remove("opacity-100");
     canvas.classList.add("opacity-0");
+  };
+
+  const showImage = (img: HTMLImageElement, canvas: HTMLCanvasElement) => {
+    img.classList.remove("opacity-0");
+    img.classList.add("opacity-100");
+    hideCanvas(canvas);
   };
 
   const drawCover = (
@@ -120,19 +115,11 @@ const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
     const sourceHeight = img.naturalHeight;
     if (!sourceWidth || !sourceHeight) return false;
 
-    const targetRatio = width / height;
-    let sx = 0;
-    let sy = 0;
-    let cropWidth = sourceWidth;
-    let cropHeight = sourceHeight;
-
-    if (sourceWidth / sourceHeight > targetRatio) {
-      cropWidth = Math.round(sourceHeight * targetRatio);
-      sx = Math.round((sourceWidth - cropWidth) / 2);
-    } else {
-      cropHeight = Math.round(sourceWidth / targetRatio);
-      sy = Math.round((sourceHeight - cropHeight) / 2);
-    }
+    const scale = Math.max(width / sourceWidth, height / sourceHeight);
+    const cropWidth = Math.min(sourceWidth, Math.round(width / scale));
+    const cropHeight = Math.min(sourceHeight, Math.round(height / scale));
+    const sx = Math.floor((sourceWidth - cropWidth) / 2);
+    const sy = Math.floor((sourceHeight - cropHeight) / 2);
 
     context.drawImage(img, sx, sy, cropWidth, cropHeight, 0, 0, width, height);
     return true;
@@ -152,21 +139,15 @@ const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
 
     const context = canvas.getContext("2d");
     if (!context) {
-      revealImage(img, canvas);
+      showImage(img, canvas);
       return;
     }
-    context.imageSmoothingEnabled = false;
 
-    // Rysujemy z odłączonego Image, bo <img> ma atrybuty width/height
-    // oryginału (np. 1280x720), a wczytany srcset może mieć inny rozmiar.
-    // Safari potrafi wtedy kadrować od góry/lewej zamiast środka.
+    // Safari: <img> ma atrybuty width/height oryginału, a srcset może mieć
+    // inny rozmiar — rysujemy z odłączonego Image, żeby crop był centrowany.
     const source = new Image();
     source.src = img.currentSrc || img.src;
-    try {
-      await source.decode();
-    } catch {
-      // poniżej fallback do elementu <img>
-    }
+    await source.decode().catch(() => undefined);
     const drawable = source.naturalWidth > 0 ? source : img;
 
     const reference = document.createElement("canvas");
@@ -175,7 +156,7 @@ const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
 
     const referenceContext = reference.getContext("2d");
     if (!referenceContext || !drawCover(referenceContext, drawable, width, height)) {
-      revealImage(img, canvas);
+      showImage(img, canvas);
       return;
     }
 
@@ -183,8 +164,6 @@ const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
 
     const placeholder = root.querySelector<HTMLElement>(".picture__placeholder");
 
-    // Obraz i canvas pokazujemy natychmiast: obraz leży pod canvasem,
-    // więc po wygaszeniu canvasu nie ma mignięcia tła.
     img.style.transition = "none";
     canvas.style.transition = "none";
     img.classList.remove("opacity-0");
@@ -207,7 +186,7 @@ const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
       frame.height = stageHeight;
       const frameContext = frame.getContext("2d");
       if (!frameContext) {
-        revealImage(img, canvas);
+        showImage(img, canvas);
         return;
       }
 
@@ -216,13 +195,13 @@ const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
 
       context.imageSmoothingEnabled = false;
       context.clearRect(0, 0, width, height);
-      context.drawImage(frame, 0, 0, stageWidth, stageHeight, 0, 0, width, height);
+      context.drawImage(frame, 0, 0, width, height);
 
       stage += 1;
       if (stage < STAGES.length) {
         window.setTimeout(runStage, STAGE_MS);
       } else {
-        revealImage(img, canvas);
+        hideCanvas(canvas);
       }
     };
 
@@ -248,26 +227,21 @@ const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
     const start = () => {
       if (started || !loaded) return;
       if (reducedMotion) {
-        revealImage(img, canvas);
+        started = true;
+        showImage(img, canvas);
         return;
       }
       if (!visible) return;
       started = true;
       observer?.disconnect();
-      animateReveal(root, img, canvas);
-    };
-
-    const markLoaded = () => {
-      loaded = true;
-      start();
+      void animateReveal(root, img, canvas);
     };
 
     const onLoad = () => {
-      if (typeof img.decode === "function") {
-        img.decode().catch(() => undefined).then(markLoaded);
-      } else {
-        markLoaded();
-      }
+      img.decode().catch(() => undefined).then(() => {
+        loaded = true;
+        start();
+      });
     };
 
     if (img.complete && img.naturalWidth > 0) {
@@ -278,7 +252,7 @@ const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
         "error",
         () => {
           observer?.disconnect();
-          revealImage(img, canvas);
+          showImage(img, canvas);
         },
         { once: true },
       );
