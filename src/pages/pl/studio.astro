@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Button from "@/components/_ui/Button.astro";
+import Picture from "@/components/_ui/Picture.astro";
+import studio02 from "@/assets/images/studio-02.jpg";
+import studio03 from "@/assets/images/studio-03.jpg";
 import { getRoute } from "@/i18n/routes";
 
 const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "pl";
@@ -10,8 +13,8 @@ const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "pl";
   title="Studio projektowe"
   description="Niezależne studio projektowe: identyfikacje wizualne, strony internetowe i sklepy. Bez pośredników — projekt i kod pod jednym dachem."
 >
-  <div class="container">
-    <header class="mt-36 mb-16 md:mb-24">
+  <div class="container-full">
+    <header class="mt-24 mb-16 md:mb-24">
       <h1 class="display mb-5 reveal">Visual Label — Studio projektowe</h1>
       <p class="h3 max-w-[52ch] text-(--muted) text-pretty reveal">
         Niezależne, jednoosobowe studio projektowe tworzące identyfikacje
@@ -20,16 +23,14 @@ const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "pl";
       </p>
     </header>
 
-    <div
-      class="mb-16 md:mb-24 w-full aspect-3/2 md:aspect-video overflow-hidden bg-(--background-1) reveal"
-    >
-      <img
-        src="/images/studio-02.jpg"
-        alt="Visual Label — wnętrze studia"
-        loading="lazy"
-        class="w-full h-full object-cover"
-      />
-    </div>
+    <Picture
+      src={studio02}
+      alt="Visual Label — wnętrze studia"
+      aspect="3/2"
+      class="mb-16 md:mb-24 md:aspect-video reveal"
+      sizes="100vw"
+      loading="lazy"
+    />
 
     <section class="mb-16 md:mb-24 border-t border-(--border)">
       <h2 class="mt-1 mb-6 text-xs font-mono uppercase text-(--muted) reveal">
@@ -46,16 +47,14 @@ const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as "pl";
       </p>
     </section>
 
-    <div
-      class="mb-16 md:mb-24 w-full aspect-3/2 md:aspect-video overflow-hidden bg-(--background-1) reveal"
-    >
-      <img
-        src="/images/studio-03.jpg"
-        alt="Wydrukowane materiały identyfikacji wizualnej na biurku"
-        loading="lazy"
-        class="w-full h-full object-cover"
-      />
-    </div>
+    <Picture
+      src={studio03}
+      alt="Wydrukowane materiały identyfikacji wizualnej na biurku"
+      aspect="3/2"
+      class="mb-16 md:mb-24 md:aspect-video reveal"
+      sizes="100vw"
+      loading="lazy"
+    />
 
     <section class="mb-16 md:mb-24 border-t border-(--border)">
       <h2 class="mt-1 mb-6 text-xs font-mono uppercase text-(--muted) reveal">

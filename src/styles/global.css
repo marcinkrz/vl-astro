@@ -132,7 +132,6 @@ html.reveal-on-scroll [data-reveal-group] > :not(.is-revealed) {
 }
 
 .display,
-.display-sm,
 .h1,
 .h2,
 .h3,
@@ -141,10 +140,6 @@ html.reveal-on-scroll [data-reveal-group] > :not(.is-revealed) {
 }
 
 .display {
-  @apply text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-none! font-features-['liga'] tracking-tighter;
-}
-
-.display-sm {
   @apply text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-none! font-features-['liga'] tracking-tighter;
 }
 

@@ -1,0 +1,283 @@
+---
+import { getImage, Picture as AstroPicture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+const ASPECTS = {
+  video: { className: "aspect-video", ratio: [16, 9] },
+  "3/2": { className: "aspect-3/2", ratio: [3, 2] },
+  "4/3": { className: "aspect-4/3", ratio: [4, 3] },
+  square: { className: "aspect-square", ratio: [1, 1] },
+  "2/3": { className: "aspect-2/3", ratio: [2, 3] },
+  "3/4": { className: "aspect-3/4", ratio: [3, 4] },
+} as const;
+
+type PictureAspect = keyof typeof ASPECTS;
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  aspect?: PictureAspect;
+  class?: string;
+  imgClass?: string;
+  sizes?: string;
+  widths?: number[];
+  loading?: "eager" | "lazy";
+}
+
+const {
+  src,
+  alt,
+  aspect = "3/2",
+  class: className,
+  imgClass,
+  sizes = "100vw",
+  widths = [320, 480, 640, 960, 1280],
+  loading = "lazy",
+} = Astro.props;
+
+const availableWidths = [...new Set(widths.filter((width) => width <= src.width))];
+if (availableWidths.length === 0) availableWidths.push(src.width);
+
+const placeholder = await getImage({
+  src,
+  width: 16,
+  format: "jpg",
+  quality: 100,
+});
+
+const imageClass = [
+  "picture__img absolute inset-0 h-full w-full object-cover opacity-0 transition-all duration-300 ease-out",
+  imgClass,
+]
+  .filter(Boolean)
+  .join(" ");
+
+const [aspectWidth, aspectHeight] = ASPECTS[aspect].ratio;
+const canvasWidth = 300;
+const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
+---
+
+<div
+  class:list={[
+    "relative w-full overflow-hidden bg-(--background-1)",
+    ASPECTS[aspect].className,
+    className,
+  ]}
+  data-picture
+>
+  <span
+    class="picture__placeholder absolute inset-0 bg-cover bg-center bg-no-repeat [image-rendering:pixelated] transition-opacity duration-200 ease-out"
+    style={{ backgroundImage: `url("${placeholder.src}")` }}
+    aria-hidden="true"></span>
+
+  <AstroPicture
+    src={src}
+    alt={alt}
+    widths={availableWidths}
+    sizes={sizes}
+    formats={["avif", "webp"]}
+    loading={loading}
+    decoding="async"
+    pictureAttributes={{ class: "contents" }}
+    class={imageClass}
+  />
+
+  <canvas
+    width={canvasWidth}
+    height={canvasHeight}
+    class="picture__canvas pointer-events-none absolute inset-0 h-full w-full opacity-0 transition-opacity duration-200 ease-out"
+    aria-hidden="true"
+  ></canvas>
+</div>
+
+<script>
+  const STAGES = [0.02, 0.04, 0.08, 0.12, 0.24];
+  const STAGE_MS = 200;
+
+  const hideCanvas = (canvas: HTMLCanvasElement) => {
+    canvas.classList.remove("opacity-100");
+    canvas.classList.add("opacity-0");
+  };
+
+  const showImage = (img: HTMLImageElement, canvas: HTMLCanvasElement) => {
+    img.classList.remove("opacity-0");
+    img.classList.add("opacity-100");
+    hideCanvas(canvas);
+  };
+
+  const drawCover = (
+    context: CanvasRenderingContext2D,
+    img: HTMLImageElement,
+    width: number,
+    height: number,
+  ) => {
+    const sourceWidth = img.naturalWidth;
+    const sourceHeight = img.naturalHeight;
+    if (!sourceWidth || !sourceHeight) return false;
+
+    const scale = Math.max(width / sourceWidth, height / sourceHeight);
+    const cropWidth = Math.min(sourceWidth, Math.round(width / scale));
+    const cropHeight = Math.min(sourceHeight, Math.round(height / scale));
+    const sx = Math.floor((sourceWidth - cropWidth) / 2);
+    const sy = Math.floor((sourceHeight - cropHeight) / 2);
+
+    context.drawImage(img, sx, sy, cropWidth, cropHeight, 0, 0, width, height);
+    return true;
+  };
+
+  const animateReveal = async (
+    root: HTMLElement,
+    img: HTMLImageElement,
+    canvas: HTMLCanvasElement,
+  ) => {
+    const box = root.getBoundingClientRect();
+    const width = Math.max(1, Math.round(box.width));
+    const height = Math.max(1, Math.round(box.height));
+
+    canvas.width = width;
+    canvas.height = height;
+
+    const context = canvas.getContext("2d");
+    if (!context) {
+      showImage(img, canvas);
+      return;
+    }
+
+    // Safari: <img> ma atrybuty width/height oryginału, a srcset może mieć
+    // inny rozmiar — rysujemy z odłączonego Image, żeby crop był centrowany.
+    const source = new Image();
+    source.src = img.currentSrc || img.src;
+    await source.decode().catch(() => undefined);
+    const drawable = source.naturalWidth > 0 ? source : img;
+
+    const reference = document.createElement("canvas");
+    reference.width = width;
+    reference.height = height;
+
+    const referenceContext = reference.getContext("2d");
+    if (!referenceContext || !drawCover(referenceContext, drawable, width, height)) {
+      showImage(img, canvas);
+      return;
+    }
+
+    const frame = document.createElement("canvas");
+
+    const placeholder = root.querySelector<HTMLElement>(".picture__placeholder");
+
+    img.style.transition = "none";
+    canvas.style.transition = "none";
+    img.classList.remove("opacity-0");
+    img.classList.add("opacity-100");
+    canvas.classList.remove("opacity-0");
+    canvas.classList.add("opacity-100");
+    placeholder?.classList.add("opacity-0");
+
+    void canvas.offsetWidth;
+    img.style.transition = "";
+    canvas.style.transition = "";
+
+    let stage = 0;
+    const runStage = () => {
+      const scale = STAGES[stage];
+      const stageWidth = Math.max(1, Math.round(width * scale));
+      const stageHeight = Math.max(1, Math.round(height * scale));
+
+      frame.width = stageWidth;
+      frame.height = stageHeight;
+      const frameContext = frame.getContext("2d");
+      if (!frameContext) {
+        showImage(img, canvas);
+        return;
+      }
+
+      frameContext.imageSmoothingEnabled = true;
+      frameContext.drawImage(reference, 0, 0, stageWidth, stageHeight);
+
+      context.imageSmoothingEnabled = false;
+      context.clearRect(0, 0, width, height);
+      context.drawImage(frame, 0, 0, width, height);
+
+      stage += 1;
+      if (stage < STAGES.length) {
+        window.setTimeout(runStage, STAGE_MS);
+      } else {
+        hideCanvas(canvas);
+      }
+    };
+
+    runStage();
+  };
+
+  const init = (root: HTMLElement) => {
+    if (root.dataset.pictureReady === "true") return;
+    root.dataset.pictureReady = "true";
+
+    const img = root.querySelector<HTMLImageElement>(".picture__img");
+    const canvas = root.querySelector<HTMLCanvasElement>(".picture__canvas");
+    if (!img || !canvas) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const hasObserver = "IntersectionObserver" in window;
+
+    let loaded = false;
+    let visible = !hasObserver;
+    let started = false;
+    let observer: IntersectionObserver | undefined;
+
+    const start = () => {
+      if (started || !loaded) return;
+      if (reducedMotion) {
+        started = true;
+        showImage(img, canvas);
+        return;
+      }
+      if (!visible) return;
+      started = true;
+      observer?.disconnect();
+      void animateReveal(root, img, canvas);
+    };
+
+    const onLoad = () => {
+      img.decode().catch(() => undefined).then(() => {
+        loaded = true;
+        start();
+      });
+    };
+
+    if (img.complete && img.naturalWidth > 0) {
+      onLoad();
+    } else {
+      img.addEventListener("load", onLoad, { once: true });
+      img.addEventListener(
+        "error",
+        () => {
+          observer?.disconnect();
+          showImage(img, canvas);
+        },
+        { once: true },
+      );
+    }
+
+    if (hasObserver) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((entry) => entry.isIntersecting)) return;
+          visible = true;
+          observer?.disconnect();
+          start();
+        },
+        { threshold: 0.15 },
+      );
+      observer.observe(root);
+    } else {
+      start();
+    }
+  };
+
+  const initAll = () => {
+    document.querySelectorAll<HTMLElement>("[data-picture]").forEach(init);
+  };
+
+  initAll();
+  document.addEventListener("astro:page-load", initAll);
+</script>
