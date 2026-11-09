@@ -138,7 +138,7 @@ const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
     return true;
   };
 
-  const animateReveal = (
+  const animateReveal = async (
     root: HTMLElement,
     img: HTMLImageElement,
     canvas: HTMLCanvasElement,
@@ -157,12 +157,24 @@ const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
     }
     context.imageSmoothingEnabled = false;
 
+    // Rysujemy z odłączonego Image, bo <img> ma atrybuty width/height
+    // oryginału (np. 1280x720), a wczytany srcset może mieć inny rozmiar.
+    // Safari potrafi wtedy kadrować od góry/lewej zamiast środka.
+    const source = new Image();
+    source.src = img.currentSrc || img.src;
+    try {
+      await source.decode();
+    } catch {
+      // poniżej fallback do elementu <img>
+    }
+    const drawable = source.naturalWidth > 0 ? source : img;
+
     const reference = document.createElement("canvas");
     reference.width = width;
     reference.height = height;
 
     const referenceContext = reference.getContext("2d");
-    if (!referenceContext || !drawCover(referenceContext, img, width, height)) {
+    if (!referenceContext || !drawCover(referenceContext, drawable, width, height)) {
       revealImage(img, canvas);
       return;
     }
