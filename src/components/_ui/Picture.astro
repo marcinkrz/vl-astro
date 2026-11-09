@@ -181,11 +181,21 @@ const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
 
     const frame = document.createElement("canvas");
 
+    const placeholder = root.querySelector<HTMLElement>(".picture__placeholder");
+
+    // Obraz i canvas pokazujemy natychmiast: obraz leży pod canvasem,
+    // więc po wygaszeniu canvasu nie ma mignięcia tła.
+    img.style.transition = "none";
+    canvas.style.transition = "none";
+    img.classList.remove("opacity-0");
+    img.classList.add("opacity-100");
     canvas.classList.remove("opacity-0");
     canvas.classList.add("opacity-100");
-
-    const placeholder = root.querySelector<HTMLElement>(".picture__placeholder");
     placeholder?.classList.add("opacity-0");
+
+    void canvas.offsetWidth;
+    img.style.transition = "";
+    canvas.style.transition = "";
 
     let stage = 0;
     const runStage = () => {
