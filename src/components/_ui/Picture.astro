@@ -51,7 +51,7 @@ const placeholder = await getImage({
   src,
   width: 16,
   format: "jpg",
-  quality: 10,
+  quality: 100,
 });
 
 const imageClass = [
@@ -100,8 +100,8 @@ const canvasHeight = Math.round((canvasWidth * aspectHeight) / aspectWidth);
 </div>
 
 <script>
-  const STAGES = [0.02, 0.04, 0.08, 0.12, 0.16, 0.32, 0.64];
-  const STAGE_MS = 200;
+  const STAGES = [0.02, 0.04, 0.08, 0.16, 0.32, 0.48];
+  const STAGE_MS = 100;
 
   const revealImage = (img: HTMLImageElement, canvas: HTMLCanvasElement) => {
     img.classList.remove("opacity-0");
