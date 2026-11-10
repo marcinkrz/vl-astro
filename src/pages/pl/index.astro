@@ -5,6 +5,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Button from "@/components/_ui/Button.astro";
 import Picture from "@/components/_ui/Picture.astro";
+import AsciiGalaxy from "@/components/AsciiGalaxy.astro";
 import { Galaxy, LaptopMinimal, MoveRight, Stamp, Store } from "@lucide/astro";
 
 const locale = Astro.currentLocale === "pl" ? "pl" : "en";
@@ -25,8 +26,8 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
         <h1 class="lg:max-w-2/3 xl:max-w-1/2 mt-24 mb-3 h1 text-balance reveal">Efektowne projekty i przemyślane doświadczenia. Napędzają rozwój Twojej marki, w sieci i poza nią.</h1>
         <p class="mb-6 text-sm text-(--muted) reveal">Studio kreatywne / Developer</p>
       </div>
-      <div class="w-full aspect-3/4 sm:aspect-square md:aspect-3/2 lg:aspect-video flex justify-center items-center border border-(--border) font-mono text-sm text-(--muted) reveal">
-        animacja projektów
+      <div class="relative w-full aspect-3/4 sm:aspect-square md:aspect-3/2 lg:aspect-video border border-(--border) overflow-hidden reveal">
+        <AsciiGalaxy label="Animacja ASCII galaktyki obracającej się zgodnie z ruchem wskazówek zegara" />
       </div>
     </section>
 
