@@ -17,10 +17,41 @@ const { label, class: className = "" } = Astro.props;
 </div>
 
 <script>
-  const PALETTE = " .·:-=+*#%@";
-  const OMEGA = 0.26; // rad/s, one clockwise revolution every ~24 s
+  const SLIDE_MS = 1000;
+  const OMEGA = 0.5; // rad/s, one clockwise revolution every ~12.6 s
   const FRAME_MS = 1000 / 30;
   const cleanups = new Set<() => void>();
+
+  type Rgb = [number, number, number];
+  type Star = { r: number; theta: number; b: number };
+  type FieldStar = { x: number; y: number; b: number; phase: number; speed: number };
+
+  const VARIANTS = [
+    {
+      name: "exposure",
+      chars: " .·:-=+*#%@",
+      decay: 0.95,
+      zoom: 1.0,
+      skip: 1,
+      stops: ["shadow", "primary", "highlight"],
+    },
+    {
+      name: "flare",
+      chars: " .:=+*#%@",
+      decay: 0.9,
+      zoom: 0.96,
+      skip: 1,
+      stops: ["shadow", "highlight", "primary"],
+    },
+    {
+      name: "solar",
+      chars: " .:+#%@@",
+      decay: 0.94,
+      zoom: 1.02,
+      skip: 1,
+      stops: ["primary", "highlight", "highlight"],
+    },
+  ] as const;
 
   function mulberry32(seed: number) {
     let a = seed >>> 0;
@@ -33,9 +64,6 @@ const { label, class: className = "" } = Astro.props;
     };
   }
 
-  type Star = { r: number; theta: number; b: number };
-  type FieldStar = { x: number; y: number; b: number; phase: number; speed: number };
-
   function buildGalaxy(count: number, seed: number) {
     const rand = mulberry32(seed);
     const stars: Star[] = [];
@@ -47,11 +75,14 @@ const { label, class: className = "" } = Astro.props;
       const arm = i % 2;
       const u = rand();
       const r = 0.12 + 0.88 * Math.pow(u, 0.9);
+      // 180-degree flipped spiral; unequal arms make the flip visible
       const theta =
+        Math.PI +
         arm * Math.PI +
         4.5 * Math.log(r + 0.08) +
         (rand() - 0.5) * 0.18;
-      const b = (0.5 + 0.5 * rand()) * (1.15 - 0.35 * r);
+      const weight = arm === 0 ? 1 : 0.66;
+      const b = (0.5 + 0.5 * rand()) * (1.15 - 0.35 * r) * weight;
       stars.push({ r, theta, b });
     }
     for (let i = 0; i < disk; i++) {
@@ -90,6 +121,11 @@ const { label, class: className = "" } = Astro.props;
     if (!ctx) return;
     root.dataset.ready = "true";
 
+    const probeCanvas = document.createElement("canvas");
+    probeCanvas.width = 1;
+    probeCanvas.height = 1;
+    const probe = probeCanvas.getContext("2d", { willReadFrequently: true });
+
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
     let reduced = reduce.matches;
     let width = 0;
@@ -102,29 +138,104 @@ const { label, class: className = "" } = Astro.props;
     let offY = 0;
     let radiusPx = 1;
     let fontSize = 11;
-    let color = getComputedStyle(canvas).color;
+    let primaryCss = "rgb(214, 74, 43)";
+    let luts: string[][] = [];
     let stars: Star[] = [];
     let field: FieldStar[] = [];
     let density = new Float32Array(0);
+    let trail = new Float32Array(0);
+    let activeVariant = -1;
     let elapsed = 0;
     let last = 0;
     let lastDraw = 0;
     let raf = 0;
     let running = false;
 
-    const draw = (phase: number) => {
+    const cssColor = (name: string, fallback: string) => {
+      const el = document.createElement("span");
+      el.style.color = `var(${name})`;
+      el.style.display = "none";
+      root.appendChild(el);
+      const value = getComputedStyle(el).color;
+      el.remove();
+      return value || fallback;
+    };
+
+    const toRgb = (css: string, fallback: Rgb): Rgb => {
+      if (!probe) return fallback;
+      probe.clearRect(0, 0, 1, 1);
+      probe.fillStyle = "#000";
+      probe.fillStyle = css;
+      probe.fillRect(0, 0, 1, 1);
+      const d = probe.getImageData(0, 0, 1, 1).data;
+      return d[3] ? [d[0], d[1], d[2]] : fallback;
+    };
+
+    const isDark = () => {
+      const theme = document.documentElement.dataset.theme;
+      if (theme === "dark") return true;
+      if (theme === "light") return false;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    };
+
+    const rgbCss = (c: Rgb) => `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+
+    const makeLut = (stops: readonly string[], colors: Record<string, Rgb>) => {
+      const a = colors[stops[0]];
+      const b = colors[stops[1]];
+      const c = colors[stops[2]];
+      const out: string[] = [];
+      for (let i = 0; i < 32; i++) {
+        const t = i / 31;
+        const from = t < 0.5 ? a : b;
+        const to = t < 0.5 ? b : c;
+        const k = t < 0.5 ? t * 2 : (t - 0.5) * 2;
+        out.push(rgbCss([
+          Math.round(from[0] + (to[0] - from[0]) * k),
+          Math.round(from[1] + (to[1] - from[1]) * k),
+          Math.round(from[2] + (to[2] - from[2]) * k),
+        ]));
+      }
+      return out;
+    };
+
+    const refreshColors = () => {
+      const white = toRgb(cssColor("--white", "rgb(250,249,245)"), [250, 249, 245]);
+      const black = toRgb(cssColor("--black", "rgb(20,20,18)"), [20, 20, 18]);
+      const primary = toRgb(cssColor("--primary", "rgb(214,74,43)"), [214, 74, 43]);
+      const dark = isDark();
+      const palette = {
+        shadow: dark ? black : white,
+        highlight: dark ? white : black,
+        primary,
+      };
+      primaryCss = rgbCss(primary);
+      luts = VARIANTS.map((v) => makeLut(v.stops, palette));
+    };
+
+    const draw = (time: number, dt = 1 / 30) => {
       if (!cols || !rows) return;
+      const variant = Math.floor((time * 1000) / SLIDE_MS) % VARIANTS.length;
+      const cfg = VARIANTS[variant];
+      if (variant !== activeVariant) {
+        activeVariant = variant;
+        trail.fill(0);
+      }
+
+      const phase = time * OMEGA;
+      const rp = radiusPx * cfg.zoom;
+      const local = time % (SLIDE_MS / 1000);
+
       ctx.clearRect(0, 0, width, height);
 
-      // A very soft core halo; the character grid carries the actual image.
       const glow = ctx.createRadialGradient(
         width / 2, height / 2, 0,
-        width / 2, height / 2, radiusPx * 1.35,
+        width / 2, height / 2, rp * 1.35,
       );
-      glow.addColorStop(0, color);
+      glow.addColorStop(0, primaryCss);
       glow.addColorStop(1, "transparent");
       ctx.save();
-      ctx.globalAlpha = 0.045;
+      ctx.globalAlpha = 0.055;
       ctx.fillStyle = glow;
       ctx.fillRect(0, 0, width, height);
       ctx.restore();
@@ -137,8 +248,8 @@ const { label, class: className = "" } = Astro.props;
         const s = stars[i];
         // screen y points down, so a growing angle is clockwise
         const a = s.theta + phase;
-        const x = cx + (Math.cos(a) * s.r * radiusPx) / cellW;
-        const y = cy + (Math.sin(a) * s.r * radiusPx) / cellH;
+        const x = cx + (Math.cos(a) * s.r * rp) / cellW;
+        const y = cy + (Math.sin(a) * s.r * rp) / cellH;
         const c = Math.floor(x);
         const r = Math.floor(y);
         if (c >= 0 && c < cols && r >= 0 && r < rows) {
@@ -148,35 +259,88 @@ const { label, class: className = "" } = Astro.props;
       }
       for (let i = 0; i < field.length; i++) {
         const s = field[i];
-        const tw = 0.6 + 0.4 * Math.sin(elapsed * s.speed + s.phase);
-        const c = Math.floor(cx + (s.x * radiusPx) / cellW);
-        const r = Math.floor(cy + (s.y * radiusPx) / cellH);
+        const tw = 0.6 + 0.4 * Math.sin(time * s.speed + s.phase);
+        const c = Math.floor(cx + (s.x * rp) / cellW);
+        const r = Math.floor(cy + (s.y * rp) / cellH);
         if (c >= 0 && c < cols && r >= 0 && r < rows) {
           const k = r * cols + c;
           density[k] = Math.max(density[k], s.b * tw * 0.55);
         }
       }
 
-      ctx.fillStyle = color;
+      // Afterimage: the arms leave a fading trail behind the clockwise motion.
+      const decay = Math.pow(cfg.decay, dt * 30);
+      for (let k = 0; k < density.length; k++) {
+        trail[k] = Math.max(density[k], trail[k] * decay);
+      }
+
       ctx.font = `${fontSize}px ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
+      const lut = luts[variant];
+      const pal = cfg.chars;
 
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
-          const v = density[r * cols + c];
+          if (cfg.skip > 1 && (r + c) % cfg.skip !== 0) continue;
+          const v = trail[r * cols + c];
           if (v < 0.055) continue;
-          const idx = Math.min(
-            PALETTE.length - 1,
-            Math.round(Math.pow(v, 0.72) * (PALETTE.length - 1)),
-          );
-          const ch = PALETTE[idx];
+          const ci = Math.min(pal.length - 1, Math.round(Math.pow(v, 0.72) * (pal.length - 1)));
+          const ch = pal[ci];
           if (ch === " ") continue;
-          ctx.globalAlpha = Math.min(1, 0.18 + v * 0.86);
+          const colorIndex = Math.min(31, Math.floor(v * 31));
+          ctx.fillStyle = lut[colorIndex];
+          ctx.globalAlpha = Math.min(1, 0.22 + v * 0.9);
           ctx.fillText(ch, offX + c * cellW, offY + r * cellH);
         }
       }
       ctx.globalAlpha = 1;
+
+      // Per-slide overlays: orbit / pulse ring / scanline.
+      const distToCenter = (c: number, r: number) =>
+        Math.hypot((c - cx) * cellW, (r - cy) * cellH);
+
+      if (cfg.name === "exposure") {
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const d = distToCenter(c, r);
+            if (Math.abs(d - rp * 0.99) < cellH * 0.38) {
+              ctx.fillStyle = primaryCss;
+              ctx.globalAlpha = 0.34;
+              ctx.fillText("·", offX + c * cellW, offY + r * cellH);
+            }
+          }
+        }
+      } else if (cfg.name === "flare") {
+        const ringR = local * rp * 1.35;
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const d = distToCenter(c, r);
+            if (Math.abs(d - ringR) < cellH * 0.55) {
+              ctx.fillStyle = primaryCss;
+              ctx.globalAlpha = 0.55;
+              ctx.fillText("+", offX + c * cellW, offY + r * cellH);
+            }
+          }
+        }
+      } else {
+        const scanRow = Math.floor(local * rows);
+        ctx.fillStyle = primaryCss;
+        ctx.globalAlpha = 0.4;
+        for (let c = 0; c < cols; c += 2) {
+          ctx.fillText("-", offX + c * cellW, offY + scanRow * cellH);
+        }
+      }
+      ctx.globalAlpha = 1;
+
+      // A single primary wipe marks the slide change.
+      if (local < 0.1) {
+        const x = (local / 0.1) * width;
+        ctx.fillStyle = primaryCss;
+        ctx.globalAlpha = 0.22;
+        ctx.fillRect(x, 0, 1.5, height);
+        ctx.globalAlpha = 1;
+      }
     };
 
     const tick = (now: number) => {
@@ -185,11 +349,10 @@ const { label, class: className = "" } = Astro.props;
       const dt = Math.min(0.12, (now - last) / 1000);
       last = now;
       elapsed += dt;
-      // Keep the elapsed value bounded; phase is all that matters.
       if (elapsed > 1e6) elapsed = 0;
       if (!lastDraw) lastDraw = now;
       if (now - lastDraw >= FRAME_MS) {
-        draw(elapsed * OMEGA);
+        draw(elapsed, dt);
         lastDraw = now;
       }
       raf = requestAnimationFrame(tick);
@@ -228,18 +391,18 @@ const { label, class: className = "" } = Astro.props;
       offX = (width - cols * cellW) / 2 + cellW / 2;
       offY = (height - rows * cellH) / 2 + cellH / 2;
       radiusPx = Math.min(width, height) * 0.44;
-      color = getComputedStyle(canvas).color;
 
       const count = Math.min(9000, Math.round(cols * rows * 0.9));
       const galaxy = buildGalaxy(count, 1337 + cols * 1000 + rows);
       stars = galaxy.stars;
       field = galaxy.field;
       density = new Float32Array(cols * rows);
-      draw(elapsed * OMEGA);
+      trail = new Float32Array(cols * rows);
+      activeVariant = -1;
+      draw(elapsed, 1 / 30);
     };
 
-    const onResize = () => layout();
-    const ro = new ResizeObserver(onResize);
+    const ro = new ResizeObserver(layout);
     ro.observe(root);
 
     const onVisibility = () => {
@@ -252,16 +415,14 @@ const { label, class: className = "" } = Astro.props;
       reduced = reduce.matches;
       if (reduced) {
         stop();
-        draw(0);
-      } else {
-        start();
-      }
+        draw(0, 1 / 30);
+      } else start();
     };
     reduce.addEventListener("change", onMotionChange);
 
     const themeObserver = new MutationObserver(() => {
-      color = getComputedStyle(canvas).color;
-      if (reduced) draw(0);
+      refreshColors();
+      if (reduced) draw(elapsed, 1 / 30);
     });
     themeObserver.observe(document.documentElement, {
       attributes: true,
@@ -278,8 +439,9 @@ const { label, class: className = "" } = Astro.props;
     };
     cleanups.add(cleanup);
 
+    refreshColors();
     layout();
-    if (reduced) draw(0);
+    if (reduced) draw(0, 1 / 30);
     else start();
   }
 
