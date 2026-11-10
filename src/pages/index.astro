@@ -21,32 +21,23 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 <BaseLayout>
   <main class="container-full space-y-32">
     <section class="mb-6 min-h-[70vh] flex flex-col items-start justify-between">
-      <div>
-        <h1 class="xl:max-w-1/2 mt-24 mb-3 display reveal">
-          Creative services <br>for businesses
-        </h1>
-        <p class="mb-4 lead text-(--muted) reveal">
-          At Visual Label, we create the desired brand image, online and beyond.
-        </p>
-        <Button
-          href={getRoute(locale, "brief")}
-          variant="outline"
-          size="large"
-          class="mb-4 reveal"
-        >
-          Request a quote
-        </Button>
-      </div> 
-      <div class="w-full aspect-video bg-(--background) bg-blend-exclusion bg-size-[100%_100%] bg-[url(/images/ascii-spectral.gif)] [image-rendering:pixelated] reveal"></div>
+      <div class="w-full">
+        <h1 class="lg:max-w-2/3 xl:max-w-1/2 mt-24 mb-3 display text-balance reveal">Impactful designs and experiences. They drive your brand’s growth, both online and offline.</h1>
+        <p class="mb-6 text-sm text-(--muted) reveal">Creative studio / Developer</p>
+      </div>
+      <div class="w-full aspect-3/4 sm:aspect-square md:aspect-3/2 lg:aspect-video flex justify-center items-center border border-(--border) font-mono text-sm text-(--muted) reveal">
+        projects animation
+      </div>
     </section>
 
     <section
       class="-mx-3 md:-mx-4 lg:mx-auto"
     >
       <header
-        class="mt-1 mb-8 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) reveal"
+        class="mt-1 mb-8 pt-2 px-3 md:px-4 lg:px-0 border-t border-(--border) reveal"
       >
-        <h2 class="text-(--muted)">Services</h2>
+        <h2 class="mb-3 text-(--muted)">Services</h2>
+        <p class="lead">I help small businesses build a unique brand identity. From the initial discussion and brief, through sketches and proposals, to implementation and support.</p>
       </header>
 
       <div class="relative w-full">
@@ -66,7 +57,7 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
               </Button>
             </h3>
             <p class="text-sm text-(--muted) text-pretty">
-              Logos and visual identity systems that scale from a business card
+              Logos and visual identity system that scale from a business card
               to a billboard.
             </p>
           </li>

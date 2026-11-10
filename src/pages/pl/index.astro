@@ -21,32 +21,23 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 <BaseLayout>
   <main class="container-full space-y-32">
     <section class="mb-6 min-h-[70vh] flex flex-col items-start justify-between">
-      <div>
-        <h1 class="xl:max-w-1/2 mt-24 mb-3 display reveal">
-          Kreatywne usługi <br>dla biznesu
-        </h1>
-        <p class="mb-4 lead text-(--muted) reveal">
-          W Visual Label tworzymy pożądany wizerunek marki, w sieci i poza nią.
-        </p>
-        <Button
-          href={getRoute(locale, "brief")}
-          variant="outline"
-          size="large"
-          class="mb-4 reveal"
-        >
-          Wyceń projekt
-        </Button>
+      <div class="w-full">
+        <h1 class="lg:max-w-2/3 xl:max-w-1/2 mt-24 mb-3 display text-balance reveal">Efektowne projekty i przemyślane doświadczenia. Napędzają rozwój Twojej marki, w sieci i poza nią.</h1>
+        <p class="mb-6 text-sm text-(--muted) reveal">Studio kreatywne / Developer</p>
       </div>
-      <div class="w-full aspect-video bg-(--background) bg-blend-exclusion bg-size-[100%_100%] bg-[url(/images/ascii-spectral.gif)] [image-rendering:pixelated] reveal"></div>
+      <div class="w-full aspect-3/4 sm:aspect-square md:aspect-3/2 lg:aspect-video flex justify-center items-center border border-(--border) font-mono text-sm text-(--muted) reveal">
+        animacja projektów
+      </div>
     </section>
 
     <section
       class="-mx-3 md:-mx-4 lg:mx-auto"
     >
       <header
-        class="mt-1 mb-8 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) reveal"
+        class="mt-1 mb-8 pt-2 px-3 md:px-4 lg:px-0 border-t border-(--border) reveal"
       >
-        <h2 class="text-(--muted)">Usługi</h2>
+        <h2 class="mb-3 text-(--muted)">Usługi</h2>
+        <p class="lead">Pomagam małym firmom zbudować unikalny wizerunek. Od rozmowy i briefu, przez szkice i propozycje, po wdrożenie i wsparcie.</p>
       </header>
 
       <div class="relative w-full">
@@ -60,11 +51,11 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
                 variant="link"
                 class="h-auto h3 text-left whitespace-normal"
               >
-                Identyfikacja
+                Identyfikacjia
               </Button>
             </h3>
             <p class="text-sm text-(--muted) text-pretty">
-              Logo i systemy identyfikacji wizualnej, które skalują się od
+              Logo i system identyfikacji wizualnej, które skalują się od
               wizytówki do bilbordu.
             </p>
           </li>
