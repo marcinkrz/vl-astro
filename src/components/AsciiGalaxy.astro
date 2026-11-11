@@ -17,10 +17,129 @@ const { label, class: className = "" } = Astro.props;
 </div>
 
 <script>
-  const SLIDE_MS = 2000;
-  const OMEGA = 0.55; // rad/s, clockwise; one revolution every ~11.4 s
-  const FRAME_MS = 1000 / 30;
-  const PALETTE = " .·:-=+*#%@";
+  // All visual controls live here. The galaxy is a single, endless edge view.
+  const GALAXY = {
+    motion: {
+      omega: 0.55, // rad/s; one revolution every ~11.4 s
+      frameMs: 1000 / 30,
+    },
+    camera: {
+      tilt: 0.9, // 0 = face-on, 1.57 = edge-on
+      pa: 0.45, // screen rotation in radians
+      zoom: 1.08,
+      dx: 0,
+      dy: 0,
+    },
+    trail: {
+      decay: 0.95, // closer to 1 = longer afterimage
+      accumulation: 0.22,
+    },
+    stars: {
+      budget: 9000,
+      density: 0.9, // fraction of the character grid used as a star cap
+      armsShare: 0.62,
+      diskShare: 0.12,
+      haloShare: 0.1,
+    },
+    arms: {
+      count: 2,
+      startAngle: Math.PI,
+      pitch: 4.8, // larger = tighter spiral
+      pitchOffset: 0.08,
+      jitter: 0.06,
+      innerRadius: 0.1,
+      outerRadius: 1,
+      radialPower: 0.82,
+      brightnessBase: 0.5,
+      brightnessJitter: 0.5,
+      edgeGain: 1.1,
+      radialFalloff: 0.55,
+      secondWeight: 0.85,
+      companionChance: 0.5,
+      companionBrightness: 0.16,
+      companionJitter: 0.09,
+      companionScale: 0.035,
+      companionMaxRadius: 1.18,
+      accentChance: 0.008,
+      accentBrightness: 0.9,
+    },
+    disk: {
+      minRadius: 0.1,
+      maxRadius: 1,
+      brightnessMin: 0.08,
+      brightnessMax: 0.16,
+    },
+    halo: {
+      minRadius: 0.45,
+      maxRadius: 1.2,
+      brightnessMin: 0.05,
+      brightnessMax: 0.08,
+    },
+    core: {
+      radius: 0.16,
+      brightnessBase: 0.55,
+      brightnessRange: 0.45,
+    },
+    field: {
+      divisor: 16,
+      min: 60,
+      extent: 1.1,
+      clearRadius: 0.94,
+      brightnessMin: 0.2,
+      brightnessMax: 0.6,
+      speedMin: 1,
+      speedMax: 3,
+      glyphScale: 0.55,
+      brightnessScale: 0.58,
+      brightGlyphAt: 0.36,
+      chars: { dim: "·", bright: "+" },
+    },
+    render: {
+      family: `ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`,
+      weight: 400,
+      desktop: 14,
+      mobile: 11,
+      palette: " .·:-=+*#%@",
+      exponent: 0.68,
+      passes: [
+        { size: 0.2, min: 0.0125, max: 0.06 },
+        { size: 0.4, min: 0.025, max: 0.12 },
+        { size: 0.6, min: 0.05, max: 0.25 },
+        { size: 0.8, min: 0.1, max: 0.5 },
+        { size: 0.9, min: 0.15, max: 0.75 },
+        { size: 1, min: 0.2, max: 1 },
+        { size: 1.1, min: 0.25, max: 1.25 },
+        { size: 1.2, min: 0.3, max: 1.5 },
+      ],
+    },
+    background: {
+      fontScale: 0.55,
+      alpha: 0.55,
+      threshold: 0.94,
+      colorThreshold: 0.972,
+      chars: [
+        { min: 0.962, char: "#" },
+        { min: 0.95, char: ".:" },
+        { min: 0, char: ":·" },
+      ],
+    },
+    layout: {
+      radiusFactor: 0.44,
+      cellHeight: 1.02,
+      minCellWidth: 6,
+      seed: 1337,
+    },
+    accentVar: "--accent-1-light",
+    accentVars: [
+      "--primary-lighter",
+      "--primary-light",
+      "--accent-1-lighter",
+      "--accent-1-light",
+      "--accent-2-lighter",
+      "--accent-2-light",
+    ],
+  } as const;
+
   const cleanups = new Set<() => void>();
 
   type Rgb = [number, number, number];
@@ -32,76 +151,6 @@ const { label, class: className = "" } = Astro.props;
     phase: number;
     speed: number;
   };
-
-  // Six camera setups; the palette and character style stay constant.
-  const SHOTS = [
-    {
-      name: "wide",
-      tilt: 0.08,
-      pa: 0,
-      zoom: 4,
-      drift: -0.04,
-      dx: 0,
-      dy: 0,
-      decay: 0.95,
-      accent: "--primary-lighter",
-    },
-    {
-      name: "oblique",
-      tilt: 0.82,
-      pa: -0.35,
-      zoom: 4,
-      drift: -0.03,
-      dx: 0,
-      dy: 0,
-      decay: 0.94,
-      accent: "--accent-1-lighter",
-    },
-    {
-      name: "close",
-      tilt: 0.45,
-      pa: 0.28,
-      zoom: 4,
-      drift: 0.04,
-      dx: 0,
-      dy: 0,
-      decay: 0.95,
-      accent: "--accent-2-lighter",
-    },
-    {
-      name: "far",
-      tilt: 0.18,
-      pa: 0.12,
-      zoom: 4,
-      drift: 0.02,
-      dx: 0,
-      dy: 0,
-      decay: 0.94,
-      accent: "--primary-light",
-    },
-    {
-      name: "edge",
-      tilt: 0.90,
-      pa: 0.45,
-      zoom: 4,
-      drift: -0.01,
-      dx: 0,
-      dy: 0,
-      decay: 0.95,
-      accent: "--accent-1-light",
-    },
-    {
-      name: "dutch",
-      tilt: 0.55,
-      pa: 0.95,
-      zoom: 4,
-      drift: -0.02,
-      dx: 0,
-      dy: 0,
-      decay: 0.94,
-      accent: "--accent-2-light",
-    },
-  ] as const;
 
   function mulberry32(seed: number) {
     let a = seed >>> 0;
@@ -117,25 +166,32 @@ const { label, class: className = "" } = Astro.props;
   function buildGalaxy(count: number, seed: number) {
     const rand = mulberry32(seed);
     const stars: Star[] = [];
-    const arms = Math.round(count * 0.62);
-    const disk = Math.round(count * 0.12);
-    const halo = Math.round(count * 0.1);
+    const { armsShare, diskShare, haloShare } = GALAXY.stars;
+    const arms = Math.round(count * armsShare);
+    const disk = Math.round(count * diskShare);
+    const halo = Math.round(count * haloShare);
     const core = Math.max(0, count - arms - disk - halo);
 
+    const A = GALAXY.arms;
     for (let i = 0; i < arms; i++) {
-      const arm = i % 2;
+      const arm = i % A.count;
       const u = rand();
-      const r = 0.1 + 0.9 * Math.pow(u, 0.82);
+      const r =
+        A.innerRadius +
+        (A.outerRadius - A.innerRadius) * Math.pow(u, A.radialPower);
       // Negative log term = arms trail behind the clockwise rotation.
       const theta =
-        Math.PI +
-        arm * Math.PI -
-        4.8 * Math.log(r + 0.08) +
-        (rand() - 0.5) * 0.06;
-      const weight = arm === 0 ? 1 : 0.85;
-      let b = (0.5 + 0.5 * rand()) * (1.1 - 0.55 * r) * weight;
-      const p = rand() < 0.008;
-      if (p) b = Math.max(b, 0.9);
+        A.startAngle +
+        arm * ((Math.PI * 2) / A.count) -
+        A.pitch * Math.log(r + A.pitchOffset) +
+        (rand() - 0.5) * A.jitter;
+      const weight = arm === 0 ? 1 : A.secondWeight;
+      let b =
+        (A.brightnessBase + A.brightnessJitter * rand()) *
+        (A.edgeGain - A.radialFalloff * r) *
+        weight;
+      const p = rand() < A.accentChance;
+      if (p) b = Math.max(b, A.accentBrightness);
       stars.push({
         r,
         theta,
@@ -144,54 +200,66 @@ const { label, class: className = "" } = Astro.props;
         pc: rand() < 0.5 ? "*" : "+",
       });
       // Faint, wider companions soften the arm edge into a gradient.
-      if (rand() < 0.5) {
+      if (rand() < A.companionChance) {
         stars.push({
-          r: Math.min(1.18, r * (1.01 + rand() * 0.035)),
-          theta: theta + (rand() - 0.5) * 0.09,
-          b: b * 0.16,
+          r: Math.min(
+            A.companionMaxRadius,
+            r * (1.01 + rand() * A.companionScale),
+          ),
+          theta: theta + (rand() - 0.5) * A.companionJitter,
+          b: b * A.companionBrightness,
         });
       }
     }
+
+    const D = GALAXY.disk;
     for (let i = 0; i < disk; i++) {
-      const r = 0.1 + 0.9 * Math.sqrt(rand());
+      const r =
+        D.minRadius + (D.maxRadius - D.minRadius) * Math.sqrt(rand());
       stars.push({
         r,
         theta: rand() * Math.PI * 2,
-        b: 0.08 + 0.16 * rand(),
-      });
-    }
-    // Very faint outer dust keeps the edge from ending in a hard line.
-    for (let i = 0; i < halo; i++) {
-      const r = 0.45 + 0.75 * Math.sqrt(rand());
-      stars.push({
-        r,
-        theta: rand() * Math.PI * 2,
-        b: 0.05 + 0.08 * rand(),
-      });
-    }
-    for (let i = 0; i < core; i++) {
-      const r = 0.16 * Math.sqrt(rand());
-      stars.push({
-        r,
-        theta: rand() * Math.PI * 2,
-        b: 0.55 + 0.45 * (1 - r / 0.16),
+        b: D.brightnessMin + (D.brightnessMax - D.brightnessMin) * rand(),
       });
     }
 
+    const H = GALAXY.halo;
+    for (let i = 0; i < halo; i++) {
+      const r =
+        H.minRadius + (H.maxRadius - H.minRadius) * Math.sqrt(rand());
+      stars.push({
+        r,
+        theta: rand() * Math.PI * 2,
+        b: H.brightnessMin + (H.brightnessMax - H.brightnessMin) * rand(),
+      });
+    }
+
+    const C = GALAXY.core;
+    for (let i = 0; i < core; i++) {
+      const r = C.radius * Math.sqrt(rand());
+      stars.push({
+        r,
+        theta: rand() * Math.PI * 2,
+        b: C.brightnessBase + C.brightnessRange * (1 - r / C.radius),
+      });
+    }
+
+    const F = GALAXY.field;
     const field: FieldStar[] = [];
-    const fieldCount = Math.max(60, Math.round(count / 16));
+    const fieldCount = Math.max(F.min, Math.round(count / F.divisor));
     let guard = 0;
     while (field.length < fieldCount && guard < fieldCount * 20) {
       guard++;
-      const x = rand() * 2.2 - 1.1;
-      const y = rand() * 2.2 - 1.1;
-      if (Math.hypot(x, y) < 0.94) continue;
+      const x = rand() * 2 * F.extent - F.extent;
+      const y = rand() * 2 * F.extent - F.extent;
+      if (Math.hypot(x, y) < F.clearRadius) continue;
       field.push({
         x,
         y,
-        b: 0.2 + 0.4 * rand(),
+        b: F.brightnessMin + (F.brightnessMax - F.brightnessMin) * rand(),
         phase: rand() * Math.PI * 2,
-        speed: 1 + Math.floor(rand() * 3),
+        speed:
+          F.speedMin + Math.floor(rand() * (F.speedMax - F.speedMin + 1)),
       });
     }
     return { stars, field };
@@ -221,9 +289,8 @@ const { label, class: className = "" } = Astro.props;
     let offX = 0;
     let offY = 0;
     let radiusPx = 1;
-    let fontSize = 14;
+    let fontSize = GALAXY.render.desktop;
     let backgroundCss = "rgb(250, 249, 245)";
-    let foregroundCss = "rgb(20, 20, 18)";
     let primaryCss = "rgb(214, 74, 43)";
     let bgChar1Css = "rgb(245, 244, 240)";
     let bgChar2Css = "rgb(235, 234, 230)";
@@ -233,7 +300,6 @@ const { label, class: className = "" } = Astro.props;
     let field: FieldStar[] = [];
     let density = new Float32Array(0);
     let trail = new Float32Array(0);
-    let activeShot = -1;
     let elapsed = 0;
     let last = 0;
     let lastDraw = 0;
@@ -295,40 +361,24 @@ const { label, class: className = "" } = Astro.props;
       const fg = cvar("--foreground", "rgb(26,25,22)", [26, 25, 22]);
       const primary = cvar("--primary", "rgb(214,74,43)", [214, 74, 43]);
       backgroundCss = rgbCss(bg);
-      foregroundCss = rgbCss(fg);
       primaryCss = rgbCss(primary);
       bgChar1Css = rgbCss(bg1);
       bgChar2Css = rgbCss(bg2);
       // Eight-stop grayscale gradient from the project's theme variables.
       lut = makeLut([bg, bg1, bg2, bg3, fg3, fg2, fg1, fg]);
       accentMap = {};
-      for (const name of [
-        "--primary-lighter",
-        "--primary-light",
-        "--accent-1-lighter",
-        "--accent-1-light",
-        "--accent-2-lighter",
-        "--accent-2-light",
-      ]) {
+      for (const name of GALAXY.accentVars) {
         accentMap[name] = rgbCss(toRgb(cssColor(name, primaryCss), primary));
       }
     };
 
     const draw = (time: number, dt = 1 / 30) => {
       if (!cols || !rows) return;
-      const shot = Math.floor((time * 1000) / SLIDE_MS) % SHOTS.length;
-      const cfg = SHOTS[shot];
-      if (shot !== activeShot) {
-        activeShot = shot;
-        trail.fill(0);
-      }
-
-      const phase = time * OMEGA;
-      const local = time % (SLIDE_MS / 1000);
-      const zoom = cfg.zoom + cfg.drift * local;
-      const rp = radiusPx * zoom;
-      const ox = cfg.dx * radiusPx;
-      const oy = cfg.dy * radiusPx;
+      const camera = GALAXY.camera;
+      const phase = time * GALAXY.motion.omega;
+      const rp = radiusPx * camera.zoom;
+      const ox = camera.dx * radiusPx;
+      const oy = camera.dy * radiusPx;
 
       ctx.fillStyle = backgroundCss;
       ctx.fillRect(0, 0, width, height);
@@ -337,23 +387,31 @@ const { label, class: className = "" } = Astro.props;
       const cy = rows / 2;
 
       // Barely visible character texture in the void.
-      ctx.font = `400 ${fontSize * 0.55}px ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`;
+      const B = GALAXY.background;
+      ctx.font = `${GALAXY.render.weight} ${fontSize * B.fontScale}px ${GALAXY.render.family}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.globalAlpha = 0.55;
+      ctx.globalAlpha = B.alpha;
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
           const h = hash2(c + 17, r + 31);
-          if (h < 0.94) continue;
-          ctx.fillStyle = h > 0.972 ? bgChar2Css : bgChar1Css;
-          const ch = h > 0.962 ? "#" : h > 0.95 ? ".:" : ":·";
+          if (h < B.threshold) continue;
+          ctx.fillStyle = h > B.colorThreshold ? bgChar2Css : bgChar1Css;
+          let ch = B.chars[B.chars.length - 1].char;
+          for (const band of B.chars) {
+            if (h >= band.min) {
+              ch = band.char;
+              break;
+            }
+          }
           ctx.fillText(ch, offX + c * cellW, offY + r * cellH);
         }
       }
       ctx.globalAlpha = 1;
 
       // Fine, small type for the sky. The galaxy uses larger characters.
-      ctx.font = `400 ${fontSize * 0.55}px ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`;
+      const F = GALAXY.field;
+      ctx.font = `${GALAXY.render.weight} ${fontSize * F.glyphScale}px ${GALAXY.render.family}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       for (let i = 0; i < field.length; i++) {
@@ -362,10 +420,10 @@ const { label, class: className = "" } = Astro.props;
         const c = Math.floor(cx + (s.x * radiusPx) / cellW);
         const r = Math.floor(cy + (s.y * radiusPx) / cellH);
         if (c >= 0 && c < cols && r >= 0 && r < rows) {
-          const v = s.b * tw * 0.58;
+          const v = s.b * tw * F.brightnessScale;
           ctx.fillStyle = lut[Math.min(31, Math.max(0, Math.floor(v * 31)))];
           ctx.fillText(
-            v > 0.36 ? "+" : "·",
+            v > F.brightGlyphAt ? F.chars.bright : F.chars.dim,
             offX + c * cellW,
             offY + r * cellH,
           );
@@ -373,10 +431,10 @@ const { label, class: className = "" } = Astro.props;
       }
 
       density.fill(0);
-      const ct = Math.cos(cfg.tilt);
-      const st = Math.sin(cfg.tilt);
-      const cp = Math.cos(cfg.pa);
-      const sp = Math.sin(cfg.pa);
+      const ct = Math.cos(camera.tilt);
+      const st = Math.sin(camera.tilt);
+      const cp = Math.cos(camera.pa);
+      const sp = Math.sin(camera.pa);
 
       for (let i = 0; i < stars.length; i++) {
         const s = stars[i];
@@ -393,41 +451,33 @@ const { label, class: className = "" } = Astro.props;
         const r = Math.floor(cy + (sy * rp + oy) / cellH);
         if (c >= 0 && c < cols && r >= 0 && r < rows) {
           const k = r * cols + c;
-          density[k] = Math.min(1, density[k] + s.b * 0.22);
+          density[k] = Math.min(
+            1,
+            density[k] + s.b * GALAXY.trail.accumulation,
+          );
         }
       }
       // The arms leave a fading afterimage behind the clockwise motion.
-      const decay = Math.pow(cfg.decay, dt * 30);
+      const decay = Math.pow(GALAXY.trail.decay, dt * 30);
       for (let k = 0; k < density.length; k++) {
         trail[k] = Math.max(density[k], trail[k] * decay);
       }
 
-      const fontFamily = `ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`;
+      const R = GALAXY.render;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
-      // Three glyph sizes: fine halo, arm body, fat core/ridges.
-      const passes = [
-        { size: fontSize * 0.20, min: 0.0125, max: 0.06 },
-        { size: fontSize * 0.40, min: 0.025, max: 0.12 },
-        { size: fontSize * 0.60, min: 0.05, max: 0.25 },
-        { size: fontSize * 0.80, min: 0.10, max: 0.5 },
-        { size: fontSize * 0.90, min: 0.15, max: 0.75 },
-        { size: fontSize * 1, min: 0.20, max: 1 },
-        { size: fontSize * 1.10, min: 0.25, max: 1.25 },
-        { size: fontSize * 1.20, min: 0.30, max: 1.5 },
-      ];
-      for (const pass of passes) {
-        ctx.font = `400 ${pass.size}px ${fontFamily}`;
+      for (const pass of R.passes) {
+        ctx.font = `${R.weight} ${fontSize * pass.size}px ${R.family}`;
         for (let r = 0; r < rows; r++) {
           for (let c = 0; c < cols; c++) {
             const v = trail[r * cols + c];
             if (v < pass.min || v >= pass.max) continue;
             const ci = Math.min(
-              PALETTE.length - 1,
-              Math.round(Math.pow(v, 0.68) * (PALETTE.length - 1)),
+              R.palette.length - 1,
+              Math.round(Math.pow(v, R.exponent) * (R.palette.length - 1)),
             );
-            const ch = PALETTE[ci];
+            const ch = R.palette[ci];
             if (ch === " ") continue;
             ctx.fillStyle = lut[Math.min(31, Math.floor(v * 31))];
             ctx.fillText(ch, offX + c * cellW, offY + r * cellH);
@@ -436,8 +486,8 @@ const { label, class: className = "" } = Astro.props;
       }
 
       // A derived accent shade appears only as rare individual stars.
-      ctx.font = `400 ${fontSize}px ${fontFamily}`;
-      const accentCss = accentMap[cfg.accent] ?? primaryCss;
+      ctx.font = `${R.weight} ${fontSize}px ${R.family}`;
+      const accentCss = accentMap[GALAXY.accentVar] ?? primaryCss;
       for (let i = 0; i < stars.length; i++) {
         const s = stars[i];
         if (!s.p) continue;
@@ -456,12 +506,6 @@ const { label, class: className = "" } = Astro.props;
           ctx.fillText(s.pc ?? "*", offX + c * cellW, offY + r * cellH);
         }
       }
-
-      // Hard foreground wipe marks the camera cut; no soft transition.
-      if (local < 0.08) {
-        ctx.fillStyle = foregroundCss;
-        ctx.fillRect((local / 0.08) * width, 0, 2, height);
-      }
     };
 
     const tick = (now: number) => {
@@ -470,9 +514,8 @@ const { label, class: className = "" } = Astro.props;
       const dt = Math.min(0.12, (now - last) / 1000);
       last = now;
       elapsed += dt;
-      if (elapsed > 1e6) elapsed = 0;
       if (!lastDraw) lastDraw = now;
-      if (now - lastDraw >= FRAME_MS) {
+      if (now - lastDraw >= GALAXY.motion.frameMs) {
         draw(elapsed, dt);
         lastDraw = now;
       }
@@ -503,23 +546,29 @@ const { label, class: className = "" } = Astro.props;
       canvas.height = Math.round(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      fontSize = width < 480 ? 11 : 14;
-      ctx.font = `400 ${fontSize}px ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`;
-      cellW = Math.max(6, ctx.measureText("M").width);
-      cellH = fontSize * 1.02;
+      fontSize =
+        width < 480 ? GALAXY.render.mobile : GALAXY.render.desktop;
+      ctx.font = `${GALAXY.render.weight} ${fontSize}px ${GALAXY.render.family}`;
+      cellW = Math.max(GALAXY.layout.minCellWidth, ctx.measureText("M").width);
+      cellH = fontSize * GALAXY.layout.cellHeight;
       cols = Math.max(1, Math.floor(width / cellW));
       rows = Math.max(1, Math.floor(height / cellH));
       offX = (width - cols * cellW) / 2 + cellW / 2;
       offY = (height - rows * cellH) / 2 + cellH / 2;
-      radiusPx = Math.min(width, height) * 0.44;
+      radiusPx = Math.min(width, height) * GALAXY.layout.radiusFactor;
 
-      const count = Math.min(9000, Math.round(cols * rows * 0.9));
-      const galaxy = buildGalaxy(count, 1337 + cols * 1000 + rows);
+      const count = Math.min(
+        GALAXY.stars.budget,
+        Math.round(cols * rows * GALAXY.stars.density),
+      );
+      const galaxy = buildGalaxy(
+        count,
+        GALAXY.layout.seed + cols * 1000 + rows,
+      );
       stars = galaxy.stars;
       field = galaxy.field;
       density = new Float32Array(cols * rows);
       trail = new Float32Array(cols * rows);
-      activeShot = -1;
       draw(elapsed, 1 / 30);
     };
 
@@ -567,7 +616,9 @@ const { label, class: className = "" } = Astro.props;
   }
 
   function initAll() {
-    document.querySelectorAll<HTMLElement>("[data-ascii-galaxy]").forEach(init);
+    document
+      .querySelectorAll<HTMLElement>("[data-ascii-galaxy]")
+      .forEach(init);
   }
 
   document.addEventListener("astro:before-swap", () => {
