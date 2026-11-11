@@ -25,16 +25,82 @@ const { label, class: className = "" } = Astro.props;
 
   type Rgb = [number, number, number];
   type Star = { r: number; theta: number; b: number; p?: boolean; pc?: string };
-  type FieldStar = { x: number; y: number; b: number; phase: number; speed: number };
+  type FieldStar = {
+    x: number;
+    y: number;
+    b: number;
+    phase: number;
+    speed: number;
+  };
 
   // Six camera setups; the palette and character style stay constant.
   const SHOTS = [
-    { name: "wide", tilt: 0.08, pa: 0, zoom: 0.92, drift: 0.04, dx: 0, dy: 0, decay: 0.945, accent: "--primary-lighter" },
-    { name: "oblique", tilt: 0.82, pa: -0.35, zoom: 1.04, drift: -0.03, dx: -0.08, dy: 0.05, decay: 0.94, accent: "--accent-1-lighter" },
-    { name: "close", tilt: 0.4, pa: 0.28, zoom: 1.46, drift: 0.04, dx: 0.16, dy: -0.07, decay: 0.95, accent: "--accent-2-lighter" },
-    { name: "far", tilt: 0.18, pa: 0.12, zoom: 0.62, drift: 0.02, dx: 0, dy: 0.02, decay: 0.94, accent: "--primary-light" },
-    { name: "edge", tilt: 1.32, pa: 0.18, zoom: 1.08, drift: 0.03, dx: 0, dy: 0, decay: 0.95, accent: "--accent-1-light" },
-    { name: "dutch", tilt: 0.55, pa: 0.95, zoom: 1.12, drift: -0.02, dx: 0.1, dy: -0.05, decay: 0.94, accent: "--accent-2-light" },
+    {
+      name: "wide",
+      tilt: 0.08,
+      pa: 0,
+      zoom: 4,
+      drift: -0.04,
+      dx: 0,
+      dy: 0,
+      decay: 0.95,
+      accent: "--primary-lighter",
+    },
+    {
+      name: "oblique",
+      tilt: 0.82,
+      pa: -0.35,
+      zoom: 4,
+      drift: -0.03,
+      dx: 0,
+      dy: 0,
+      decay: 0.94,
+      accent: "--accent-1-lighter",
+    },
+    {
+      name: "close",
+      tilt: 0.45,
+      pa: 0.28,
+      zoom: 4,
+      drift: 0.04,
+      dx: 0,
+      dy: 0,
+      decay: 0.95,
+      accent: "--accent-2-lighter",
+    },
+    {
+      name: "far",
+      tilt: 0.18,
+      pa: 0.12,
+      zoom: 4,
+      drift: 0.02,
+      dx: 0,
+      dy: 0,
+      decay: 0.94,
+      accent: "--primary-light",
+    },
+    {
+      name: "edge",
+      tilt: 0.90,
+      pa: 0.45,
+      zoom: 4,
+      drift: -0.01,
+      dx: 0,
+      dy: 0,
+      decay: 0.95,
+      accent: "--accent-1-light",
+    },
+    {
+      name: "dutch",
+      tilt: 0.55,
+      pa: 0.95,
+      zoom: 4,
+      drift: -0.02,
+      dx: 0,
+      dy: 0,
+      decay: 0.94,
+      accent: "--accent-2-light",
+    },
   ] as const;
 
   function mulberry32(seed: number) {
@@ -237,9 +303,12 @@ const { label, class: className = "" } = Astro.props;
       lut = makeLut([bg, bg1, bg2, bg3, fg3, fg2, fg1, fg]);
       accentMap = {};
       for (const name of [
-        "--primary-lighter", "--primary-light",
-        "--accent-1-lighter", "--accent-1-light",
-        "--accent-2-lighter", "--accent-2-light",
+        "--primary-lighter",
+        "--primary-light",
+        "--accent-1-lighter",
+        "--accent-1-light",
+        "--accent-2-lighter",
+        "--accent-2-light",
       ]) {
         accentMap[name] = rgbCss(toRgb(cssColor(name, primaryCss), primary));
       }
@@ -268,7 +337,7 @@ const { label, class: className = "" } = Astro.props;
       const cy = rows / 2;
 
       // Barely visible character texture in the void.
-      ctx.font = `400 ${fontSize * 0.48}px ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`;
+      ctx.font = `400 ${fontSize * 0.55}px ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.globalAlpha = 0.55;
@@ -277,7 +346,7 @@ const { label, class: className = "" } = Astro.props;
           const h = hash2(c + 17, r + 31);
           if (h < 0.94) continue;
           ctx.fillStyle = h > 0.972 ? bgChar2Css : bgChar1Css;
-          const ch = h > 0.962 ? ":" : h > 0.95 ? "." : "·";
+          const ch = h > 0.962 ? "#" : h > 0.95 ? ".:" : ":·";
           ctx.fillText(ch, offX + c * cellW, offY + r * cellH);
         }
       }
@@ -295,7 +364,11 @@ const { label, class: className = "" } = Astro.props;
         if (c >= 0 && c < cols && r >= 0 && r < rows) {
           const v = s.b * tw * 0.58;
           ctx.fillStyle = lut[Math.min(31, Math.max(0, Math.floor(v * 31)))];
-          ctx.fillText(v > 0.36 ? "+" : "·", offX + c * cellW, offY + r * cellH);
+          ctx.fillText(
+            v > 0.36 ? "+" : "·",
+            offX + c * cellW,
+            offY + r * cellH,
+          );
         }
       }
 
@@ -335,9 +408,14 @@ const { label, class: className = "" } = Astro.props;
 
       // Three glyph sizes: fine halo, arm body, fat core/ridges.
       const passes = [
-        { size: fontSize * 0.62, min: 0.05, max: 0.25 },
-        { size: fontSize * 0.95, min: 0.25, max: 0.68 },
-        { size: fontSize * 1.15, min: 0.68, max: 1.01 },
+        { size: fontSize * 0.20, min: 0.0125, max: 0.06 },
+        { size: fontSize * 0.40, min: 0.025, max: 0.12 },
+        { size: fontSize * 0.60, min: 0.05, max: 0.25 },
+        { size: fontSize * 0.80, min: 0.10, max: 0.5 },
+        { size: fontSize * 0.90, min: 0.15, max: 0.75 },
+        { size: fontSize * 1, min: 0.20, max: 1 },
+        { size: fontSize * 1.10, min: 0.25, max: 1.25 },
+        { size: fontSize * 1.20, min: 0.30, max: 1.5 },
       ];
       for (const pass of passes) {
         ctx.font = `400 ${pass.size}px ${fontFamily}`;
