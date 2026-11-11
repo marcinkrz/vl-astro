@@ -24,18 +24,18 @@ const { label, class: className = "" } = Astro.props;
       frameMs: 1000 / 30,
     },
     camera: {
-      tilt: 0.9, // 0 = face-on, 1.57 = edge-on
+      tilt: 0.8, // 0 = face-on, 1.57 = edge-on
       pa: 0.45, // screen rotation in radians
       zoom: 3,
       dx: 0,
-      dy: 0.3,
+      dy: 0.1,
     },
     trail: {
       decay: 0.975, // closer to 1 = longer afterimage
-      accumulation: 0.2,
+      accumulation: 0.1,
     },
     stars: {
-      budget: 5000,
+      budget: 9000,
       density: 1, // fraction of the character grid used as a star cap
       armsShare: 1,
       diskShare: 1,
@@ -46,14 +46,14 @@ const { label, class: className = "" } = Astro.props;
       startAngle: Math.PI,
       pitch: 3, // larger = tighter spiral
       pitchOffset: -0.01,
-      jitter: 0.5,
+      jitter: .75,
       innerRadius: 0,
       outerRadius: 1,
-      radialPower: 1.1,
-      brightnessBase: 0.01,
-      brightnessJitter: 0.75,
-      edgeGain: 1.5,
-      radialFalloff: 1.2,
+      radialPower: 0.75,
+      brightnessBase: 0.5,
+      brightnessJitter: 1,
+      edgeGain: 1.1,
+      radialFalloff: 1,
       secondWeight: 1,
       companionChance: 0.5,
       companionBrightness: 0.16,
@@ -97,10 +97,10 @@ const { label, class: className = "" } = Astro.props;
     render: {
       family: `ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`,
       weight: 400,
-      desktop: 16,
-      mobile: 14,
-      palette: ".·.`.::#%&",
-      exponent: 0.68,
+      desktop: 12,
+      mobile: 9,
+      palette: ".:+#",
+      exponent: 0.5,
       passes: [
         { size: 0.2, min: 0.1, max: 0.6 },
         { size: 0.4, min: 0.2, max: 0.7 },
@@ -111,19 +111,19 @@ const { label, class: className = "" } = Astro.props;
     },
     background: {
       fontScale: 1,
-      alpha: 1,
-      threshold: 0.9,
+      alpha: 0.6,
+      threshold: 0.96,
       colorThreshold: 1,
       chars: [
-        { min: 0.962, char: "+ " },
-        { min: 0.95, char: ".: " },
-        { min: 0, char: ":· " },
+        { min: 0.9, char: "x " },
+        { min: 0.6, char: ".: " },
+        { min: 0.3, char: ":· " },
       ],
     },
     layout: {
       radiusFactor: 0.3,
       cellHeight: 1,
-      minCellWidth: 6,
+      minCellWidth: 1,
       seed: 1337,
     },
     accentVar: "--primary",
@@ -194,7 +194,7 @@ const { label, class: className = "" } = Astro.props;
         theta,
         b,
         p,
-        pc: rand() < 0.5 ? "*" : "+",
+        pc: rand() < 0.5 ? "+" : "x",
       });
       // Faint, wider companions soften the arm edge into a gradient.
       if (rand() < A.companionChance) {
