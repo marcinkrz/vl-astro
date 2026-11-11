@@ -26,41 +26,41 @@ const { label, class: className = "" } = Astro.props;
     camera: {
       tilt: 0.9, // 0 = face-on, 1.57 = edge-on
       pa: 0.45, // screen rotation in radians
-      zoom: 1.08,
+      zoom: 3,
       dx: 0,
       dy: 0,
     },
     trail: {
-      decay: 0.95, // closer to 1 = longer afterimage
-      accumulation: 0.22,
+      decay: 0.975, // closer to 1 = longer afterimage
+      accumulation: 0.2,
     },
     stars: {
-      budget: 9000,
-      density: 0.9, // fraction of the character grid used as a star cap
-      armsShare: 0.62,
-      diskShare: 0.12,
-      haloShare: 0.1,
+      budget: 5000,
+      density: 1, // fraction of the character grid used as a star cap
+      armsShare: 1,
+      diskShare: 1,
+      haloShare: 1,
     },
     arms: {
-      count: 2,
+      count: 3,
       startAngle: Math.PI,
-      pitch: 4.8, // larger = tighter spiral
-      pitchOffset: 0.08,
-      jitter: 0.06,
-      innerRadius: 0.1,
+      pitch: 3, // larger = tighter spiral
+      pitchOffset: -0.01,
+      jitter: 0.5,
+      innerRadius: 0,
       outerRadius: 1,
-      radialPower: 0.82,
-      brightnessBase: 0.5,
-      brightnessJitter: 0.5,
-      edgeGain: 1.1,
-      radialFalloff: 0.55,
-      secondWeight: 0.85,
+      radialPower: 1.1,
+      brightnessBase: 0.01,
+      brightnessJitter: 0.75,
+      edgeGain: 1.5,
+      radialFalloff: 1.2,
+      secondWeight: 1,
       companionChance: 0.5,
       companionBrightness: 0.16,
-      companionJitter: 0.09,
+      companionJitter: 0.5,
       companionScale: 0.035,
       companionMaxRadius: 1.18,
-      accentChance: 0.008,
+      accentChance: 0.01,
       accentBrightness: 0.9,
     },
     disk: {
@@ -114,7 +114,7 @@ const { label, class: className = "" } = Astro.props;
     },
     background: {
       fontScale: 0.55,
-      alpha: 0.55,
+      alpha: 0.95,
       threshold: 0.94,
       colorThreshold: 0.972,
       chars: [
@@ -289,7 +289,7 @@ const { label, class: className = "" } = Astro.props;
     let offX = 0;
     let offY = 0;
     let radiusPx = 1;
-    let fontSize = GALAXY.render.desktop;
+    let fontSize: number = GALAXY.render.desktop;
     let backgroundCss = "rgb(250, 249, 245)";
     let primaryCss = "rgb(214, 74, 43)";
     let bgChar1Css = "rgb(245, 244, 240)";
@@ -546,8 +546,7 @@ const { label, class: className = "" } = Astro.props;
       canvas.height = Math.round(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      fontSize =
-        width < 480 ? GALAXY.render.mobile : GALAXY.render.desktop;
+      fontSize = width < 480 ? GALAXY.render.mobile : GALAXY.render.desktop;
       ctx.font = `${GALAXY.render.weight} ${fontSize}px ${GALAXY.render.family}`;
       cellW = Math.max(GALAXY.layout.minCellWidth, ctx.measureText("M").width);
       cellH = fontSize * GALAXY.layout.cellHeight;
