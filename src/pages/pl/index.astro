@@ -20,20 +20,18 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 ---
 
 <BaseLayout>
-  <main class="container-full space-y-32">
-    <section class="mb-6 min-h-[70vh] flex flex-col items-start justify-between">
-      <div class="w-full">
+  <main class="space-y-32">
+    <section class="mb-0 relative h-[100vh] flex flex-col items-start justify-between">
+      <div class="container-full relative z-1">
         <h1 class="lg:max-w-2/3 xl:max-w-1/2 mt-24 mb-3 h1 text-balance reveal">Efektowne projekty i przemyślane doświadczenia. Napędzają rozwój Twojej marki, w sieci i poza nią.</h1>
         <p class="mb-6 text-sm text-(--muted) reveal">Studio kreatywne / Developer</p>
       </div>
-      <div class="relative w-full aspect-3/4 sm:aspect-square md:aspect-3/2 lg:aspect-video xl:aspect-21/9 overflow-hidden reveal">
+      <div class="absolute inset-0 overflow-hidden reveal">
         <AsciiGalaxy label="Animacja ASCII galaktyki" />
       </div>
     </section>
 
-    <section
-      class="-mx-3 md:-mx-4 lg:mx-auto"
-    >
+    <section class="container-full">
       <header
         class="mt-1 mb-8 pt-2 px-3 md:px-4 lg:px-0 border-t border-(--border) reveal"
       >
@@ -108,53 +106,57 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
       </div>
     </section>
 
-    <section class="mb-24 -mx-3 md:-mx-4 lg:mx-auto">
-      <h2 class="display mb-4 px-3 md:px-4 lg:px-0 reveal">
-        Sprawdź nasze realizacje
-      </h2>
-      <header
-        class="mt-1 mb-6 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) reveal"
-      >
-        <h2 class="text-(--muted)">Projekty</h2>
-        <Button
-          href={getRoute(locale, "projects")}
-          variant="link"
-          class="h-auto"
-        >
-          {t("projects.btnTitle")}
-          <MoveRight class="w-4 stroke-2" />
-        </Button>
-      </header>
-      <div class="relative w-full max-md:overflow-x-auto max-md:pl-2">
-        <ul class="inline-flex md:grid grid-cols-3 md:gap-4 pb-4">
-          {
-            projects.map((project, index) => (
-              <li
-                style={`--reveal-delay: ${index * 50}ms`}
-                class="max-md:w-[66vw] max-md:pr-2 reveal"
-              >
-                <a class="group" href={`/pl/projekty/${project.id}`}>
-                  {project.data.cover && (
-                    <Picture
-                      src={project.data.cover}
-                      alt={project.data.title}
-                      aspect="3/2"
-                      sizes="(min-width: 768px) 33vw, 66vw"
-                      imgClass="group-hover:scale-105 group-active:scale-105"
-                    />
-                  )}
-                  <div>
-                    <h3 class="mt-2">{project.data.title}</h3>
-                    <p class="col-span-3 text-sm text-(--muted)">
-                      {project.data.description}
-                    </p>
-                  </div>
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-    </section>
+    <div class="container-full">
+      <section class="mb-24 -mx-3 md:-mx-4 lg:mx-auto">
+        <header>
+          <h2 class="display mb-4 px-3 md:px-4 lg:px-0 reveal">
+            Sprawdź nasze realizacje
+          </h2>
+          <div
+            class="mt-1 mb-6 pt-2 px-3 md:px-4 lg:px-0 flex justify-between border-t border-(--border) reveal"
+          >
+            <h3 class="text-(--muted)">Projekty</h3>
+            <Button
+              href={getRoute(locale, "projects")}
+              variant="link"
+              class="h-auto"
+            >
+              {t("projects.btnTitle")}
+              <MoveRight class="w-4 stroke-2" />
+            </Button>
+          </div>
+        </header>
+        <div class="relative w-full max-md:overflow-x-auto max-md:pl-2">
+          <ul class="inline-flex md:grid grid-cols-3 md:gap-4 pb-4">
+            {
+              projects.map((project, index) => (
+                <li
+                  style={`--reveal-delay: ${index * 50}ms`}
+                  class="max-md:w-[66vw] max-md:pr-2 reveal"
+                >
+                  <a class="group" href={`/pl/projekty/${project.id}`}>
+                    {project.data.cover && (
+                      <Picture
+                        src={project.data.cover}
+                        alt={project.data.title}
+                        aspect="3/2"
+                        sizes="(min-width: 768px) 33vw, 66vw"
+                        imgClass="group-hover:scale-105 group-active:scale-105"
+                      />
+                    )}
+                    <div>
+                      <h3 class="mt-2">{project.data.title}</h3>
+                      <p class="col-span-3 text-sm text-(--muted)">
+                        {project.data.description}
+                      </p>
+                    </div>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </section>
+    </div>
   </main>
 </BaseLayout>
