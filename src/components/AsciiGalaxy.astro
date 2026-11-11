@@ -24,7 +24,7 @@ const { label, class: className = "" } = Astro.props;
   const cleanups = new Set<() => void>();
 
   type Rgb = [number, number, number];
-  type Star = { r: number; theta: number; b: number; p?: boolean; pc?: string };
+  type Star = { r: number; theta: number; b: number; p?: number; pc?: string };
   type FieldStar = { x: number; y: number; b: number; phase: number; speed: number };
 
   // Six camera setups; the palette and character style stay constant.
@@ -67,13 +67,15 @@ const { label, class: className = "" } = Astro.props;
         (rand() - 0.5) * 0.08;
       const weight = arm === 0 ? 1 : 0.85;
       let b = (0.55 + 0.45 * rand()) * (1.2 - 0.42 * r) * weight;
-      const primary = rand() < 0.012;
-      if (primary) b = Math.max(b, 0.92);
+      const roll = rand();
+      // 0 = primary, 1 = accent-1, 2 = accent-2; otherwise monochrome
+      const p = roll < 0.01 ? 0 : roll < 0.014 ? 1 : roll < 0.018 ? 2 : undefined;
+      if (p !== undefined) b = Math.max(b, 0.92);
       stars.push({
         r,
         theta,
         b,
-        p: primary,
+        p,
         pc: rand() < 0.5 ? "*" : "+",
       });
       // A faint companion thickens the arm without adding another hard edge.
@@ -91,8 +93,6 @@ const { label, class: className = "" } = Astro.props;
         r,
         theta: rand() * Math.PI * 2,
         b: 0.12 + 0.22 * rand(),
-        p: rand() < 0.008,
-        pc: rand() < 0.5 ? "*" : "+",
       });
     }
     for (let i = 0; i < core; i++) {
@@ -147,6 +147,8 @@ const { label, class: className = "" } = Astro.props;
     let backgroundCss = "rgb(250, 249, 245)";
     let foregroundCss = "rgb(20, 20, 18)";
     let primaryCss = "rgb(214, 74, 43)";
+    let accent1Css = "rgb(214, 74, 43)";
+    let accent2Css = "rgb(214, 74, 43)";
     let lut: string[] = [];
     let stars: Star[] = [];
     let field: FieldStar[] = [];
@@ -200,11 +202,15 @@ const { label, class: className = "" } = Astro.props;
       const background = toRgb(cssColor("--background", "rgb(250,249,245)"), [250, 249, 245]);
       const foreground = toRgb(cssColor("--foreground", "rgb(20,20,18)"), [20, 20, 18]);
       const primary = toRgb(cssColor("--primary", "rgb(214,74,43)"), [214, 74, 43]);
+      const accent1 = toRgb(cssColor("--accent-1", "rgb(214,74,43)"), primary);
+      const accent2 = toRgb(cssColor("--accent-2", "rgb(214,74,43)"), primary);
       backgroundCss = rgbCss(background);
       foregroundCss = rgbCss(foreground);
       primaryCss = rgbCss(primary);
-      // Only foreground/background shades in the galaxy; primary is reserved
-      // for the rare individual stars added in buildGalaxy().
+      accent1Css = rgbCss(accent1);
+      accent2Css = rgbCss(accent2);
+      // Only foreground/background shades in the galaxy; brand colours are
+      // reserved for the rare individual stars added in buildGalaxy().
       const dim = mix(foreground, background, 0.62);
       const mid = mix(foreground, background, 0.24);
       lut = makeLut([background, dim, mid, foreground]);
@@ -229,9 +235,26 @@ const { label, class: className = "" } = Astro.props;
       ctx.fillStyle = backgroundCss;
       ctx.fillRect(0, 0, width, height);
 
-      density.fill(0);
       const cx = cols / 2;
       const cy = rows / 2;
+
+      // Fine, small type for the sky. The galaxy uses larger characters.
+      ctx.font = `700 ${fontSize * 0.68}px ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      for (let i = 0; i < field.length; i++) {
+        const s = field[i];
+        const tw = 0.6 + 0.4 * Math.sin(time * s.speed + s.phase);
+        const c = Math.floor(cx + (s.x * radiusPx) / cellW);
+        const r = Math.floor(cy + (s.y * radiusPx) / cellH);
+        if (c >= 0 && c < cols && r >= 0 && r < rows) {
+          const v = s.b * tw * 0.58;
+          ctx.fillStyle = lut[Math.min(31, Math.max(0, Math.floor(v * 31)))];
+          ctx.fillText(v > 0.36 ? "+" : "·", offX + c * cellW, offY + r * cellH);
+        }
+      }
+
+      density.fill(0);
       const ct = Math.cos(cfg.tilt);
       const st = Math.sin(cfg.tilt);
       const cp = Math.cos(cfg.pa);
@@ -255,47 +278,46 @@ const { label, class: className = "" } = Astro.props;
           density[k] = Math.min(1, density[k] + s.b * 0.22);
         }
       }
-      // Sky stays put while the camera moves through the shot.
-      for (let i = 0; i < field.length; i++) {
-        const s = field[i];
-        const tw = 0.6 + 0.4 * Math.sin(time * s.speed + s.phase);
-        const c = Math.floor(cx + (s.x * radiusPx) / cellW);
-        const r = Math.floor(cy + (s.y * radiusPx) / cellH);
-        if (c >= 0 && c < cols && r >= 0 && r < rows) {
-          const k = r * cols + c;
-          density[k] = Math.max(density[k], s.b * tw * 0.58);
-        }
-      }
-
       // The arms leave a fading afterimage behind the clockwise motion.
       const decay = Math.pow(cfg.decay, dt * 30);
       for (let k = 0; k < density.length; k++) {
         trail[k] = Math.max(density[k], trail[k] * decay);
       }
 
-      ctx.font = `700 ${fontSize}px ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`;
+      const fontFamily = `ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          const v = trail[r * cols + c];
-          if (v < 0.05) continue;
-          const ci = Math.min(
-            PALETTE.length - 1,
-            Math.round(Math.pow(v, 0.68) * (PALETTE.length - 1)),
-          );
-          const ch = PALETTE[ci];
-          if (ch === " ") continue;
-          ctx.fillStyle = lut[Math.min(31, Math.floor(v * 31))];
-          ctx.fillText(ch, offX + c * cellW, offY + r * cellH);
+      // Three glyph sizes: fine halo, arm body, fat core/ridges.
+      const passes = [
+        { size: fontSize * 0.7, min: 0.05, max: 0.28 },
+        { size: fontSize, min: 0.28, max: 0.66 },
+        { size: fontSize * 1.22, min: 0.66, max: 1.01 },
+      ];
+      for (const pass of passes) {
+        ctx.font = `700 ${pass.size}px ${fontFamily}`;
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const v = trail[r * cols + c];
+            if (v < pass.min || v >= pass.max) continue;
+            const ci = Math.min(
+              PALETTE.length - 1,
+              Math.round(Math.pow(v, 0.68) * (PALETTE.length - 1)),
+            );
+            const ch = PALETTE[ci];
+            if (ch === " ") continue;
+            ctx.fillStyle = lut[Math.min(31, Math.floor(v * 31))];
+            ctx.fillText(ch, offX + c * cellW, offY + r * cellH);
+          }
         }
       }
 
-      // Primary appears only as individual stars inside the galaxy.
+      // Brand colours appear only as individual stars inside the galaxy.
+      ctx.font = `700 ${fontSize}px ${fontFamily}`;
+      const starColors = [primaryCss, accent1Css, accent2Css];
       for (let i = 0; i < stars.length; i++) {
         const s = stars[i];
-        if (!s.p) continue;
+        if (s.p === undefined) continue;
         const a = s.theta + phase;
         const gx = Math.cos(a) * s.r;
         const gy = Math.sin(a) * s.r;
@@ -307,7 +329,7 @@ const { label, class: className = "" } = Astro.props;
         const c = Math.floor(cx + (sx * rp + ox) / cellW);
         const r = Math.floor(cy + (sy * rp + oy) / cellH);
         if (c >= 0 && c < cols && r >= 0 && r < rows) {
-          ctx.fillStyle = primaryCss;
+          ctx.fillStyle = starColors[s.p] ?? primaryCss;
           ctx.fillText(s.pc ?? "*", offX + c * cellW, offY + r * cellH);
         }
       }
