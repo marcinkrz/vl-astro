@@ -136,11 +136,11 @@ html.reveal-on-scroll [data-reveal-group] > :not(.is-revealed) {
 .h2,
 .h3,
 .h4 {
-  @apply font-semibold;
+  @apply font-semibold tracking-tighter;
 }
 
 .display {
-  @apply text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-none! font-features-['liga'] tracking-tighter;
+  @apply text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-none! font-features-['liga'];
 }
 
 .h1 {

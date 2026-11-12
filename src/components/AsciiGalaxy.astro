@@ -1,0 +1,630 @@
+---
+interface Props {
+  label: string;
+  class?: string;
+}
+
+const { label, class: className = "" } = Astro.props;
+---
+
+<div
+  class={`absolute inset-0 overflow-hidden ${className}`}
+  data-ascii-galaxy
+  role="img"
+  aria-label={label}
+>
+  <canvas class="block h-full w-full" aria-hidden="true"></canvas>
+</div>
+
+<script>
+  // All visual controls live here. The galaxy is a single, endless edge view.
+  const GALAXY = {
+    motion: {
+      omega: 0.55, // rad/s; one revolution every ~11.4 s
+      frameMs: 1000 / 30,
+    },
+    camera: {
+      tilt: 0.8, // 0 = face-on, 1.57 = edge-on
+      pa: 0.45, // screen rotation in radians
+      zoom: 3,
+      dx: 0,
+      dy: 0.1,
+    },
+    trail: {
+      decay: 0.975, // closer to 1 = longer afterimage
+      accumulation: 0.1,
+    },
+    stars: {
+      budget: 9000,
+      density: 1, // fraction of the character grid used as a star cap
+      armsShare: 1,
+      diskShare: 1,
+      haloShare: 1,
+    },
+    arms: {
+      count: 3,
+      startAngle: Math.PI,
+      pitch: 3, // larger = tighter spiral
+      pitchOffset: -0.01,
+      jitter: .75,
+      innerRadius: 0,
+      outerRadius: 1,
+      radialPower: 0.75,
+      brightnessBase: 0.5,
+      brightnessJitter: 1,
+      edgeGain: 1.1,
+      radialFalloff: 1,
+      secondWeight: 1,
+      companionChance: 0.5,
+      companionBrightness: 0.16,
+      companionJitter: 0.5,
+      companionScale: 0.035,
+      companionMaxRadius: 1.18,
+      accentChance: 0.01,
+      accentBrightness: 0.9,
+    },
+    disk: {
+      minRadius: 0.1,
+      maxRadius: 1,
+      brightnessMin: 0.2,
+      brightnessMax: 0.3,
+    },
+    halo: {
+      minRadius: 0.45,
+      maxRadius: 1.2,
+      brightnessMin: 0.1,
+      brightnessMax: 0.2,
+    },
+    core: {
+      radius: 0.16,
+      brightnessBase: 0.6,
+      brightnessRange: 1,
+    },
+    field: {
+      divisor: 5,
+      min: 1,
+      extent: 3,
+      clearRadius: 0,
+      brightnessMin: 1,
+      brightnessMax: 1,
+      speedMin: 8,
+      speedMax: 10,
+      glyphScale: 1,
+      brightnessScale: 0.5,
+      brightGlyphAt: 1,
+      chars: { dim: "·", bright: "+" },
+    },
+    render: {
+      family: `ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`,
+      weight: 400,
+      desktop: 12,
+      mobile: 9,
+      palette: ".:+#",
+      exponent: 0.5,
+      passes: [
+        { size: 0.2, min: 0.1, max: 0.6 },
+        { size: 0.4, min: 0.2, max: 0.7 },
+        { size: 0.6, min: 0.3, max: 0.8 },
+        { size: 0.8, min: 0.4, max: 0.9 },
+        { size: 1.0, min: 0.5, max: 1.0 }
+      ],
+    },
+    background: {
+      fontScale: 1,
+      alpha: 0.6,
+      threshold: 0.96,
+      colorThreshold: 1,
+      chars: [
+        { min: 0.9, char: "x " },
+        { min: 0.6, char: ".: " },
+        { min: 0.3, char: ":· " },
+      ],
+    },
+    layout: {
+      radiusFactor: 0.3,
+      cellHeight: 1,
+      minCellWidth: 1,
+      seed: 1337,
+    },
+    accentVar: "--primary",
+    accentVars: [
+      "--primary-light",
+      "--primary",
+      "--accent-1-light",
+      "--accent-1",
+      "--accent-2-light",
+      "--accent-2",
+    ],
+  } as const;
+
+  const cleanups = new Set<() => void>();
+
+  type Rgb = [number, number, number];
+  type Star = { r: number; theta: number; b: number; p?: boolean; pc?: string };
+  type FieldStar = {
+    x: number;
+    y: number;
+    b: number;
+    phase: number;
+    speed: number;
+  };
+
+  function mulberry32(seed: number) {
+    let a = seed >>> 0;
+    return () => {
+      a = (a + 0x6d2b79f5) >>> 0;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function buildGalaxy(count: number, seed: number) {
+    const rand = mulberry32(seed);
+    const stars: Star[] = [];
+    const { armsShare, diskShare, haloShare } = GALAXY.stars;
+    const arms = Math.round(count * armsShare);
+    const disk = Math.round(count * diskShare);
+    const halo = Math.round(count * haloShare);
+    const core = Math.max(0, count - arms - disk - halo);
+
+    const A = GALAXY.arms;
+    for (let i = 0; i < arms; i++) {
+      const arm = i % A.count;
+      const u = rand();
+      const r =
+        A.innerRadius +
+        (A.outerRadius - A.innerRadius) * Math.pow(u, A.radialPower);
+      // Negative log term = arms trail behind the clockwise rotation.
+      const theta =
+        A.startAngle +
+        arm * ((Math.PI * 2) / A.count) -
+        A.pitch * Math.log(r + A.pitchOffset) +
+        (rand() - 0.5) * A.jitter;
+      const weight = arm === 0 ? 1 : A.secondWeight;
+      let b =
+        (A.brightnessBase + A.brightnessJitter * rand()) *
+        (A.edgeGain - A.radialFalloff * r) *
+        weight;
+      const p = rand() < A.accentChance;
+      if (p) b = Math.max(b, A.accentBrightness);
+      stars.push({
+        r,
+        theta,
+        b,
+        p,
+        pc: rand() < 0.5 ? "+" : "x",
+      });
+      // Faint, wider companions soften the arm edge into a gradient.
+      if (rand() < A.companionChance) {
+        stars.push({
+          r: Math.min(
+            A.companionMaxRadius,
+            r * (1.01 + rand() * A.companionScale),
+          ),
+          theta: theta + (rand() - 0.5) * A.companionJitter,
+          b: b * A.companionBrightness,
+        });
+      }
+    }
+
+    const D = GALAXY.disk;
+    for (let i = 0; i < disk; i++) {
+      const r =
+        D.minRadius + (D.maxRadius - D.minRadius) * Math.sqrt(rand());
+      stars.push({
+        r,
+        theta: rand() * Math.PI * 2,
+        b: D.brightnessMin + (D.brightnessMax - D.brightnessMin) * rand(),
+      });
+    }
+
+    const H = GALAXY.halo;
+    for (let i = 0; i < halo; i++) {
+      const r =
+        H.minRadius + (H.maxRadius - H.minRadius) * Math.sqrt(rand());
+      stars.push({
+        r,
+        theta: rand() * Math.PI * 2,
+        b: H.brightnessMin + (H.brightnessMax - H.brightnessMin) * rand(),
+      });
+    }
+
+    const C = GALAXY.core;
+    for (let i = 0; i < core; i++) {
+      const r = C.radius * Math.sqrt(rand());
+      stars.push({
+        r,
+        theta: rand() * Math.PI * 2,
+        b: C.brightnessBase + C.brightnessRange * (1 - r / C.radius),
+      });
+    }
+
+    const F = GALAXY.field;
+    const field: FieldStar[] = [];
+    const fieldCount = Math.max(F.min, Math.round(count / F.divisor));
+    let guard = 0;
+    while (field.length < fieldCount && guard < fieldCount * 20) {
+      guard++;
+      const x = rand() * 2 * F.extent - F.extent;
+      const y = rand() * 2 * F.extent - F.extent;
+      if (Math.hypot(x, y) < F.clearRadius) continue;
+      field.push({
+        x,
+        y,
+        b: F.brightnessMin + (F.brightnessMax - F.brightnessMin) * rand(),
+        phase: rand() * Math.PI * 2,
+        speed:
+          F.speedMin + Math.floor(rand() * (F.speedMax - F.speedMin + 1)),
+      });
+    }
+    return { stars, field };
+  }
+
+  function init(root: HTMLElement) {
+    if (root.dataset.ready === "true") return;
+    const canvas = root.querySelector("canvas");
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    root.dataset.ready = "true";
+
+    const probeCanvas = document.createElement("canvas");
+    probeCanvas.width = 1;
+    probeCanvas.height = 1;
+    const probe = probeCanvas.getContext("2d", { willReadFrequently: true });
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let reduced = reduce.matches;
+    let width = 0;
+    let height = 0;
+    let cols = 0;
+    let rows = 0;
+    let cellW = 0;
+    let cellH = 0;
+    let offX = 0;
+    let offY = 0;
+    let radiusPx = 1;
+    let fontSize: number = GALAXY.render.desktop;
+    let backgroundCss = "rgb(250, 249, 245)";
+    let primaryCss = "rgb(214, 74, 43)";
+    let bgChar1Css = "rgb(245, 244, 240)";
+    let bgChar2Css = "rgb(235, 234, 230)";
+    let accentMap: Record<string, string> = {};
+    let lut: string[] = [];
+    let stars: Star[] = [];
+    let field: FieldStar[] = [];
+    let density = new Float32Array(0);
+    let trail = new Float32Array(0);
+    let elapsed = 0;
+    let last = 0;
+    let lastDraw = 0;
+    let raf = 0;
+    let running = false;
+
+    const cssColor = (name: string, fallback: string) => {
+      const el = document.createElement("span");
+      el.style.color = `var(${name})`;
+      el.style.display = "none";
+      root.appendChild(el);
+      const value = getComputedStyle(el).color;
+      el.remove();
+      return value || fallback;
+    };
+
+    const toRgb = (css: string, fallback: Rgb): Rgb => {
+      if (!probe) return fallback;
+      probe.clearRect(0, 0, 1, 1);
+      probe.fillStyle = "#000";
+      probe.fillStyle = css;
+      probe.fillRect(0, 0, 1, 1);
+      const d = probe.getImageData(0, 0, 1, 1).data;
+      return d[3] ? [d[0], d[1], d[2]] : fallback;
+    };
+
+    const rgbCss = (c: Rgb) => `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+    const hash2 = (x: number, y: number) => {
+      let n = (x * 374761393 + y * 668265263) >>> 0;
+      n = Math.imul(n ^ (n >>> 13), 1274126177) >>> 0;
+      return ((n ^ (n >>> 16)) >>> 0) / 4294967296;
+    };
+    const mix = (a: Rgb, b: Rgb, t: number): Rgb => [
+      Math.round(a[0] + (b[0] - a[0]) * t),
+      Math.round(a[1] + (b[1] - a[1]) * t),
+      Math.round(a[2] + (b[2] - a[2]) * t),
+    ];
+
+    const makeLut = (stops: readonly Rgb[]) => {
+      const out: string[] = [];
+      for (let i = 0; i < 32; i++) {
+        const t = (i / 31) * (stops.length - 1);
+        const idx = Math.min(stops.length - 2, Math.floor(t));
+        out.push(rgbCss(mix(stops[idx], stops[idx + 1], t - idx)));
+      }
+      return out;
+    };
+
+    const refreshColors = () => {
+      const cvar = (name: string, fallback: string, rgb: Rgb) =>
+        toRgb(cssColor(name, fallback), rgb);
+      const bg = cvar("--background", "rgb(249,248,244)", [249, 248, 244]);
+      const bg1 = cvar("--background-1", "rgb(245,244,240)", [245, 244, 240]);
+      const bg2 = cvar("--background-2", "rgb(236,235,231)", [236, 235, 231]);
+      const bg3 = cvar("--background-3", "rgb(220,218,213)", [220, 218, 213]);
+      const fg3 = cvar("--foreground-3", "rgb(122,120,115)", [122, 120, 115]);
+      const fg2 = cvar("--foreground-2", "rgb(74,73,69)", [74, 73, 69]);
+      const fg1 = cvar("--foreground-1", "rgb(42,41,38)", [42, 41, 38]);
+      const fg = cvar("--foreground", "rgb(26,25,22)", [26, 25, 22]);
+      const primary = cvar("--primary", "rgb(214,74,43)", [214, 74, 43]);
+      backgroundCss = rgbCss(bg);
+      primaryCss = rgbCss(primary);
+      bgChar1Css = rgbCss(bg1);
+      bgChar2Css = rgbCss(bg2);
+      // Eight-stop grayscale gradient from the project's theme variables.
+      lut = makeLut([bg, bg1, bg2, bg3, fg3, fg2, fg1, fg]);
+      accentMap = {};
+      for (const name of GALAXY.accentVars) {
+        accentMap[name] = rgbCss(toRgb(cssColor(name, primaryCss), primary));
+      }
+    };
+
+    const draw = (time: number, dt = 1 / 30) => {
+      if (!cols || !rows) return;
+      const camera = GALAXY.camera;
+      const phase = time * GALAXY.motion.omega;
+      const rp = radiusPx * camera.zoom;
+      const ox = camera.dx * radiusPx;
+      const oy = camera.dy * radiusPx;
+
+      ctx.fillStyle = backgroundCss;
+      ctx.fillRect(0, 0, width, height);
+
+      const cx = cols / 2;
+      const cy = rows / 2;
+
+      // Barely visible character texture in the void.
+      const B = GALAXY.background;
+      ctx.font = `${GALAXY.render.weight} ${fontSize * B.fontScale}px ${GALAXY.render.family}`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.globalAlpha = B.alpha;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const h = hash2(c + 17, r + 31);
+          if (h < B.threshold) continue;
+          ctx.fillStyle = h > B.colorThreshold ? bgChar2Css : bgChar1Css;
+          let ch = B.chars[B.chars.length - 1].char;
+          for (const band of B.chars) {
+            if (h >= band.min) {
+              ch = band.char;
+              break;
+            }
+          }
+          ctx.fillText(ch, offX + c * cellW, offY + r * cellH);
+        }
+      }
+      ctx.globalAlpha = 1;
+
+      // Fine, small type for the sky. The galaxy uses larger characters.
+      const F = GALAXY.field;
+      ctx.font = `${GALAXY.render.weight} ${fontSize * F.glyphScale}px ${GALAXY.render.family}`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      for (let i = 0; i < field.length; i++) {
+        const s = field[i];
+        const tw = 0.6 + 0.4 * Math.sin(time * s.speed + s.phase);
+        const c = Math.floor(cx + (s.x * radiusPx) / cellW);
+        const r = Math.floor(cy + (s.y * radiusPx) / cellH);
+        if (c >= 0 && c < cols && r >= 0 && r < rows) {
+          const v = s.b * tw * F.brightnessScale;
+          ctx.fillStyle = lut[Math.min(31, Math.max(0, Math.floor(v * 31)))];
+          ctx.fillText(
+            v > F.brightGlyphAt ? F.chars.bright : F.chars.dim,
+            offX + c * cellW,
+            offY + r * cellH,
+          );
+        }
+      }
+
+      density.fill(0);
+      const ct = Math.cos(camera.tilt);
+      const st = Math.sin(camera.tilt);
+      const cp = Math.cos(camera.pa);
+      const sp = Math.sin(camera.pa);
+
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        // screen y points down, so a growing angle is clockwise
+        const a = s.theta + phase;
+        const gx = Math.cos(a) * s.r;
+        const gy = Math.sin(a) * s.r;
+        const projectedY = gy * ct;
+        const depth = gy * st;
+        const persp = 1 / (1 + depth * 0.28);
+        const sx = (gx * cp - projectedY * sp) * persp;
+        const sy = (gx * sp + projectedY * cp) * persp;
+        const c = Math.floor(cx + (sx * rp + ox) / cellW);
+        const r = Math.floor(cy + (sy * rp + oy) / cellH);
+        if (c >= 0 && c < cols && r >= 0 && r < rows) {
+          const k = r * cols + c;
+          density[k] = Math.min(
+            1,
+            density[k] + s.b * GALAXY.trail.accumulation,
+          );
+        }
+      }
+      // The arms leave a fading afterimage behind the clockwise motion.
+      const decay = Math.pow(GALAXY.trail.decay, dt * 30);
+      for (let k = 0; k < density.length; k++) {
+        trail[k] = Math.max(density[k], trail[k] * decay);
+      }
+
+      const R = GALAXY.render;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      for (const pass of R.passes) {
+        ctx.font = `${R.weight} ${fontSize * pass.size}px ${R.family}`;
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const v = trail[r * cols + c];
+            if (v < pass.min || v >= pass.max) continue;
+            const ci = Math.min(
+              R.palette.length - 1,
+              Math.round(Math.pow(v, R.exponent) * (R.palette.length - 1)),
+            );
+            const ch = R.palette[ci];
+            if (ch === " ") continue;
+            ctx.fillStyle = lut[Math.min(31, Math.floor(v * 31))];
+            ctx.fillText(ch, offX + c * cellW, offY + r * cellH);
+          }
+        }
+      }
+
+      // A derived accent shade appears only as rare individual stars.
+      ctx.font = `${R.weight} ${fontSize}px ${R.family}`;
+      const accentCss = accentMap[GALAXY.accentVar] ?? primaryCss;
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        if (!s.p) continue;
+        const a = s.theta + phase;
+        const gx = Math.cos(a) * s.r;
+        const gy = Math.sin(a) * s.r;
+        const projectedY = gy * ct;
+        const depth = gy * st;
+        const persp = 1 / (1 + depth * 0.28);
+        const sx = (gx * cp - projectedY * sp) * persp;
+        const sy = (gx * sp + projectedY * cp) * persp;
+        const c = Math.floor(cx + (sx * rp + ox) / cellW);
+        const r = Math.floor(cy + (sy * rp + oy) / cellH);
+        if (c >= 0 && c < cols && r >= 0 && r < rows) {
+          ctx.fillStyle = accentCss;
+          ctx.fillText(s.pc ?? "*", offX + c * cellW, offY + r * cellH);
+        }
+      }
+    };
+
+    const tick = (now: number) => {
+      if (!running) return;
+      if (!last) last = now;
+      const dt = Math.min(0.12, (now - last) / 1000);
+      last = now;
+      elapsed += dt;
+      if (!lastDraw) lastDraw = now;
+      if (now - lastDraw >= GALAXY.motion.frameMs) {
+        draw(elapsed, dt);
+        lastDraw = now;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+
+    const stop = () => {
+      running = false;
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+    };
+
+    const start = () => {
+      if (reduced || running) return;
+      running = true;
+      last = 0;
+      lastDraw = 0;
+      raf = requestAnimationFrame(tick);
+    };
+
+    const layout = () => {
+      const rect = root.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      width = rect.width;
+      height = rect.height;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      fontSize = width < 480 ? GALAXY.render.mobile : GALAXY.render.desktop;
+      ctx.font = `${GALAXY.render.weight} ${fontSize}px ${GALAXY.render.family}`;
+      cellW = Math.max(GALAXY.layout.minCellWidth, ctx.measureText("M").width);
+      cellH = fontSize * GALAXY.layout.cellHeight;
+      cols = Math.max(1, Math.floor(width / cellW));
+      rows = Math.max(1, Math.floor(height / cellH));
+      offX = (width - cols * cellW) / 2 + cellW / 2;
+      offY = (height - rows * cellH) / 2 + cellH / 2;
+      radiusPx = Math.min(width, height) * GALAXY.layout.radiusFactor;
+
+      const count = Math.min(
+        GALAXY.stars.budget,
+        Math.round(cols * rows * GALAXY.stars.density),
+      );
+      const galaxy = buildGalaxy(
+        count,
+        GALAXY.layout.seed + cols * 1000 + rows,
+      );
+      stars = galaxy.stars;
+      field = galaxy.field;
+      density = new Float32Array(cols * rows);
+      trail = new Float32Array(cols * rows);
+      draw(elapsed, 1 / 30);
+    };
+
+    const ro = new ResizeObserver(layout);
+    ro.observe(root);
+
+    const onVisibility = () => {
+      if (document.hidden) stop();
+      else start();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    const onMotionChange = () => {
+      reduced = reduce.matches;
+      if (reduced) {
+        stop();
+        draw(0, 1 / 30);
+      } else start();
+    };
+    reduce.addEventListener("change", onMotionChange);
+
+    const themeObserver = new MutationObserver(() => {
+      refreshColors();
+      if (reduced) draw(elapsed, 1 / 30);
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme", "style"],
+    });
+
+    const cleanup = () => {
+      stop();
+      ro.disconnect();
+      themeObserver.disconnect();
+      reduce.removeEventListener("change", onMotionChange);
+      document.removeEventListener("visibilitychange", onVisibility);
+      delete root.dataset.ready;
+    };
+    cleanups.add(cleanup);
+
+    refreshColors();
+    layout();
+    if (reduced) draw(0, 1 / 30);
+    else start();
+  }
+
+  function initAll() {
+    document
+      .querySelectorAll<HTMLElement>("[data-ascii-galaxy]")
+      .forEach(init);
+  }
+
+  document.addEventListener("astro:before-swap", () => {
+    cleanups.forEach((fn) => fn());
+    cleanups.clear();
+  });
+  document.addEventListener("astro:page-load", initAll);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAll, { once: true });
+  } else {
+    initAll();
+  }
+</script>

@@ -22,18 +22,14 @@ const locale = (Astro.currentLocale === "pl" ? "pl" : "en") as Locale;
         Wyceń projekt
       </Button>
       <p class="text-(--muted-1) reveal">
-        Wyślij&nbsp;
-        <Button
-          id="modal-contact-form"
-          variant="link"
-          class="h-auto leading-inherit">
-          formularz
-        </Button> lub napisz bezpośrednio na&nbsp;
+        Wyślij formularz lub napisz bezpośrednio na&nbsp;
         <Button
           variant="link"
           href="mailto:info@visuallabel.com"
-          class="h-auto leading-inherit">info@visuallabel.com</Button
-        >.
+          class="h-auto leading-inherit"
+        >
+          info@visuallabel.com
+        </Button>
       </p>
       <div class="reveal">
         <ContactForm locale={locale} client:load />
