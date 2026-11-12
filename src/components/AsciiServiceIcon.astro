@@ -1,0 +1,588 @@
+---
+interface Props {
+  name: "branding" | "websites" | "stores" | "print";
+  label: string;
+  class?: string;
+}
+
+const { name, label, class: className = "" } = Astro.props;
+---
+
+<div
+  class={`relative w-full aspect-square ${className}`}
+  data-ascii-service-icon={name}
+  role="img"
+  aria-label={label}
+>
+  <canvas class="block h-full w-full" aria-hidden="true"></canvas>
+</div>
+
+<script>
+  // Same glyph size as AsciiGalaxy.
+  type IconName = "branding" | "websites" | "stores" | "print";
+  type Buffers = {
+    cols: number;
+    rows: number;
+    dirs: Uint8Array;
+    chars: Uint16Array;
+    tones: Uint8Array;
+  };
+  type Metrics = {
+    width: number;
+    height: number;
+    fontSize: number;
+    cellW: number;
+    cellH: number;
+    cols: number;
+    rows: number;
+    offX: number;
+    offY: number;
+  };
+  type Instance = {
+    root: HTMLElement;
+    canvas: HTMLCanvasElement;
+    context: CanvasRenderingContext2D;
+    name: IconName;
+    colors: string[];
+    metrics: Metrics | null;
+    state: Buffers | null;
+    radius: number;
+    elapsed: number;
+    last: number;
+    lastDraw: number;
+    raf: number;
+    running: boolean;
+    visible: boolean;
+    reduced: boolean;
+  };
+
+  const FONT = {
+    family: `ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`,
+    desktop: 12,
+    mobile: 9,
+  };
+  const FRAME_MS = 1000 / 30;
+  const RADIUS = 0.46;
+  const H = 1;
+  const V = 2;
+  const D1 = 4;
+  const D2 = 8;
+  const PHASE: Record<IconName, number> = {
+    branding: 0.4,
+    websites: 1.6,
+    stores: 2.4,
+    print: 1.2,
+  };
+  const STATIC_T: Record<IconName, number> = {
+    branding: 2.5,
+    websites: 3.0,
+    stores: 2.8,
+    print: 3.3,
+  };
+
+  const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
+
+  const glyph = (bits: number) => {
+    if (bits & (bits - 1)) return "+";
+    if (bits === H) return "-";
+    if (bits === V) return "|";
+    if (bits === D1) return "\\";
+    return "/";
+  };
+
+  function makePen(state: Buffers, cellW: number, cellH: number, radius: number) {
+    const { cols, rows, dirs, chars, tones } = state;
+    const cx = cols / 2;
+    const cy = rows / 2;
+    const cOf = (x: number) => cx + (x * radius) / cellW;
+    const rOf = (y: number) => cy + (y * radius) / cellH;
+
+    const put = (c: number, r: number, bit: number, tone: number) => {
+      if (c < 0 || c >= cols || r < 0 || r >= rows) return;
+      const i = r * cols + c;
+      if (bit) {
+        dirs[i] |= bit;
+        chars[i] = 0;
+      }
+      if (tone >= tones[i]) tones[i] = tone;
+    };
+
+    const line = (
+      x1: number,
+      y1: number,
+      x2: number,
+      y2: number,
+      tone = 1,
+    ) => {
+      let c = Math.round(cOf(x1));
+      let r = Math.round(rOf(y1));
+      const c1 = Math.round(cOf(x2));
+      const r1 = Math.round(rOf(y2));
+      const dc = Math.abs(c1 - c);
+      const dr = Math.abs(r1 - r);
+      const sc = c < c1 ? 1 : -1;
+      const sr = r < r1 ? 1 : -1;
+      let err = dc - dr;
+      let bit: number;
+      if (dr === 0) bit = H;
+      else if (dc === 0) bit = V;
+      else if (dr < dc * 0.42) bit = H;
+      else if (dc < dr * 0.42) bit = V;
+      else bit = sc * sr > 0 ? D1 : D2;
+
+      for (let guard = 0; guard <= cols * rows; guard++) {
+        put(c, r, bit, tone);
+        if (c === c1 && r === r1) break;
+        const e2 = 2 * err;
+        if (e2 > -dr) {
+          err -= dr;
+          c += sc;
+        }
+        if (e2 < dc) {
+          err += dc;
+          r += sr;
+        }
+      }
+    };
+
+    const rect = (
+      x0: number,
+      y0: number,
+      x1: number,
+      y1: number,
+      tone = 1,
+    ) => {
+      line(x0, y0, x1, y0, tone);
+      line(x1, y0, x1, y1, tone);
+      line(x1, y1, x0, y1, tone);
+      line(x0, y1, x0, y0, tone);
+    };
+
+    const fillRect = (
+      x0: number,
+      y0: number,
+      x1: number,
+      y1: number,
+      char = ":",
+      tone = 1,
+    ) => {
+      const code = char.charCodeAt(0);
+      const c0 = Math.round(cOf(x0));
+      const c1 = Math.round(cOf(x1));
+      const r0 = Math.round(rOf(y0));
+      const r1 = Math.round(rOf(y1));
+      for (let r = Math.min(r0, r1); r <= Math.max(r0, r1); r++) {
+        for (let c = Math.min(c0, c1); c <= Math.max(c0, c1); c++) {
+          if (c < 0 || c >= cols || r < 0 || r >= rows) continue;
+          const i = r * cols + c;
+          if (dirs[i] || chars[i]) continue;
+          chars[i] = code;
+          tones[i] = tone;
+        }
+      }
+    };
+
+    const circle = (x: number, y: number, rad: number, tone = 1) => {
+      const steps = Math.max(24, Math.ceil(rad * radius * 4));
+      for (let i = 0; i <= steps; i++) {
+        const a = (i / steps) * Math.PI * 2;
+        const px = x + Math.cos(a) * rad;
+        const py = y + Math.sin(a) * rad;
+        const nx = -Math.sin(a);
+        const ny = Math.cos(a);
+        let bit: number;
+        if (Math.abs(ny) > Math.abs(nx) * 1.8) bit = V;
+        else if (Math.abs(nx) > Math.abs(ny) * 1.8) bit = H;
+        else bit = nx * ny > 0 ? D1 : D2;
+        put(Math.round(cOf(px)), Math.round(rOf(py)), bit, tone);
+      }
+    };
+
+    const text = (x: number, y: number, value: string, tone = 1) => {
+      const c0 = Math.round(cOf(x));
+      const r = Math.round(rOf(y));
+      for (let i = 0; i < value.length; i++) {
+        const c = c0 + i;
+        if (c < 0 || c >= cols || r < 0 || r >= rows) continue;
+        const k = r * cols + c;
+        chars[k] = value.charCodeAt(i);
+        dirs[k] = 0;
+        if (tone >= tones[k]) tones[k] = tone;
+      }
+    };
+
+    return { line, rect, fillRect, circle, text, dot: text };
+  }
+
+  type Pen = ReturnType<typeof makePen>;
+
+  const ICONS: Record<IconName, (p: Pen, t: number) => void> = {
+    // A pen nib drawing a small brand mark.
+    branding(p, t) {
+      p.fillRect(-0.18, -0.52, 0.18, -0.32, ":", 1);
+      p.line(-0.20, -0.56, 0.20, -0.56, 2);
+      p.line(-0.20, -0.56, -0.30, -0.46, 2);
+      p.line(0.20, -0.56, 0.30, -0.46, 2);
+      p.line(-0.30, -0.46, -0.34, -0.24, 2);
+      p.line(0.30, -0.46, 0.34, -0.24, 2);
+      p.line(-0.34, -0.24, 0, 0.58, 2);
+      p.line(0.34, -0.24, 0, 0.58, 2);
+      p.line(-0.32, -0.28, 0.32, -0.28, 2);
+      p.dot(0, -0.12, "+", 2);
+      p.line(0, -0.04, 0, 0.50, 2);
+
+      const ink = 0.06 + 0.04 * Math.sin(t * 2.2);
+      p.line(0, 0.64, 0, 0.64 + ink, 3);
+      const twinkle = Math.sin(t * 2.2 + 1) > 0 ? "*" : "+";
+      p.dot(0.48, -0.36, twinkle, 3);
+      p.dot(0.58, -0.24, "·", 1);
+    },
+
+    // A browser with a wireframe that builds itself.
+    websites(p, t) {
+      p.rect(-0.66, -0.64, 0.66, 0.22, 2);
+      p.rect(-0.56, -0.54, 0.56, 0.12, 1);
+      p.line(-0.56, -0.44, 0.56, -0.44, 1);
+      p.text(-0.48, -0.49, "···", 3);
+      p.line(-0.24, -0.49, 0.32, -0.49, 1);
+
+      p.line(-0.66, 0.22, -0.80, 0.40, 2);
+      p.line(0.66, 0.22, 0.80, 0.40, 2);
+      p.line(-0.80, 0.40, 0.80, 0.40, 2);
+      p.line(-0.10, 0.31, 0.10, 0.31, 1);
+
+      const cycle = (t % 5) / 5;
+      const grow = (
+        x0: number,
+        x1: number,
+        y: number,
+        startAt: number,
+        duration: number,
+        tone = 1,
+      ) => {
+        const progress = clamp01((cycle - startAt) / duration);
+        if (progress > 0) p.line(x0, y, x0 + (x1 - x0) * progress, y, tone);
+      };
+      grow(-0.48, 0.48, -0.32, 0.02, 0.18, 2);
+      grow(-0.48, 0.48, -0.22, 0.12, 0.22);
+      grow(-0.48, 0.10, -0.12, 0.22, 0.22);
+      grow(-0.48, -0.08, 0.00, 0.38, 0.18);
+      grow(0.08, 0.48, 0.00, 0.48, 0.18);
+    },
+
+    // A storefront with a striped awning that marches.
+    stores(p, t) {
+      p.line(-0.82, -0.66, 0.82, -0.66, 2);
+      p.line(-0.82, -0.66, -0.82, -0.40, 2);
+      p.line(0.82, -0.66, 0.82, -0.40, 2);
+
+      const scallops = 4;
+      for (let i = 0; i < scallops; i++) {
+        const x0 = -0.82 + (i / scallops) * 1.64;
+        const x1 = -0.82 + ((i + 1) / scallops) * 1.64;
+        const mid = (x0 + x1) / 2;
+        p.line(x0, -0.40, mid, -0.22, 2);
+        p.line(mid, -0.22, x1, -0.40, 2);
+      }
+
+      const shift = (t * 0.05) % 0.205;
+      for (let i = 0; i < 8; i++) {
+        if (i % 2) continue;
+        const x0 = Math.max(-0.82, -0.82 + (i / 8) * 1.64 + shift);
+        const x1 = Math.min(0.82, -0.82 + ((i + 1) / 8) * 1.64 + shift);
+        p.fillRect(x0, -0.64, x1, -0.50, ":", 1);
+      }
+
+      p.line(-0.72, -0.22, -0.72, 0.58, 2);
+      p.line(0.72, -0.22, 0.72, 0.58, 2);
+      p.line(-0.72, 0.58, 0.72, 0.58, 2);
+      p.rect(-0.56, -0.08, -0.06, 0.34, 1);
+      p.text(-0.43, 0.10, "[%]", 3);
+      p.rect(0.18, -0.08, 0.54, 0.58, 2);
+      p.dot(0.47, 0.30, "+", 1);
+    },
+
+    // A stamp pressing a postmark onto paper.
+    print(p, t) {
+      const cycle = (t % 4) / 4;
+      const press = Math.sin(
+        Math.PI * clamp01((cycle - 0.62) / 0.18),
+      );
+      const dy = press * 0.14;
+
+      p.rect(-0.78, 0.16, 0.78, 0.64, 0);
+      const mark =
+        clamp01((cycle - 0.78) / 0.04) *
+        clamp01((1 - cycle) / 0.12);
+      if (mark > 0.05) {
+        p.circle(0.30, 0.40, 0.22, 1);
+        p.text(0.28, 0.38, "*", 3);
+        p.line(-0.66, 0.32, -0.34, 0.32, 1);
+        p.line(-0.66, 0.40, -0.30, 0.40, 1);
+        p.line(-0.66, 0.48, -0.38, 0.48, 1);
+      }
+
+      p.fillRect(-0.40, -0.24 + dy, 0.40, 0.02 + dy, ":", 1);
+      p.rect(-0.16, -0.66 + dy, 0.16, -0.46 + dy, 2);
+      p.rect(-0.08, -0.46 + dy, 0.08, -0.24 + dy, 2);
+      p.rect(-0.40, -0.24 + dy, 0.40, 0.02 + dy, 2);
+      p.line(-0.50, 0.02 + dy, 0.50, 0.02 + dy, 2);
+      p.text(-0.02, -0.12 + dy, "*", 3);
+    },
+  };
+
+  const probeCanvas = document.createElement("canvas");
+  probeCanvas.width = 1;
+  probeCanvas.height = 1;
+  const probe = probeCanvas.getContext("2d", { willReadFrequently: true });
+
+  function toRgb(css: string, fallback: string) {
+    if (!probe) return fallback;
+    probe.clearRect(0, 0, 1, 1);
+    probe.fillStyle = "#000";
+    probe.fillStyle = css;
+    probe.fillRect(0, 0, 1, 1);
+    const d = probe.getImageData(0, 0, 1, 1).data;
+    return d[3] ? `rgb(${d[0]}, ${d[1]}, ${d[2]})` : fallback;
+  }
+
+  function readColor(root: HTMLElement, name: string, fallback: string) {
+    const el = document.createElement("span");
+    el.style.color = `var(${name})`;
+    el.style.display = "none";
+    root.appendChild(el);
+    const css = getComputedStyle(el).color;
+    el.remove();
+    return toRgb(css, fallback);
+  }
+
+  function refreshColors(instance: Instance) {
+    const { root } = instance;
+    instance.colors = [
+      readColor(root, "--background-3", "#dcdad5"),
+      readColor(root, "--foreground-3", "#7a7873"),
+      readColor(root, "--foreground", "#1a1916"),
+      readColor(root, "--primary", "#d64a2b"),
+    ];
+  }
+
+  function paint(instance: Instance, time: number) {
+    const { state, metrics, context, colors } = instance;
+    if (!metrics || !state) return;
+    state.dirs.fill(0);
+    state.chars.fill(0);
+    state.tones.fill(0);
+
+    const pen = makePen(state, metrics.cellW, metrics.cellH, instance.radius);
+    ICONS[instance.name](pen, time);
+
+    context.clearRect(0, 0, metrics.width, metrics.height);
+    context.font = `400 ${metrics.fontSize}px ${FONT.family}`;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+
+    let lastTone = -1;
+    for (let r = 0; r < state.rows; r++) {
+      for (let c = 0; c < state.cols; c++) {
+        const i = r * state.cols + c;
+        const ch = state.chars[i]
+          ? String.fromCharCode(state.chars[i])
+          : state.dirs[i]
+            ? glyph(state.dirs[i])
+            : "";
+        if (!ch || ch === " ") continue;
+        const tone = state.tones[i];
+        if (tone !== lastTone) {
+          context.fillStyle = colors[tone] ?? colors[2];
+          lastTone = tone;
+        }
+        context.fillText(
+          ch,
+          metrics.offX + c * metrics.cellW,
+          metrics.offY + r * metrics.cellH,
+        );
+      }
+    }
+  }
+
+  function layout(instance: Instance) {
+    const rect = instance.root.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const canvas = instance.canvas;
+    const context = instance.context;
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.height * dpr);
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const fontSize =
+      window.innerWidth < 480 ? FONT.mobile : FONT.desktop;
+    context.font = `400 ${fontSize}px ${FONT.family}`;
+    const cellW = Math.max(1, context.measureText("M").width);
+    const cellH = fontSize;
+    const cols = Math.max(1, Math.floor(rect.width / cellW));
+    const rows = Math.max(1, Math.floor(rect.height / cellH));
+
+    instance.metrics = {
+      width: rect.width,
+      height: rect.height,
+      fontSize,
+      cellW,
+      cellH,
+      cols,
+      rows,
+      offX: (rect.width - cols * cellW) / 2 + cellW / 2,
+      offY: (rect.height - rows * cellH) / 2 + cellH / 2,
+    };
+    instance.state = {
+      cols,
+      rows,
+      dirs: new Uint8Array(cols * rows),
+      chars: new Uint16Array(cols * rows),
+      tones: new Uint8Array(cols * rows),
+    };
+    instance.radius = Math.min(rect.width, rect.height) * RADIUS;
+    paint(instance, instance.reduced ? STATIC_T[instance.name] : PHASE[instance.name]);
+  }
+
+  function drawStatic(instance: Instance) {
+    paint(instance, STATIC_T[instance.name]);
+  }
+
+  function stop(instance: Instance) {
+    instance.running = false;
+    if (instance.raf) cancelAnimationFrame(instance.raf);
+    instance.raf = 0;
+  }
+
+  function start(instance: Instance) {
+    if (
+      instance.running ||
+      instance.reduced ||
+      !instance.visible ||
+      document.hidden
+    ) {
+      return;
+    }
+    instance.running = true;
+    instance.last = 0;
+    instance.lastDraw = 0;
+    const tick = (now: number) => {
+      if (!instance.running) return;
+      if (!instance.last) instance.last = now;
+      const dt = Math.min(0.1, (now - instance.last) / 1000);
+      instance.last = now;
+      instance.elapsed += dt;
+      if (!instance.lastDraw) instance.lastDraw = now;
+      if (now - instance.lastDraw >= FRAME_MS) {
+        paint(instance, instance.elapsed + PHASE[instance.name]);
+        instance.lastDraw = now;
+      }
+      instance.raf = requestAnimationFrame(tick);
+    };
+    instance.raf = requestAnimationFrame(tick);
+  }
+
+  const cleanups = new Set<() => void>();
+
+  function init(root: HTMLElement) {
+    if (root.dataset.ready === "true") return;
+    const name = root.dataset.asciiServiceIcon as IconName | undefined;
+    if (!name || !ICONS[name]) return;
+    const canvas = root.querySelector("canvas");
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+    const context = canvas.getContext("2d");
+    if (!context) return;
+    root.dataset.ready = "true";
+
+    const instance: Instance = {
+      root,
+      canvas,
+      context,
+      name,
+      colors: [],
+      metrics: null,
+      state: null,
+      radius: 1,
+      elapsed: 0,
+      last: 0,
+      lastDraw: 0,
+      raf: 0,
+      running: false,
+      visible: false,
+      reduced: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    };
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    refreshColors(instance);
+    layout(instance);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        instance.visible = entries[0]?.isIntersecting ?? false;
+        if (instance.visible) start(instance);
+        else stop(instance);
+      },
+      { rootMargin: "120px 0px" },
+    );
+    observer.observe(root);
+
+    const resizeObserver = new ResizeObserver(() => layout(instance));
+    resizeObserver.observe(root);
+
+    const onMotion = () => {
+      instance.reduced = reduce.matches;
+      if (instance.reduced) {
+        stop(instance);
+        drawStatic(instance);
+      } else {
+        start(instance);
+      }
+    };
+    reduce.addEventListener("change", onMotion);
+
+    const onVisibility = () => {
+      if (document.hidden) stop(instance);
+      else start(instance);
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    const themeObserver = new MutationObserver(() => {
+      refreshColors(instance);
+      if (instance.reduced) drawStatic(instance);
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme", "style"],
+    });
+
+    const cleanup = () => {
+      stop(instance);
+      observer.disconnect();
+      resizeObserver.disconnect();
+      themeObserver.disconnect();
+      reduce.removeEventListener("change", onMotion);
+      document.removeEventListener("visibilitychange", onVisibility);
+      delete root.dataset.ready;
+      cleanups.delete(cleanup);
+    };
+    cleanups.add(cleanup);
+  }
+
+  function initAll() {
+    document
+      .querySelectorAll<HTMLElement>("[data-ascii-service-icon]")
+      .forEach((root) => init(root));
+  }
+
+  document.addEventListener("astro:before-swap", () => {
+    cleanups.forEach((fn) => fn());
+    cleanups.clear();
+  });
+  document.addEventListener("astro:page-load", initAll);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAll, { once: true });
+  } else {
+    initAll();
+  }
+</script>
