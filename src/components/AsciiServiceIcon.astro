@@ -1,0 +1,993 @@
+---
+interface Props {
+  name: "branding" | "websites" | "stores" | "print";
+  label: string;
+  class?: string;
+}
+
+const { name, label, class: className = "" } = Astro.props;
+---
+
+<div
+  class={`relative w-full aspect-square ${className}`}
+  data-ascii-service-icon={name}
+  role="img"
+  aria-label={label}
+>
+  <canvas class="block h-full w-full" aria-hidden="true"></canvas>
+</div>
+
+<script>
+  type IconName = "branding" | "websites" | "stores" | "print";
+  type Rgb = [number, number, number];
+  type Panel = { x: number; y: number; w: number; h: number; r: number };
+  type Buffers = {
+    cols: number;
+    rows: number;
+    body: Float32Array;
+    field: Float32Array;
+    ink: Float32Array;
+    gray: Float32Array;
+    accent: Uint8Array;
+    panel: Panel | null;
+  };
+  type Metrics = {
+    width: number;
+    height: number;
+    fontSize: number;
+    cellW: number;
+    cellH: number;
+    cols: number;
+    rows: number;
+    offX: number;
+    offY: number;
+  };
+  type Colors = {
+    lut: string[];
+    bg2: string;
+    white: string;
+    black: string;
+    primary: string;
+    gray: string;
+    border: string;
+  };
+  type Instance = {
+    root: HTMLElement;
+    canvas: HTMLCanvasElement;
+    context: CanvasRenderingContext2D;
+    name: IconName;
+    colors: Colors;
+    metrics: Metrics | null;
+    state: Buffers | null;
+    radius: number;
+    elapsed: number;
+    last: number;
+    lastDraw: number;
+    raf: number;
+    running: boolean;
+    visible: boolean;
+    reduced: boolean;
+  };
+
+  // Same glyph size as AsciiGalaxy.
+  const FONT = {
+    family: `ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`,
+    desktop: 12,
+    mobile: 9,
+  };
+  const FRAME_MS = 1000 / 30;
+  const RADIUS = 0.46;
+  const RAMP = " .·:-=+*#%@";
+  const PHASE: Record<IconName, number> = {
+    branding: 0.2,
+    websites: 0.8,
+    stores: 1.4,
+    print: 0.4,
+  };
+  const STATIC_T: Record<IconName, number> = {
+    branding: 2.4,
+    websites: 2.9,
+    stores: 2.2,
+    print: 2.2,
+  };
+
+  const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
+  const smoothstep = (edge0: number, edge1: number, value: number) => {
+    const t = clamp01((value - edge0) / (edge1 - edge0));
+    return t * t * (3 - 2 * t);
+  };
+  // 1 inside a shape (d < -soft), 0 outside (d > soft), smooth across the edge.
+  const cover = (d: number, soft: number) => {
+    const t = clamp01((soft - d) / (2 * soft));
+    return t * t * (3 - 2 * t);
+  };
+
+  const hash2 = (x: number, y: number) => {
+    let n = (x * 374761393 + y * 668265263) >>> 0;
+    n = Math.imul(n ^ (n >>> 13), 1274126177) >>> 0;
+    return ((n ^ (n >>> 16)) >>> 0) / 4294967296;
+  };
+
+  const mix = (a: Rgb, b: Rgb, t: number): Rgb => [
+    Math.round(a[0] + (b[0] - a[0]) * t),
+    Math.round(a[1] + (b[1] - a[1]) * t),
+    Math.round(a[2] + (b[2] - a[2]) * t),
+  ];
+  const rgbCss = (c: Rgb) => `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+
+  const sdBox = (x: number, y: number, hw: number, hh: number) => {
+    const dx = Math.abs(x) - hw;
+    const dy = Math.abs(y) - hh;
+    return (
+      Math.hypot(Math.max(dx, 0), Math.max(dy, 0)) +
+      Math.min(Math.max(dx, dy), 0)
+    );
+  };
+  const sdRoundBox = (
+    x: number,
+    y: number,
+    hw: number,
+    hh: number,
+    r: number,
+  ) => sdBox(x, y, hw - r, hh - r) - r;
+
+  const sdTriangle = (px: number, py: number, r: number) => {
+    const k = Math.sqrt(3);
+    let x = Math.abs(px) - r;
+    let y = py + r / k;
+    if (x + k * y > 0) {
+      const nx = (x - k * y) / 2;
+      const ny = (-k * x - y) / 2;
+      x = nx;
+      y = ny;
+    }
+    x -= Math.max(-2 * r, Math.min(0, x));
+    return -Math.hypot(x, y) * Math.sign(y);
+  };
+
+  const sdSegment = (
+    px: number,
+    py: number,
+    ax: number,
+    ay: number,
+    bx: number,
+    by: number,
+  ) => {
+    const pax = px - ax;
+    const pay = py - ay;
+    const bax = bx - ax;
+    const bay = by - ay;
+    const h = clamp01((pax * bax + pay * bay) / (bax * bax + bay * bay));
+    return Math.hypot(pax - bax * h, pay - bay * h);
+  };
+
+  function makePen(state: Buffers, metrics: Metrics, radius: number) {
+    const { cols, rows, body, field, ink, gray, accent } = state;
+    const cx = cols / 2;
+    const cy = rows / 2;
+    const cOf = (x: number) => cx + (x * radius) / metrics.cellW;
+    const rOf = (y: number) => cy + (y * radius) / metrics.cellH;
+
+    const addRaw = (buf: Float32Array, c: number, r: number, value: number) => {
+      if (c < 0 || c >= cols || r < 0 || r >= rows || value <= 0) return;
+      const i = r * cols + c;
+      buf[i] = Math.min(1, buf[i] + value);
+    };
+
+    const addPoint = (buf: Float32Array, x: number, y: number, value: number) => {
+      const c = cOf(x);
+      const r = rOf(y);
+      const c0 = Math.floor(c);
+      const r0 = Math.floor(r);
+      const fx = c - c0;
+      const fy = r - r0;
+      addRaw(buf, c0, r0, value * (1 - fx) * (1 - fy));
+      addRaw(buf, c0 + 1, r0, value * fx * (1 - fy));
+      addRaw(buf, c0, r0 + 1, value * (1 - fx) * fy);
+      addRaw(buf, c0 + 1, r0 + 1, value * fx * fy);
+    };
+
+    const addAccentAt = (x: number, y: number) => {
+      const c = Math.round(cOf(x));
+      const r = Math.round(rOf(y));
+      if (c < 0 || c >= cols || r < 0 || r >= rows) return;
+      accent[r * cols + c] = 1;
+    };
+
+    const setPanel = (u0: number, v0: number, u1: number, v1: number) => {
+      const x0 = metrics.offX + cOf(u0) * metrics.cellW;
+      const x1 = metrics.offX + cOf(u1) * metrics.cellW;
+      const y0 = metrics.offY + rOf(v0) * metrics.cellH;
+      const y1 = metrics.offY + rOf(v1) * metrics.cellH;
+      state.panel = { x: x0, y: y0, w: x1 - x0, h: y1 - y0, r: 7 };
+    };
+
+    const forEachCell = (
+      fn: (c: number, r: number, x: number, y: number) => void,
+    ) => {
+      for (let r = 0; r < rows; r++) {
+        const y = ((r - cy) * metrics.cellH) / radius;
+        for (let c = 0; c < cols; c++) {
+          const x = ((c - cx) * metrics.cellW) / radius;
+          fn(c, r, x, y);
+        }
+      }
+    };
+
+    return {
+      cols,
+      rows,
+      addBodyCell: (c: number, r: number, value: number) => addRaw(body, c, r, value),
+      addFieldCell: (c: number, r: number, value: number) => addRaw(field, c, r, value),
+      addInkCell: (c: number, r: number, value: number) => addRaw(ink, c, r, value),
+      addGrayCell: (c: number, r: number, value: number) => addRaw(gray, c, r, value),
+      addBodyAt: (x: number, y: number, value: number) => addPoint(body, x, y, value),
+      addFieldAt: (x: number, y: number, value: number) => addPoint(field, x, y, value),
+      addInkAt: (x: number, y: number, value: number) => addPoint(ink, x, y, value),
+      addGrayAt: (x: number, y: number, value: number) => addPoint(gray, x, y, value),
+      addAccentAt,
+      setPanel,
+      forEachCell,
+    };
+  }
+
+  type Pen = ReturnType<typeof makePen>;
+
+  const ICONS: Record<IconName, (p: Pen, t: number) => void> = {
+    // A star spinning in front of a cross-shaped halo.
+    branding(p, t) {
+      const phase = t * 0.55;
+      p.forEachCell((c, r, x, y) => {
+        const rad = Math.hypot(x, y);
+        if (rad > 1.12) return;
+        const a = Math.atan2(y, x) - phase;
+        const edge =
+          0.7 * (0.08 + 0.92 * Math.pow(Math.abs(Math.cos(2 * a)), 0.45));
+        const d = rad - edge;
+        const star = cover(d, 0.04) * (0.6 + 0.4 * (1 - rad / 0.7));
+        const core = Math.exp(-Math.pow(rad / 0.09, 2)) * 0.9;
+        const rim = Math.exp(-Math.abs(d) / 0.05) * 0.3;
+        let ray = 0;
+        for (let k = 0; k < 4; k++) {
+          const ang = phase + (k * Math.PI) / 2;
+          const ca = Math.cos(ang);
+          const sa = Math.sin(ang);
+          const along = x * ca + y * sa;
+          const perp = -x * sa + y * ca;
+          if (along > 0 && along < 0.7) {
+            const half = 0.1 * (1 - along / 0.7);
+            ray = Math.max(
+              ray,
+              cover(Math.abs(perp) - half, 0.03) * (1 - along / 0.7) * 0.95,
+            );
+          }
+        }
+        p.addBodyCell(c, r, Math.max(star, ray) + core + rim);
+
+        const cross = Math.max(
+          Math.min(Math.abs(x), Math.abs(y)) - 0.12,
+          Math.max(Math.abs(x), Math.abs(y)) - 0.98,
+        );
+        const halo =
+          cover(cross, 0.12) * 0.45 * Math.pow(Math.max(0, 1 - rad), 1.4);
+        const glow = Math.exp(-Math.pow(rad / 0.55, 2)) * 0.12;
+        p.addFieldCell(c, r, halo + glow);
+      });
+
+      // Grain for the halo so the cross reads as dust, not a rule.
+      let seed = 1337;
+      const rand = () => {
+        seed = (seed * 16807) % 2147483647;
+        return (seed - 1) / 2147483646;
+      };
+      for (let i = 0; i < 220; i++) {
+        const arm = Math.floor(rand() * 4);
+        const along = (rand() * 2 - 1) * 0.92;
+        const jitter = (rand() * 2 - 1) * 0.075;
+        const x = arm < 2 ? along : jitter;
+        const y = arm < 2 ? jitter : along;
+        const twinkle = 0.5 + 0.5 * Math.sin(t * 1.8 + i * 0.7);
+        p.addFieldAt(x, y, 0.1 + 0.18 * twinkle);
+      }
+
+      const accents: [number, number][] = [
+        [0.56, -0.34],
+        [-0.62, 0.27],
+        [0.3, 0.72],
+        [-0.26, -0.78],
+      ];
+      accents.forEach(([x, y], i) => {
+        if (Math.sin(t * 1.6 + i * 1.7) > 0.15) p.addAccentAt(x, y);
+      });
+    },
+
+    // A browser on a 3D plane with a page scrolling inside.
+    websites(p, t) {
+      const quality = p.cols >= 40 ? 1 : 0.78;
+      const nu = Math.round(112 * quality);
+      const nv = Math.round(92 * quality);
+      const yaw = 0.22 + 0.08 * Math.sin(t * 0.35);
+      const pitch = 0.06 + 0.03 * Math.sin(t * 0.28 + 1);
+      const f = 2.6;
+      const cyaw = Math.cos(yaw);
+      const syaw = Math.sin(yaw);
+      const cpitch = Math.cos(pitch);
+      const spitch = Math.sin(pitch);
+      const project = (x: number, y: number, z: number) => {
+        const x1 = x * cyaw + z * syaw;
+        const z1 = -x * syaw + z * cyaw;
+        const y1 = y * cpitch - z1 * spitch;
+        const z2 = y * spitch + z1 * cpitch;
+        const s = f / (f + z2);
+        return { x: x1 * s, y: y1 * s };
+      };
+
+      const scroll = (t * 0.1) % 0.72;
+      for (let iu = 0; iu <= nu; iu++) {
+        const u = -0.85 + (1.7 * iu) / nu;
+        for (let iv = 0; iv <= nv; iv++) {
+          const v = -0.55 + (1.1 * iv) / nv;
+          const dOuter = sdRoundBox(u, v, 0.85, 0.55, 0.12);
+          if (dOuter > 0.02) continue;
+          const dInner = sdRoundBox(u, v, 0.78, 0.47, 0.08);
+          let density = 0;
+
+          const bezel = cover(dOuter, 0.02) * (1 - cover(dInner, 0.02));
+          density += bezel * 0.9;
+          density += Math.exp(-Math.abs(dOuter) / 0.022) * 0.32;
+          density += Math.exp(-Math.abs(dInner) / 0.02) * 0.18;
+
+          if (dInner < 0) {
+            density += 0.03;
+            if (v > 0.36) {
+              density += 0.25;
+              const dots: [number, number][] = [
+                [-0.7, 0.42],
+                [-0.63, 0.42],
+                [-0.56, 0.42],
+              ];
+              for (const [du, dv] of dots) {
+                density +=
+                  cover(Math.hypot(u - du, v - dv) - 0.018, 0.01) * 0.9;
+              }
+              if (Math.abs(v - 0.42) < 0.012 && u > -0.48 && u < 0.55) {
+                density += 0.3;
+              }
+            } else {
+              const p = ((v + 0.36 - scroll) % 0.72 + 0.72) % 0.72;
+              const edge =
+                smoothstep(-0.47, -0.39, v) *
+                (1 - smoothstep(0.28, 0.36, v));
+              let content = 0;
+              if (p < 0.15) {
+                if (u > -0.66 && u < 0.66) content += 0.2;
+              } else if (p < 0.19) {
+                if (u > -0.6 && u < 0.1) content += 0.6;
+              } else {
+                const k = Math.floor((p - 0.19) / 0.085);
+                const lp = (p - 0.19) % 0.085;
+                if (k < 5 && lp < 0.022) {
+                  const end = 0.6 - k * 0.08;
+                  if (u > -0.66 && u < -0.66 + end) content += 0.55;
+                }
+              }
+              if (p > 0.42 && p < 0.62 && u > 0.08 && u < 0.62) {
+                content += 0.14;
+              }
+              density += content * (0.35 + 0.65 * edge);
+            }
+
+            if (u > 0.745 && u < 0.775 && v > -0.3 && v < 0.34) {
+              density += 0.15;
+              const thumb = 0.3 - 0.55 * (scroll / 0.72);
+              if (Math.abs(v - thumb) < 0.09) density += 0.6;
+            }
+          }
+
+          const proj = project(u, v, 0);
+          p.addBodyAt(proj.x, proj.y, Math.min(1, density) * 0.15);
+        }
+      }
+
+      const dot = project(-0.56, 0.42, 0);
+      p.addAccentAt(dot.x, dot.y);
+
+      p.forEachCell((c, r, x, y) => {
+        const d = Math.hypot((x - 0.06) / 0.82, (y - 0.62) / 0.16) - 1;
+        p.addFieldCell(c, r, cover(d, 0.18) * 0.1);
+      });
+    },
+
+    // A browser carousel: triangle, circle and square on white slides.
+    stores(p, t) {
+      p.forEachCell((c, r, x, y) => {
+        const dOuter = sdRoundBox(x, y, 0.85, 0.55, 0.12);
+        if (dOuter > 0.02) return;
+        const dInner = sdRoundBox(x, y, 0.78, 0.47, 0.08);
+        let density = 0;
+        const bezel = cover(dOuter, 0.02) * (1 - cover(dInner, 0.02));
+        density += bezel * 0.9;
+        density += Math.exp(-Math.abs(dOuter) / 0.022) * 0.32;
+        density += Math.exp(-Math.abs(dInner) / 0.02) * 0.18;
+
+        if (dInner < 0) {
+          density += 0.04;
+          if (y > -0.47 && y < -0.36) {
+            density += 0.25;
+            const dots: [number, number][] = [
+              [-0.7, -0.42],
+              [-0.63, -0.42],
+              [-0.56, -0.42],
+            ];
+            for (const [du, dv] of dots) {
+              density += cover(Math.hypot(x - du, y - dv) - 0.018, 0.01) * 0.9;
+            }
+            if (Math.abs(y + 0.42) < 0.012 && x > -0.48 && x < 0.55) {
+              density += 0.3;
+            }
+          }
+        }
+        p.addBodyCell(c, r, Math.min(1, density));
+      });
+
+      p.setPanel(-0.73, -0.3, 0.73, 0.3);
+
+      const raw = t / 2.4;
+      const index = Math.floor(raw) % 3;
+      const frac = raw - Math.floor(raw);
+      const eased = smoothstep(0.62, 1, frac);
+
+      p.forEachCell((c, r, x, y) => {
+        if (Math.abs(x) > 0.73 || Math.abs(y) > 0.3) return;
+        const edgeFade =
+          smoothstep(0.73, 0.64, Math.abs(x)) *
+          smoothstep(0.3, 0.23, Math.abs(y));
+        for (let i = 0; i < 3; i++) {
+          const delta = ((i - index + 3) % 3) - eased;
+          const off = delta * 1.55;
+          const sx = x - off;
+          const d =
+            i === 0
+              ? sdTriangle(sx, -y, 0.22)
+              : i === 1
+                ? Math.hypot(sx, y) - 0.24
+                : sdBox(sx, y, 0.2, 0.2);
+          if (d < 0.08) {
+            const fill = 0.95 + 0.05 * hash2(c + 7, r + 3);
+            p.addInkCell(c, r, cover(d, 0.025) * fill * edgeFade);
+          }
+          const ds =
+            i === 0
+              ? sdTriangle(sx - 0.018, -(y + 0.025), 0.22)
+              : i === 1
+                ? Math.hypot(sx - 0.018, y + 0.025) - 0.24
+                : sdBox(sx - 0.018, y + 0.025, 0.2, 0.2);
+          if (ds < 0.08) {
+            p.addGrayCell(c, r, cover(ds, 0.03) * 0.18 * edgeFade);
+          }
+        }
+      });
+
+      const dots: [number, number][] = [
+        [-0.08, 0.35],
+        [0, 0.35],
+        [0.08, 0.35],
+      ];
+      dots.forEach(([x, y], i) => {
+        if (i === index) p.addAccentAt(x, y);
+        else p.addGrayAt(x, y, 0.5);
+      });
+
+      p.forEachCell((c, r, x, y) => {
+        const d = Math.hypot((x - 0.04) / 0.84, (y - 0.62) / 0.15) - 1;
+        p.addFieldCell(c, r, cover(d, 0.18) * 0.09);
+      });
+    },
+
+    // A printed sheet: halftone image revealed by a moving print head.
+    print(p, t) {
+      const quality = p.cols >= 40 ? 1 : 0.78;
+      const nu = Math.round(104 * quality);
+      const nv = Math.round(84 * quality);
+      const yaw = 0.1 + 0.025 * Math.sin(t * 0.3);
+      const pitch = 0.05 + 0.02 * Math.sin(t * 0.25 + 1);
+      const f = 2.8;
+      const cyaw = Math.cos(yaw);
+      const syaw = Math.sin(yaw);
+      const cpitch = Math.cos(pitch);
+      const spitch = Math.sin(pitch);
+      const project = (x: number, y: number, z: number) => {
+        const x1 = x * cyaw + z * syaw;
+        const z1 = -x * syaw + z * cyaw;
+        const y1 = y * cpitch - z1 * spitch;
+        const z2 = y * spitch + z1 * cpitch;
+        const s = f / (f + z2);
+        return { x: x1 * s, y: y1 * s };
+      };
+
+      const cycle = (t % 4.5) / 4.5;
+      const head = -0.55 + smoothstep(0.08, 0.63, cycle) * 1.1;
+      const fade = 1 - smoothstep(0.86, 0.98, cycle);
+      const corner = 0.72;
+
+      for (let iu = 0; iu <= nu; iu++) {
+        const u = -0.8 + (1.6 * iu) / nu;
+        for (let iv = 0; iv <= nv; iv++) {
+          const v = -0.6 + (1.2 * iv) / nv;
+          const dOuter = sdRoundBox(u, v, 0.8, 0.6, 0.035);
+          if (dOuter > 0.02) continue;
+          let density = 0;
+
+          density += cover(dOuter, 0.02) * 0.05;
+          density += Math.exp(-Math.abs(dOuter) / 0.02) * 0.4;
+          if (dOuter < 0) density += 0.02;
+
+          let crop = 1e9;
+          for (const [cu, cv] of [
+            [-corner, -0.52],
+            [corner, -0.52],
+            [-corner, 0.52],
+            [corner, 0.52],
+          ]) {
+            const sx = cu < 0 ? 0.06 : -0.06;
+            const sy = cv < 0 ? 0.06 : -0.06;
+            crop = Math.min(
+              crop,
+              sdSegment(u, v, cu, cv, cu + sx, cv),
+              sdSegment(u, v, cu, cv, cu, cv + sy),
+            );
+          }
+          density += cover(crop - 0.002, 0.006) * 0.7;
+
+          const img = Math.hypot(u - 0.05, v + 0.02);
+          if (img < 0.36) {
+            const tone = Math.pow(clamp01(1 - img / 0.36), 0.55);
+            const halftone =
+              0.4 + 0.6 * Math.sin(u * 46) * Math.sin(v * 46);
+            const printed = v < head ? 1 : 0.08;
+            density += tone * halftone * printed * 0.85 * fade;
+          }
+
+          if (Math.abs(v - head) < 0.022 && u > -0.66 && u < 0.66) {
+            density += 0.9 * fade;
+          }
+
+          const proj = project(u, v, 0);
+          p.addBodyAt(proj.x, proj.y, Math.min(1, density) * 0.15);
+        }
+      }
+
+      for (let i = 0; i < 7; i++) {
+        const u = -0.54 + i * 0.18;
+        const proj = project(u, head, 0);
+        if (fade > 0.3) p.addAccentAt(proj.x, proj.y);
+      }
+
+      p.forEachCell((c, r, x, y) => {
+        const d = Math.hypot((x - 0.04) / 0.84, (y - 0.65) / 0.15) - 1;
+        p.addFieldCell(c, r, cover(d, 0.18) * 0.08);
+      });
+    },
+  };
+
+  const probeCanvas = document.createElement("canvas");
+  probeCanvas.width = 1;
+  probeCanvas.height = 1;
+  const probe = probeCanvas.getContext("2d", { willReadFrequently: true });
+
+  const toRgb = (css: string, fallback: Rgb): Rgb => {
+    if (!probe) return fallback;
+    probe.clearRect(0, 0, 1, 1);
+    probe.fillStyle = "#000";
+    probe.fillStyle = css;
+    probe.fillRect(0, 0, 1, 1);
+    const d = probe.getImageData(0, 0, 1, 1).data;
+    return d[3] ? [d[0], d[1], d[2]] : fallback;
+  };
+
+  const readColor = (root: HTMLElement, name: string, fallback: Rgb) => {
+    const el = document.createElement("span");
+    el.style.color = `var(${name})`;
+    el.style.display = "none";
+    root.appendChild(el);
+    const css = getComputedStyle(el).color;
+    el.remove();
+    return toRgb(css, fallback);
+  };
+
+  const makeLut = (stops: Rgb[]) => {
+    const out: string[] = [];
+    for (let i = 0; i < 32; i++) {
+      const t = (i / 31) * (stops.length - 1);
+      const k = Math.min(stops.length - 2, Math.floor(t));
+      out.push(rgbCss(mix(stops[k], stops[k + 1], t - k)));
+    }
+    return out;
+  };
+
+  function refreshColors(instance: Instance) {
+    const { root } = instance;
+    const bg = readColor(root, "--background", [249, 248, 244]);
+    const bg1 = readColor(root, "--background-1", [245, 244, 240]);
+    const bg2 = readColor(root, "--background-2", [236, 235, 231]);
+    const bg3 = readColor(root, "--background-3", [220, 218, 213]);
+    const fg3 = readColor(root, "--foreground-3", [122, 120, 115]);
+    const fg2 = readColor(root, "--foreground-2", [74, 73, 69]);
+    const fg1 = readColor(root, "--foreground-1", [42, 41, 38]);
+    const fg = readColor(root, "--foreground", [26, 25, 22]);
+    const white = readColor(root, "--white", [250, 249, 245]);
+    const black = readColor(root, "--black", [26, 25, 22]);
+    const primary = readColor(root, "--primary", [214, 74, 43]);
+    const gray = readColor(root, "--muted", [140, 140, 140]);
+
+    instance.colors = {
+      lut: makeLut([bg, bg1, bg2, bg3, fg3, fg2, fg1, fg]),
+      bg2: rgbCss(bg2),
+      white: rgbCss(white),
+      black: rgbCss(black),
+      primary: rgbCss(primary),
+      gray: rgbCss(gray),
+      border: `rgba(${bg3[0]}, ${bg3[1]}, ${bg3[2]}, 0.7)`,
+    };
+  }
+
+  const roundRectPath = (
+    context: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    r: number,
+  ) => {
+    const rr = Math.min(r, w / 2, h / 2);
+    context.beginPath();
+    context.moveTo(x + rr, y);
+    context.arcTo(x + w, y, x + w, y + h, rr);
+    context.arcTo(x + w, y + h, x, y + h, rr);
+    context.arcTo(x, y + h, x, y, rr);
+    context.arcTo(x, y, x + w, y, rr);
+    context.closePath();
+  };
+
+  function paint(instance: Instance, time: number) {
+    const { state, metrics, context, colors } = instance;
+    if (!metrics || !state) return;
+    state.body.fill(0);
+    state.field.fill(0);
+    state.ink.fill(0);
+    state.gray.fill(0);
+    state.accent.fill(0);
+    state.panel = null;
+
+    const pen = makePen(state, metrics, instance.radius);
+    ICONS[instance.name](pen, time);
+
+    const panel = state.panel as Panel | null;
+    const insidePanel = (c: number, r: number) => {
+      if (!panel) return false;
+      const x = metrics.offX + c * metrics.cellW;
+      const y = metrics.offY + r * metrics.cellH;
+      return (
+        x > panel.x &&
+        x < panel.x + panel.w &&
+        y > panel.y &&
+        y < panel.y + panel.h
+      );
+    };
+
+    context.clearRect(0, 0, metrics.width, metrics.height);
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+
+    // Faint character dust, matching the galaxy field.
+    context.font = `400 ${metrics.fontSize * 0.6}px ${FONT.family}`;
+    context.fillStyle = colors.bg2;
+    context.globalAlpha = 0.55;
+    for (let r = 0; r < state.rows; r++) {
+      for (let c = 0; c < state.cols; c++) {
+        if (insidePanel(c, r)) continue;
+        const h = hash2(c + 13, r + 29);
+        if (h < 0.955) continue;
+        context.fillText(
+          h > 0.985 ? "·" : ".",
+          metrics.offX + c * metrics.cellW,
+          metrics.offY + r * metrics.cellH,
+        );
+      }
+    }
+    context.globalAlpha = 1;
+
+    if (panel) {
+      context.save();
+      context.shadowColor = "rgba(0, 0, 0, 0.16)";
+      context.shadowBlur = 10;
+      context.shadowOffsetY = 3;
+      context.fillStyle = colors.white;
+      roundRectPath(context, panel.x, panel.y, panel.w, panel.h, panel.r);
+      context.fill();
+      context.restore();
+      context.strokeStyle = colors.border;
+      context.lineWidth = 1;
+      roundRectPath(context, panel.x, panel.y, panel.w, panel.h, panel.r);
+      context.stroke();
+    }
+
+    const drawDensity = (
+      buffer: Float32Array,
+      size: number,
+      lift: number,
+      skipPanel: boolean,
+    ) => {
+      context.font = `400 ${size}px ${FONT.family}`;
+      let last = "";
+      for (let r = 0; r < state.rows; r++) {
+        for (let c = 0; c < state.cols; c++) {
+          if (skipPanel && insidePanel(c, r)) continue;
+          const raw = buffer[r * state.cols + c];
+          if (raw < 0.045) continue;
+          const v = clamp01(raw + (hash2(c + 5, r + 11) - 0.5) * 0.1);
+          const idx = Math.min(
+            RAMP.length - 1,
+            Math.round(Math.pow(v, 0.85) * (RAMP.length - 1)),
+          );
+          const ch = RAMP[idx];
+          if (ch === " ") continue;
+          const color =
+            colors.lut[
+              Math.min(31, Math.floor((lift + (1 - lift) * v) * 31))
+            ];
+          if (color !== last) {
+            context.fillStyle = color;
+            last = color;
+          }
+          context.fillText(
+            ch,
+            metrics.offX + c * metrics.cellW,
+            metrics.offY + r * metrics.cellH,
+          );
+        }
+      }
+    };
+
+    drawDensity(state.field, metrics.fontSize * 0.66, 0.26, true);
+    drawDensity(state.body, metrics.fontSize, 0.12, true);
+
+    const drawSolid = (buffer: Float32Array, color: string, size: number) => {
+      context.font = `400 ${size}px ${FONT.family}`;
+      context.fillStyle = color;
+      for (let r = 0; r < state.rows; r++) {
+        for (let c = 0; c < state.cols; c++) {
+          const raw = buffer[r * state.cols + c];
+          if (raw < 0.05) continue;
+          const v = clamp01(raw + (hash2(c + 17, r + 3) - 0.5) * 0.08);
+          const idx = Math.min(
+            RAMP.length - 1,
+            Math.round(Math.pow(v, 0.85) * (RAMP.length - 1)),
+          );
+          const ch = RAMP[idx];
+          if (ch === " ") continue;
+          context.fillText(
+            ch,
+            metrics.offX + c * metrics.cellW,
+            metrics.offY + r * metrics.cellH,
+          );
+        }
+      }
+    };
+
+    drawSolid(state.gray, colors.gray, metrics.fontSize);
+    drawSolid(state.ink, colors.black, metrics.fontSize);
+
+    context.font = `400 ${metrics.fontSize}px ${FONT.family}`;
+    context.fillStyle = colors.primary;
+    for (let r = 0; r < state.rows; r++) {
+      for (let c = 0; c < state.cols; c++) {
+        if (!state.accent[r * state.cols + c]) continue;
+        context.fillText(
+          hash2(c, r) > 0.5 ? "*" : "+",
+          metrics.offX + c * metrics.cellW,
+          metrics.offY + r * metrics.cellH,
+        );
+      }
+    }
+  }
+
+  function layout(instance: Instance) {
+    const rect = instance.root.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const canvas = instance.canvas;
+    const context = instance.context;
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.height * dpr);
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const fontSize = window.innerWidth < 480 ? FONT.mobile : FONT.desktop;
+    context.font = `400 ${fontSize}px ${FONT.family}`;
+    const cellW = Math.max(1, context.measureText("M").width);
+    const cellH = fontSize;
+    const cols = Math.max(1, Math.floor(rect.width / cellW));
+    const rows = Math.max(1, Math.floor(rect.height / cellH));
+
+    instance.metrics = {
+      width: rect.width,
+      height: rect.height,
+      fontSize,
+      cellW,
+      cellH,
+      cols,
+      rows,
+      offX: (rect.width - cols * cellW) / 2 + cellW / 2,
+      offY: (rect.height - rows * cellH) / 2 + cellH / 2,
+    };
+    instance.state = {
+      cols,
+      rows,
+      body: new Float32Array(cols * rows),
+      field: new Float32Array(cols * rows),
+      ink: new Float32Array(cols * rows),
+      gray: new Float32Array(cols * rows),
+      accent: new Uint8Array(cols * rows),
+      panel: null,
+    };
+    instance.radius = Math.min(rect.width, rect.height) * RADIUS;
+    paint(
+      instance,
+      instance.reduced ? STATIC_T[instance.name] : PHASE[instance.name],
+    );
+  }
+
+  function drawStatic(instance: Instance) {
+    paint(instance, STATIC_T[instance.name]);
+  }
+
+  function stop(instance: Instance) {
+    instance.running = false;
+    if (instance.raf) cancelAnimationFrame(instance.raf);
+    instance.raf = 0;
+  }
+
+  function start(instance: Instance) {
+    if (
+      instance.running ||
+      instance.reduced ||
+      !instance.visible ||
+      document.hidden
+    ) {
+      return;
+    }
+    instance.running = true;
+    instance.last = 0;
+    instance.lastDraw = 0;
+    const tick = (now: number) => {
+      if (!instance.running) return;
+      if (!instance.last) instance.last = now;
+      const dt = Math.min(0.1, (now - instance.last) / 1000);
+      instance.last = now;
+      instance.elapsed += dt;
+      if (!instance.lastDraw) instance.lastDraw = now;
+      if (now - instance.lastDraw >= FRAME_MS) {
+        paint(instance, instance.elapsed + PHASE[instance.name]);
+        instance.lastDraw = now;
+      }
+      instance.raf = requestAnimationFrame(tick);
+    };
+    instance.raf = requestAnimationFrame(tick);
+  }
+
+  const cleanups = new Set<() => void>();
+
+  function init(root: HTMLElement) {
+    if (root.dataset.ready === "true") return;
+    const name = root.dataset.asciiServiceIcon as IconName | undefined;
+    if (!name || !ICONS[name]) return;
+    const canvas = root.querySelector("canvas");
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+    const context = canvas.getContext("2d");
+    if (!context) return;
+    root.dataset.ready = "true";
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const instance: Instance = {
+      root,
+      canvas,
+      context,
+      name,
+      colors: {
+        lut: [],
+        bg2: "",
+        white: "",
+        black: "",
+        primary: "",
+        gray: "",
+        border: "",
+      },
+      metrics: null,
+      state: null,
+      radius: 1,
+      elapsed: 0,
+      last: 0,
+      lastDraw: 0,
+      raf: 0,
+      running: false,
+      visible: false,
+      reduced: reduce.matches,
+    };
+
+    refreshColors(instance);
+    layout(instance);
+
+    const initialRect = root.getBoundingClientRect();
+    instance.visible =
+      initialRect.bottom > -120 && initialRect.top < window.innerHeight + 120;
+    if (instance.visible) start(instance);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        instance.visible = entries[0]?.isIntersecting ?? false;
+        if (instance.visible) start(instance);
+        else stop(instance);
+      },
+      { rootMargin: "120px 0px" },
+    );
+    observer.observe(root);
+
+    const resizeObserver = new ResizeObserver(() => layout(instance));
+    resizeObserver.observe(root);
+
+    const onMotion = () => {
+      instance.reduced = reduce.matches;
+      if (instance.reduced) {
+        stop(instance);
+        drawStatic(instance);
+      } else {
+        start(instance);
+      }
+    };
+    reduce.addEventListener("change", onMotion);
+
+    const onVisibility = () => {
+      if (document.hidden) stop(instance);
+      else start(instance);
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    const themeObserver = new MutationObserver(() => {
+      refreshColors(instance);
+      if (instance.reduced) drawStatic(instance);
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme", "style"],
+    });
+
+    const cleanup = () => {
+      stop(instance);
+      observer.disconnect();
+      resizeObserver.disconnect();
+      themeObserver.disconnect();
+      reduce.removeEventListener("change", onMotion);
+      document.removeEventListener("visibilitychange", onVisibility);
+      delete root.dataset.ready;
+      cleanups.delete(cleanup);
+    };
+    cleanups.add(cleanup);
+  }
+
+  function initAll() {
+    document
+      .querySelectorAll<HTMLElement>("[data-ascii-service-icon]")
+      .forEach((root) => init(root));
+  }
+
+  document.addEventListener("astro:before-swap", () => {
+    cleanups.forEach((fn) => fn());
+    cleanups.clear();
+  });
+  document.addEventListener("astro:page-load", initAll);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAll, { once: true });
+  } else {
+    initAll();
+  }
+</script>

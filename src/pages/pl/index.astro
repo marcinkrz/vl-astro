@@ -6,7 +6,8 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import Button from "@/components/_ui/Button.astro";
 import Picture from "@/components/_ui/Picture.astro";
 import AsciiGalaxy from "@/components/AsciiGalaxy.astro";
-import { Galaxy, LaptopMinimal, MoveRight, Stamp, Store } from "@lucide/astro";
+import AsciiServiceIcon from "@/components/AsciiServiceIcon.astro";
+import { MoveRight } from "@lucide/astro";
 
 const locale = Astro.currentLocale === "pl" ? "pl" : "en";
 const t = getT(locale);
@@ -44,22 +45,30 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
           class="px-3 md:px-4 lg:px-0 grid grid-cols-2 lg:grid-cols-4 gap-6 gap-y-0"
         >
           <li class="mb-12 reveal">
-            <Galaxy class="w-[50%] h-auto mb-3 stroke-[0.5]" />
+            <AsciiServiceIcon
+              name="branding"
+              label="Animowana ikona ASCII: identyfikacja"
+              class="mb-3"
+            />
             <h3 class="mb-1">
               <Button
                 variant="link"
                 class="h-auto h3 text-left whitespace-normal"
               >
-                Identyfikacjia
+                Identyfikacja
               </Button>
             </h3>
             <p class="text-sm text-(--muted) text-pretty">
               Logo i system identyfikacji wizualnej, które skalują się od
-              wizytówki do bilbordu.
+              wizytówki do billboardu.
             </p>
           </li>
           <li class="mb-12 reveal">
-            <LaptopMinimal class="w-[50%] h-auto mb-3 stroke-[0.5]" />
+            <AsciiServiceIcon
+              name="websites"
+              label="Animowana ikona ASCII: strony internetowe"
+              class="mb-3"
+            />
             <h3 class="mb-1">
               <Button
                 variant="link"
@@ -74,7 +83,11 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
             </p>
           </li>
           <li class="mb-12 reveal">
-            <Store class="w-[50%] h-auto mb-3 stroke-[0.5]" />
+            <AsciiServiceIcon
+              name="stores"
+              label="Animowana ikona ASCII: sklepy internetowe"
+              class="mb-3"
+            />
             <h3 class="mb-1">
               <Button
                 variant="link"
@@ -88,7 +101,11 @@ projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
             </p>
           </li>
           <li class="mb-12 reveal">
-            <Stamp class="w-[50%] h-auto mb-3 stroke-[0.5]" />
+            <AsciiServiceIcon
+              name="print"
+              label="Animowana ikona ASCII: projekt druku"
+              class="mb-3"
+            />
             <h3 class="mb-1">
               <Button
                 variant="link"
