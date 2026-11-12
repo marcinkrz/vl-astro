@@ -917,6 +917,11 @@ const { name, label, class: className = "" } = Astro.props;
     refreshColors(instance);
     layout(instance);
 
+    const initialRect = root.getBoundingClientRect();
+    instance.visible =
+      initialRect.bottom > -120 && initialRect.top < window.innerHeight + 120;
+    if (instance.visible) start(instance);
+
     const observer = new IntersectionObserver(
       (entries) => {
         instance.visible = entries[0]?.isIntersecting ?? false;
